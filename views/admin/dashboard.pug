@@ -1,0 +1,173 @@
+extends layout-admin
+
+block content
+  .content-wrapper
+    .container-fluid
+      ol.breadcrumb
+        li.breadcrumb-item
+          h4 Dashboard
+      .row
+        .col-xl-3.col-sm-6.mb-3
+          .card.secondary-text.o-hidden.h-100(style='background-color:#2a93d5')
+            .card-body
+              .card-body-icon
+                i.fa.fa-fw.fa-briefcase
+              .mr-5(style='font-size:20px;') 26
+            a.card-footer.secondary-text.clearfix.small.z-1(href='#')
+              span.float-left Categories
+              span.float-right
+                i.fa.fa-angle-right
+        .col-xl-3.col-sm-6.mb-3
+          .card.secondary-text.o-hidden.h-100(style='background-color:#2a93d5')
+            .card-body
+              .card-body-icon
+                i.fa.fa-fw.fa-briefcase
+              .mr-5(style='font-size:20px;') 26
+            a.card-footer.secondary-text.clearfix.small.z-1(href='#')
+              span.float-left Business
+              span.float-right
+                i.fa.fa-angle-right
+        .col-xl-3.col-sm-6.mb-3
+          .card.secondary-text.o-hidden.h-100(style='background-color:#2a93d5')
+            .card-body
+              .card-body-icon
+                i.fa.fa-fw.fa-bank
+              .mr-5(style='font-size:20px;') 11
+            a.card-footer.secondary-text.clearfix.small.z-1(href='#')
+              span.float-left Outlets
+              span.float-right
+                i.fa.fa-angle-right
+        .col-xl-3.col-sm-6.mb-3
+          .card.secondary-text.o-hidden.h-100(style='background-color:#2a93d5')
+            .card-body
+              .card-body-icon
+                i.fa.fa-fw.fa-book
+              .mr-5(style='font-size:20px;') 123
+            a.card-footer.secondary-text.clearfix.small.z-1(href='#')
+              span.float-left Reviews
+              span.float-right
+                i.fa.fa-angle-right
+      .row.mt-4
+        .col-md-6
+          a(href='')
+            h5 New Business
+      .row
+        .col-md-12
+          .table-responsive.mt-2
+            table#dataTable.table.table-bordered(width='100%', cellspacing='0')
+              thead
+                tr.bg-2.text-white
+                  th(scope='col') Name
+                  th(scope='col') Line of Business
+                  th(scope='col') Outlets
+                  th.text-center(scope='col') Action
+              tbody
+                tr
+                  th(scope='row') Wonderlabs
+                  td Wonderlabs
+                  td
+                    | 2 
+                    a(href='/admin/list-outlets') view outlets
+                  td.text-center
+                    .dropdown
+                      button.btn.bg-5.dropdown-toggle.btn-sm.border(type='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
+                        | Action
+                      .dropdown-menu.dropdown-menu-right
+                        a.dropdown-item(href='#')
+                          i.fa.fa-user
+                          |  View
+                        .dropdown-divider
+                        a.dropdown-item(data-toggle='modal', data-target='#deleteModal')
+                          i.fa.fa-trash
+                          |  Delete
+                tr
+                  th(scope='row') Wonderfood
+                  td Wonderlabs
+                  td
+                    | 1 
+                    a(href='/admin/list-outlets') view outlets
+                  td.text-center
+                    .dropdown
+                      button.btn.bg-5.dropdown-toggle.btn-sm.border(type='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
+                        | Action
+                      .dropdown-menu.dropdown-menu-right
+                        a.dropdown-item(href='#')
+                          i.fa.fa-user
+                          |  View
+                        .dropdown-divider
+                        a.dropdown-item(data-toggle='modal', data-target='#deleteModal')
+                          i.fa.fa-trash
+                          |  Delete
+      .row.mt-4
+        .col-md-6
+          a(href='')
+            h5 New Outlets
+      .row
+        .col-md-12
+          .table-responsive.mt-2
+            table#dataTable.table.table-bordered(width='100%', cellspacing='0')
+              thead
+                tr.bg-2.text-white
+                  th(scope='col') Name
+                  th(scope='col') Business
+                  th(scope='col') City
+                  th(scope='col') Page Views
+                  th.text-center(scope='col') Action
+              tbody
+                tr
+                  th(scope='row') Wonderlabs Amstrong
+                  td Wonderlabs
+                  td Yogyakarta
+                  td 30
+                  td.text-center
+                    .dropdown
+                      button.btn.bg-5.dropdown-toggle.btn-sm.border(type='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
+                        | Action
+                        span.caret
+                      .dropdown-menu.dropdown-menu-right
+                        a.dropdown-item(href='#')
+                          i.fa.fa-user
+                          |  View
+                        .dropdown-divider
+                        a.dropdown-item(data-toggle='modal', data-target='#deleteModal')
+                          i.fa.fa-trash
+                          |  Delete
+                tr
+                  th(scope='row') Wonderlabs Exploler
+                  td Wonderlabs
+                  td Yogyakarta
+                  td 9
+                  td.text-center
+                    .dropdown.clearfix
+                      button.btn.bg-5.dropdown-toggle.btn-sm.border(type='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
+                        | Action
+                        span.caret
+                      .dropdown-menu.dropdown-menu-right
+                        a.dropdown-item(href='#')
+                          i.fa.fa-user
+                          |  View
+                        .dropdown-divider
+                        a.dropdown-item(data-toggle='modal', data-target='#deleteModal')
+                          i.fa.fa-trash
+                          |  Delete
+                tr
+                  th(scope='row') Wonderlabs Sputnik
+                  td Wonderlabs
+                  td Yogyakarta
+                  td 9
+                  td.text-center
+                    .dropdown
+                      button.btn.bg-5.dropdown-toggle.btn-sm.border(type='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
+                        | Action
+                      .dropdown-menu.dropdown-menu-right
+                        a.dropdown-item(href='#')
+                          i.fa.fa-user
+                          |  View
+                        .dropdown-divider
+                        a.dropdown-item(data-toggle='modal', data-target='#deleteModal')
+                          i.fa.fa-trash
+                          |  Delete
+      
+    a.scroll-to-top.rounded(href='#page-top')
+      i.fa.fa-angle-up
+

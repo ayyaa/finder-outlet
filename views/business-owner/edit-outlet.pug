@@ -1,0 +1,205 @@
+extends layout
+
+block content
+  .content-wrapper
+    .container-fluid
+      ol.breadcrumb
+        li.breadcrumb-item
+          h4 Edit Outlet
+      div
+        form.mt-4(action='/action_page.php')
+          .form-group.col-md-6
+            label(for='line') Business:
+            select.custom-select(name='get_atr')
+              option(value='') Business
+              option(value='') Name
+              option(value='') Address
+          .form-group.col-md-6
+            label(for='name') Name of Business:
+            input#pwd.form-control(type='text', placeholder='Name', name='pswd')
+          .form-group.col-md-6
+            label(for='email') Email:
+            input#pwd.form-control(type='text', placeholder='somthing@something.com', name='pswd')
+          .form-group.col-md-6
+            label(for='website') Website:
+            input#website.form-control(type='text', placeholder='http://www.something.com', name='pswd')
+          .form-group.col-md-9
+            label(for='description') Description:
+            textarea.form-control(name='', id='', cols='30', rows='5')  Description about is 
+          label.ml-3(for='description') Address :
+          .form-group.col-md-9.border.ml-3.pt-2
+            .form-row
+              .form-group.col
+                label(for='line1') Line 1
+                input#inputEmail4.form-control(type='text', placeholder='Line 1 address')
+              .form-group.col
+                label(for='line2') Line 2
+                input#inputPassword4.form-control(type='text', placeholder='Line 2 address')
+            .form-row
+              .form-group.col-md-6
+                label(for='line1') Province
+                select.custom-select(name='get_atr')
+                  option(value='') Province
+                  option(value='') Name
+                  option(value='') Address
+              .form-group.col-md-3
+                label(for='line2') City
+                select.custom-select(name='get_atr')
+                  option(value='') City
+                  option(value='') Name
+                  option(value='') Address
+              .form-group.col-md-3
+                label(for='zipcode') Postal code
+                input#inputPassword4.form-control(type='text', placeholder='Postal Code')
+            .form-row
+              .form-group.col-md-4
+                button.btn.btn-secondary.btn-block(type='submit') Geolocate
+            .form-row
+              .form-group.col-md-3
+                label(for='zipcode') Latitude
+                input#inputPassword4.form-control(type='text', placeholder='Latitude', readonly='')
+              .form-group.col-md-3
+                label(for='zipcode') Longitude
+                input#inputPassword4.form-control(type='text', placeholder='Longitude', readonly='')
+            .form-row
+              .form-group.col-md-3
+                a(href='')  View in maps >
+          label.ml-3(for='description') Open Hours :
+          .form-group.col-md-9.border.ml-3.pt-2
+            .form-row
+              .form-group.col
+                h6 Monday
+              .form-group.col
+                .form-check
+                  input#gridCheck.form-check-input(type='checkbox')
+                  label.form-check-label(for='gridCheck')
+                    | Closed
+              .form-group.col
+                select.custom-select(name='get_atr')
+                  option(value='') 08.00
+                  option(value='') Name
+                  option(value='') Address
+              .form-group.col
+                select.custom-select(name='get_atr')
+                  option(value='') 08.00
+                  option(value='') Name
+                  option(value='') Address
+            .form-row
+              .form-group.col
+                h6 Tuesday
+              .form-group.col
+                .form-check
+                  input#gridCheck.form-check-input(type='checkbox')
+                  label.form-check-label(for='gridCheck')
+                    | Closed
+              .form-group.col
+                select.custom-select(name='get_atr')
+                  option(value='') 08.00
+                  option(value='') Name
+                  option(value='') Address
+              .form-group.col
+                select.custom-select(name='get_atr')
+                  option(value='') 08.00
+                  option(value='') Name
+                  option(value='') Address
+            .form-row
+              .form-group.col
+                h6 Wednesday
+              .form-group.col
+                .form-check
+                  input#gridCheck.form-check-input(type='checkbox')
+                  label.form-check-label(for='gridCheck')
+                    | Closed
+              .form-group.col
+                select.custom-select(name='get_atr')
+                  option(value='') 08.00
+                  option(value='') Name
+                  option(value='') Address
+              .form-group.col
+                select.custom-select(name='get_atr')
+                  option(value='') 08.00
+                  option(value='') Name
+                  option(value='') Address
+            .form-row
+              .form-group.col
+                h6 Thursday
+              .form-group.col
+                .form-check
+                  input#gridCheck.form-check-input(type='checkbox')
+                  label.form-check-label(for='gridCheck')
+                    | Closed
+              .form-group.col
+                select.custom-select(name='get_atr')
+                  option(value='') 08.00
+                  option(value='') Name
+                  option(value='') Address
+              .form-group.col
+                select.custom-select(name='get_atr')
+                  option(value='') 08.00
+                  option(value='') Name
+                  option(value='') Address
+            .form-row
+              .form-group.col
+                h6 Friday
+              .form-group.col
+                .form-check
+                  input#gridCheck.form-check-input(type='checkbox')
+                  label.form-check-label(for='gridCheck')
+                    | Closed
+              .form-group.col
+                select.custom-select(name='get_atr')
+                  option(value='') 08.00
+                  option(value='') Name
+                  option(value='') Address
+              .form-group.col
+                select.custom-select(name='get_atr')
+                  option(value='') 08.00
+                  option(value='') Name
+                  option(value='') Address
+            .form-row
+              .form-group.col
+                h6 Saturday
+              .form-group.col
+                .form-check
+                  input#gridCheck.form-check-input(type='checkbox', checked='')
+                  label.form-check-label(for='gridCheck')
+                    | Closed
+              .form-group.col
+                select.custom-select(name='get_atr', disabled='')
+                  option(value='')  
+                  option(value='') Name
+                  option(value='') Address
+              .form-group.col
+                select.custom-select(name='get_atr', disabled='')
+                  option(value='')  
+                  option(value='') Name
+                  option(value='') Address
+            .form-row
+              .form-group.col
+                h6 Sunday
+              .form-group.col
+                .form-check
+                  input#gridCheck.form-check-input(type='checkbox', checked='')
+                  label.form-check-label(for='gridCheck')
+                    | Closed
+              .form-group.col
+                select.custom-select(name='get_atr', disabled='')
+                  option(value='')  
+                  option(value='') Name
+                  option(value='') Address
+              .form-group.col
+                select.custom-select(name='get_atr', disabled='')
+                  option(value='')  
+                  option(value='') Name
+                  option(value='') Address
+            .form-group
+              .form-check
+                input#gridCheck.form-check-input(type='checkbox', checked='')
+                label.form-check-label(for='gridCheck')
+                  | Set as closed on public holiday
+          .form-row
+            .form-group.col-md-2.ml-3
+              button.btn.btn-primary.btn-block(type='submit') Save changes
+    a.scroll-to-top.rounded(href='#page-top')
+      i.fa.fa-angle-up
+

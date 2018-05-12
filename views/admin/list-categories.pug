@@ -1,0 +1,89 @@
+extends layout-admin
+
+block content 
+  .content-wrapper
+    .container-fluid
+      ol.breadcrumb
+        li.breadcrumb-item
+          h4 Categories
+      .card.mb-3
+        .card-header
+          i.fa.fa-table
+          |  Data List Categories
+        .card-body
+          div
+            form.form-inline(method='GET', style='overflow-x:auto;')
+              .form-group.col-md-3
+                input#pwd.form-control(type='text', placeholder='Keyword', name='search', style='width:100%')
+              .form-groupcol-md-3
+                button.btn.btn-success.form-control(type='submit', style='width:100%;')
+                  span.fa.fa-filter
+                  |  Filter
+          .col-md-12
+            .table-responsive.mt-4
+              table#dataTable.table.table-bordered(width='100%', cellspacing='0')
+                thead
+                  tr.bg-2.text-white
+                    th(scope='col') Name
+                    th(scope='col') Num. of Business
+                    th.text-center(scope='col') Action
+                tbody
+                  tr
+                    th(scope='row') Wonderlabs
+                    td 134
+                    td.text-center
+                      .dropdown
+                        button.btn.bg-5.dropdown-toggle.btn-sm.border(type='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
+                          | Action
+                        .dropdown-menu.dropdown-menu-right
+                          a.dropdown-item(href='#')
+                            i.fa.fa-user
+                            |  View
+                          .dropdown-divider
+                          a.dropdown-item(href='#')
+                            i.fa.fa-pencil
+                            |  Edit
+                          .dropdown-divider
+                          a.dropdown-item(data-toggle='modal', data-target='#deleteModal')
+                            i.fa.fa-trash
+                            |  Delete
+                  tr
+                    th(scope='row') Wonderfood
+                    td 45
+                    td.text-center
+                      .dropdown
+                        button.btn.bg-5.dropdown-toggle.btn-sm.border(type='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
+                          | Action
+                        .dropdown-menu.dropdown-menu-right
+                          a.dropdown-item(href='#')
+                            i.fa.fa-user
+                            |  View
+                          .dropdown-divider
+                          a.dropdown-item(href='#')
+                            i.fa.fa-pencil
+                            |  Edit
+                          .dropdown-divider
+                          a.dropdown-item(data-toggle='modal', data-target='#deleteModal')
+                            i.fa.fa-trash
+                            |  Delete
+            nav.float-right(aria-label='Page navigation example')
+              ul.pagination
+                li.page-item
+                  a.page-link(href='#', aria-label='Previous')
+                    span(aria-hidden='true') «
+                    span.sr-only Previous
+                li.page-item
+                  a.page-link(href='#') 1
+                li.page-item
+                  a.page-link(href='#', aria-label='Next')
+                    span(aria-hidden='true') »
+                    span.sr-only Next
+        .card-footer.small.text-muted Updated yesterday at 11:59 PM
+      a.float(href='#')
+        i.fa.fa-plus.fa-2x.my-float
+      .label-container
+        .label-text Add Categories
+        i.fa.fa-play.label-arrow
+    a.scroll-to-top.rounded(href='#page-top')
+      i.fa.fa-angle-up
+

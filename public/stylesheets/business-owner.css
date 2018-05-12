@@ -1,0 +1,179 @@
+html {
+  height: 100%;
+}
+body {
+  padding-top: 54px;
+  min-height: 100%;
+  position: relative;
+  margin : 0;
+  padding-bottom: 8rem;
+
+}
+
+@media (min-width: 992px) {
+  body {
+    padding-top: 56px;
+  }
+}
+.fa-star{
+  color: rgb(223, 198, 58);
+}
+/* .business-header {
+  height: 50vh;
+  min-height: 500px;
+  background: url('http://placehold.it/1920x400') center center no-repeat scroll;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  background-size: cover;
+  -o-background-size: cover;
+} */
+
+/* .sidenav {
+    height: 100%;
+    width: 250px;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    background-color: #111;
+    overflow-x: hidden;
+    padding-top: 24px;
+    margin-top: 60px;
+}
+
+.sidenav h5{
+  color: #f1f1f1;
+  text-align: center
+}
+
+.sidenav a {
+    padding: 6px 8px 6px 30px;
+    text-decoration: none;
+    font-size: 20px;
+    color: #818181;
+    display: block;
+}
+
+.sidenav a:hover {
+    color: #f1f1f1;
+} */
+
+/* .main { */
+    /* margin-left: 250px; Same as the width of the sidenav */
+    /* font-size: 12px; Increased text to enable scrolling */
+    /* padding: 0px 10px; */
+    /* min-height: 720px; */
+/* } */
+
+/* @media screen and (max-height: 450px) {
+    .sidenav {padding-top: 15px;}
+    .sidenav a {font-size: 18px;}
+} */
+
+.bottomright {
+position: absolute;
+overflow: visible !important;
+bottom: 20px;
+right: 30px;
+font-size: 18px;
+}
+
+.media {
+font-size: 14px;
+
+}
+.footer{
+position: absolute;
+bottom: 0;
+left: 0;
+width: 100%;
+}
+
+.bg-7{
+  background-color: #ebeae9;
+  /* color: #d1d3cf; */
+}
+
+.bg-6{
+  background-color: #e7b183;
+  /* color: #d1d3cf; */
+}
+
+.bg-5{
+  background-color: #edfafd;
+  /* color: #d1d3cf; */
+}
+
+.bg-4{
+  background-color: #aed9da
+}
+
+.bg-3{
+  background-color: #3ddad7;
+  /* color: #6b82a8; */
+}
+
+.bg-2{
+  background-color: #2a93d5
+}
+
+.bg-1{
+  background-color: #135589
+}
+
+/* css slider */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+
+.switch input {display:none;}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: green;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px green;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}

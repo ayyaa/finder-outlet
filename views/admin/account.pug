@@ -1,0 +1,86 @@
+extends layout-admin
+
+block content
+  .content-wrapper
+    .container-fluid
+      ol.breadcrumb
+        li.breadcrumb-item
+          h4 My Account
+      .container-fluid.col-sm-12
+        #nav-tab.nav.nav-pills.nav-fill.mt-4(role='tablist')
+          a#nav-basic-info-tab.nav-item.nav-link.pull-right.active(data-toggle='tab', href='#nav-basic-info', role='tab', aria-controls='nav-basic-info', aria-selected='true') Basic info
+          a#nav-change-pass-tab.nav-item.pull-right.nav-link(data-toggle='tab', href='#nav-change-pass', role='tab', aria-controls='nav-change-pass', aria-selected='false') Change password
+          a#nav-security-tab.nav-item.pull-right.nav-link(data-toggle='tab', href='#nav-security', role='tab', aria-controls='nav-security', aria-selected='false') Security
+          a#nav-deactivated-tab.nav-item.pull-right.nav-link(data-toggle='tab', href='#nav-deactivated', role='tab', aria-controls='nav-deactivated', aria-selected='false') Deactivated
+        #nav-tabContent.tab-content
+          #nav-basic-info.tab-pane.fade.show.active.border(role='tabpanel', aria-labelledby='nav-basic-info-tab', style='background-color: white')
+            form.pt-4(action='/action_page.php')
+              .form-row.container
+                .col-md-6
+                  .form-group
+                    label(for='name') Name:
+                    input#name.form-control(type='text', placeholder='Your name', name='name')
+                  .form-group
+                    label(for='username') Username:
+                    input#username.form-control(type='text', placeholder='Your Username', name='username')
+                  .form-group
+                    label(for='email') Email:
+                    input#email.form-control(type='text', placeholder='Your email', name='email')
+                  .form-group
+                    label(for='phone') Phone Number:
+                    input#phone.form-control(type='text', placeholder='Your Phone Number', name='phone')
+                  .form-group
+                    button.btn.btn-primary.btn-block(type='submit') Save
+                .col-md-6
+                  img.img-responsive.rounded.mx-auto.d-block.pb-4.pt-3(src='https://indrawatidaud.files.wordpress.com/2016/12/kotak-tisu-doraemon.jpg', alt='User', width='160', height='auto')
+                  .form-group
+                    input.form-control-file.border.rounded(type='file', width='100%')
+          #nav-change-pass.tab-pane.fade.border(role='tabpanel', aria-labelledby='nav-change-pass-tab', style='background-color: white')
+            form.pt-4(action='/action_page.php')
+              .form-group
+                .form-group.col-md-6
+                  label(for='old-pass') Old Password:
+                  input#pwd.form-control(type='text', placeholder='************', name='pswd')
+                .form-group.col-md-6
+                  label(for='new-pass') Password:
+                  input#pwd.form-control(type='text', placeholder='*************', name='pswd')
+                .form-group.col-md-6
+                  label(for='con-pass') Confirm Password:
+                  input#pwd.form-control(type='text', placeholder='*************', name='pswd')
+                .form-group.col-md-2
+                  button.btn.btn-primary.btn-block(type='submit') Save
+          #nav-security.tab-pane.fade.border(role='tabpanel', aria-labelledby='nav-security-tab', style='background-color: white')
+            form(action='/action_page.php', style='padding:5%')
+              .form-row
+                .form-group.col-md-8.col-sm-10.ml-4
+                  h6 Enable two-factor autentication token
+                .form-group.col-md-2.text-center
+                  label.switch
+                    input(type='checkbox')
+                    span.slider.round
+              .form-row
+                .form-group.col-md-8.col-sm-10.ml-4
+                  h6
+                    | Preven login from other IP address (current IP address : 
+                    a(href='') 144.205.456.32
+                    | )
+                .form-group.col-md-2.text-center
+                  label.switch
+                    input(type='checkbox')
+                    span.slider.round
+              .form-group.col-md-2.m-2
+                button.btn.btn-primary.btn-block(type='submit') Save
+          #nav-deactivated.tab-pane.fade.border(role='tabpanel', aria-labelledby='nav-deactivated-tab', style='background-color: white')
+            form(action='/action_page.php', style='padding:5%')
+              .form-row
+                .form-group.col-md-8.ml-4
+                  h6 Did you want to deactivated your account
+                .form-group
+                  .form-check.col-md-12.ml-4
+                    input#gridCheck.form-check-input(type='checkbox')
+                    label.form-check-label(for='gridCheck')
+                      | I agree that all my data will be deleted and won't be recoverable upon deleted
+              .form-group.col-md-2.m-2
+                button.btn.btn-primary.btn-block(type='submit') Save
+    a.scroll-to-top.rounded(href='#page-top')
+      i.fa.fa-angle-up
