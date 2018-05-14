@@ -1,0 +1,209 @@
+extends layout
+
+block content    
+    div(style='background-color: white')
+      .card.hovercard
+        .card-background
+          img.card-bkimg(alt='', src='https://gl-hr-site-production.s3.ap-southeast-1.amazonaws.com/variants/FTeS2KxDDgMPRkfT71qFw5P5/bb9082b17cfc2941919fb5c68883f83aabecb876e0dfc04960b7a2a3e8b1a0b7?response-content-disposition=inline%3B%20filename%3D%22logo%22%3B%20filename%2A%3DUTF-8%27%27logo&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAIBFWWD2NA7ZPYU4A%2F20180512%2Fap-southeast-1%2Fs3%2Faws4_request&X-Amz-Date=20180512T094516Z&X-Amz-Expires=300&X-Amz-SignedHeaders=host&X-Amz-Signature=d1e6a0c0719a055ca2800236366ef2a707091da4be8db9447ec628fcb518bf99')
+          // http://lorempixel.com/850/280/people/9/
+        .useravatar
+          img(alt='', src='https://gl-hr-site-production.s3.ap-southeast-1.amazonaws.com/variants/FTeS2KxDDgMPRkfT71qFw5P5/bb9082b17cfc2941919fb5c68883f83aabecb876e0dfc04960b7a2a3e8b1a0b7?response-content-disposition=inline%3B%20filename%3D%22logo%22%3B%20filename%2A%3DUTF-8%27%27logo&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAIBFWWD2NA7ZPYU4A%2F20180512%2Fap-southeast-1%2Fs3%2Faws4_request&X-Amz-Date=20180512T094516Z&X-Amz-Expires=300&X-Amz-SignedHeaders=host&X-Amz-Signature=d1e6a0c0719a055ca2800236366ef2a707091da4be8db9447ec628fcb518bf99')
+        .card-info
+          span.card-title
+            | Wonderlabs 
+            br
+            |  Amstrong Campus
+          // <p class="card-title" style="font-size: 13px">Amstrong Campus</p>
+      .row(style='overflow:auto')
+        .col-lg-3.col-12.align-content-center
+          ul.container.p-4
+            .media-body.p-2
+              h4.mt-0 Wonderlabs
+            li.row.p-2(data-placement='right')
+              i.col-1.fas.fa-globe
+              span.col.nav-link-text
+                a(href='https://wonderlabs.io') https://wonderlabs.io
+            li.row.p-2(data-placement='right')
+              i.col-1.fas.fa-phone
+              span.col.nav-link-text 0274 567 840
+            li.row.p-2(data-placement='right')
+              i.col-1.fas.fa-envelope-open
+              span.col.nav-link-text hello@wonderlabs.io 
+            li.row.p-2(data-placement='right')
+              i.col-1.fas.fa-map-marker-alt
+              span.col.nav-link-text Jalan Laksda Adisucipto no 27, Kota Yogyaarta, Depok, 55238
+        .col.container.align-content-center
+          #nav-tab.nav.nav-fill.navi.mr-4(role='tablist')
+            a#nav-home-tab.nav-item.nav-link.pull-right.active(data-toggle='pill', href='#nav-home', role='tab', aria-controls='nav-home', aria-selected='true') Info
+            a#nav-profile-tab.nav-item.pull-right.nav-link(data-toggle='pill', href='#nav-profile', role='tab', aria-controls='nav-profile', aria-selected='false') Maps
+            a#nav-rev-tab.nav-item.pull-right.nav-link(data-toggle='pill', href='#nav-rev', role='tab', aria-controls='nav-rev', aria-selected='false') Review
+            a#nav-outlet-tab.nav-item.pull-right.nav-link(data-toggle='pill', href='#nav-outlet', role='tab', aria-controls='nav-outlet', aria-selected='false') Other Outlet
+          #nav-tabContent.tab-content.pb-4.mr-4
+            #nav-home.container.tab-pane.fade.show.active.mb-4.border(role='tabpanel', aria-labelledby='nav-home-tab', style='background-color: white')
+              .container.pt-3
+                p
+                h5 Wonderlabs Armstrong Campus
+                p
+                p
+                  | Website: 
+                  a(href='https://wonderlabs.io') https://wonderlabs.io
+                p Tel: 0274 567 840
+                p Email: hello@wonderlabs.io
+                p Address: Jalan Laksda Adisucipto no 27, Kota Yogyaarta, Depok, 55238
+                p
+                  | Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
+                table.table.table-striped(style='width:30%')
+                  tr.mt-2
+                    th Day
+                    th Open
+                    th Close
+                  tr
+                    td Monday
+                    td 8.00
+                    td 18.00
+                  tr
+                    td Tuesday
+                    td 8.00
+                    td 18.00
+                  tr
+                    td Wednesday
+                    td 8.00
+                    td 18.00
+                  tr
+                    td Thrusday
+                    td 8.00
+                    td 18.00
+                  tr
+                    td Friday
+                    td 8.00
+                    td 18.00
+            #nav-profile.tab-pane.fade.mb-4.border(role='tabpanel', aria-labelledby='nav-profile-tab', style='background-color: white')
+              .col-lg-12.pt-4
+                iframe(width='100%', height='500px', frameborder='0', scrolling='no', marginheight='0', marginwidth='0', src='https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d63245.983635672164!2d110.33982538316076!3d-7.80316397292277!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e7a5787bd5b6bc5%3A0x21723fd4d3684f71!2sYogyakarta%2C+Kota+Yogyakarta%2C+Daerah+Istimewa+Yogyakarta!5e0!3m2!1sid!2sid!4v1525590578541')
+              .col-lg-12.mt-4.mb-4
+                button.btn.btn-secondary.mb-2.mr-2(type='button') Get Direction
+                button.btn.btn-secondary.mb-2(type='button') Find Similar Bussines
+            #nav-rev.tab-pane.fade.p-4.border(role='tabpanel', aria-labelledby='nav-rev-tab', style='background-color: white')
+              .container
+                p(style='font-size: 20px') Review
+                .mt-2
+                  .pt-2.pb-2.mb-2
+                    .divider.mb-2
+                    h5 Anonim
+                    p
+                      | 2 days Ago 
+                      a(href='#')
+                        i.fas.fa-flag
+                    p
+                      | Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
+                    div(style='color: orange')
+                      i.fa.fa-star
+                      i.fa.fa-star
+                      i.fa.fa-star
+                      i.fa.fa-star
+                      i.fa.fa-star
+                  .pt-2.pb-2.mb-2
+                    .divider.mb-2
+                    h5 Anonim
+                    p
+                      | 2 days Ago 
+                      a(href='#')
+                        i.fas.fa-flag
+                    p
+                      | Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
+                    i.fa.fa-star(style='color: orange')
+                    i.fa.fa-star(style='color: orange')
+                    i.fa.fa-star
+                    i.fa.fa-star
+                    i.fa.fa-star
+                  p
+                    a(href='#') More Reviews>
+                  // Button trigger modal
+                  button.btn.btn-primary(type='button', data-toggle='modal', data-target='#exampleModal')
+                    | Write Reviews
+                  // Modal
+                  #exampleModal.modal.fade(tabindex='-1', role='dialog', aria-labelledby='exampleModalLabel', aria-hidden='true')
+                    .modal-dialog(role='document')
+                      .modal-content
+                        .modal-header
+                          h5#exampleModalLabel.modal-title Write Reviews
+                          button.close(type='button', data-dismiss='modal', aria-label='Close')
+                            span(aria-hidden='true') ×
+                        .modal-body
+                          form
+                            .form-group
+                              label Name
+                              input.form-control(type='text', placeholder='Enter name')
+                            .form-group
+                              label(for='exampleInputEmail1') Email address
+                              input#exampleInputEmail1.form-control(type='email', aria-describedby='emailHelp', placeholder='Enter email')
+                              small#emailHelp.form-text.text-muted We'll never share your email with anyone else.
+                            .form-group
+                              label Review
+                              textarea.form-control(placeholder='Write Review Here')
+                            .form-group
+                              label Rating
+                              br
+                              fieldset.rating
+                                input#star5(type='radio', name='rating', value='5')
+                                label.full(for='star5', title='Awesome - 5 stars')
+                                input#star4half(type='radio', name='rating', value='4 and a half')
+                                label.half(for='star4half', title='Pretty good - 4.5 stars')
+                                input#star4(type='radio', name='rating', value='4')
+                                label.full(for='star4', title='Pretty good - 4 stars')
+                                input#star3half(type='radio', name='rating', value='3 and a half')
+                                label.half(for='star3half', title='Meh - 3.5 stars')
+                                input#star3(type='radio', name='rating', value='3')
+                                label.full(for='star3', title='Meh - 3 stars')
+                                input#star2half(type='radio', name='rating', value='2 and a half')
+                                label.half(for='star2half', title='Kinda bad - 2.5 stars')
+                                input#star2(type='radio', name='rating', value='2')
+                                label.full(for='star2', title='Kinda bad - 2 stars')
+                                input#star1half(type='radio', name='rating', value='1 and a half')
+                                label.half(for='star1half', title='Meh - 1.5 stars')
+                                input#star1(type='radio', name='rating', value='1')
+                                label.full(for='star1', title='Sucks big time - 1 star')
+                                input#starhalf(type='radio', name='rating', value='half')
+                                label.half(for='starhalf', title='Sucks big time - 0.5 stars')
+                            .modal-footer
+                              button.btn.btn-secondary(type='button', data-dismiss='modal') Close
+                              button.btn.btn-primary(type='button') Send Review
+            #nav-outlet.tab-pane.fade.border.p-4(role='tabpanel', aria-labelledby='nav-outlet-tab', style='background-color: white')
+              .container
+                p(style='font-size: 20px') Other Outlet
+                .divider.mb-2
+                .mt-2
+                  table.table.table-striped(style='width:100%')
+                    tr.mt-2
+                      th
+                        | Name
+                      th
+                        | City
+                      th
+                    tr.mt-2
+                      td Wonderlabs Explore Campus
+                      td Yogyakarta
+                      td
+                        a(href='#') View Outlet
+                    tr.mt-2
+                      td Wonderlabs Sputnik Campus
+                      td Yogyakarta
+                      td
+                        a(href='#') View Outlet
+                    tr.mt-2
+                      td Wonderlabs Houston Campus
+                      td 8.00
+                      td
+                        a(href='#') View Outlet
+    footer.footer.py-2
+      .row
+        .col-sm(style='color: white')
+          .container(style='font-size:12px')
+            span Copyright @ 2018 - Wonderlabs Academy
+            br
+            span All Right Reserved
+        .col-sm.block
+          .container.block
+            .float-right(style='font-size:12px')
+              a.block.mr-8.ml-4.text-light(href='#') Term of Use
+              a.block.mr-8.ml-4.text-light(href='#') Privacy Policy

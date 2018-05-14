@@ -1,0 +1,39 @@
+extends layout-form
+
+block content
+    .limiter
+      .container-login100
+        .wrap-login100
+          form.login100-form.validate-form
+            span.p-b-15.content-center.p-l-80
+              img(src='../images/logo6.png', alt='logo', width='120')
+            span.login100-form-title.p-b-2
+              | Sign in
+            span.login100-form-title.p-b-48
+              i.zmdi.zmdi-font
+            .wrap-input100.validate-input(data-validate='Valid email is: a@b.c')
+              input.input100(type='text', name='email')
+              span.focus-input100(data-placeholder='Email or Username')
+            .wrap-input100.validate-input(data-validate='Enter password')
+              span.btn-show-pass
+                i.zmdi.zmdi-eye
+              input.input100(type='password', name='pass')
+              span.focus-input100(data-placeholder='Password')
+            .container-login100-form-btn
+              .wrap-login100-form-btn
+                .login100-form-bgbtn
+                button.login100-form-btn
+                  | Login
+            .text-center.p-t-115
+              span.txt1
+                | Don’t have an account? 
+              a.txt2(href='/regist')
+                |  Sign Up |
+              a.txt2(href='/forgot')
+                |  Forgot Password
+            .text-center.p-t-4
+              span.txt1
+                | or Back to
+              a.txt2(href='/')
+                |  Home
+    #dropDownSelect1

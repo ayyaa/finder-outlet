@@ -1,0 +1,264 @@
+extends layout
+
+block content
+    header.search.border-bottom(style='background-color:#edfafd')
+      .ml-auto
+        .row
+          .col-md-12
+            form.container.ml-auto.form-inline.mt-4
+              .from-group.col-md-3
+                select.option-index.border.bg-white.mb-2.form-control(name='city', style='width: 100%;')
+                  option(value='') Select City...
+                  option(value='jogja') Yogyakarta
+                  option(value='semarang') Semarang
+                  option(value='jakarta') Jakarta
+                  option(value='bandung') Bandung
+                  option(value='surabaya') Surabaya
+                  option(value='kudus') Kudus
+              .from-group.col-md-3
+                select.option-index.border.bg-white.mb-2.form-control(name='category', style='width: 100%;')
+                  option(value='') Select Line of Bussines
+                  option(value='arts') Arts
+                  option(value='computers') Computers
+                  option(value='games') Games
+              .from-group.col-md-3
+                input.form-control.input-index.border.rounded.mb-2(type='text', placeholder='keyword', name='keyword', style='width: 100%;')
+              .from-group.col-md-3
+                button.btn.btn-secondary.mb-2(type='button', onclick='search_list.html')
+                  i.fas.fa-filter.mr-1
+                  | Search
+    // Page Content
+    .list.bg-white
+      .centered.ml-auto
+        .row.p-3
+          .col-sm.mr-4
+            div
+              .media
+                .media-body.mb-4
+                  h5
+                    a.text-dark(href='#') Arts
+                  a.text-dark(href='#') Toko bunga yogyakarta
+                  | ,
+                  a.text-dark(href='#') Toko lukisan indah
+                  | ,
+                  a.text-dark(href='#') Toko barang antik "UNIQ"
+                  | ,
+                  a.text-dark(href='#') Toko hiasan "Monalisa"
+                  | ,
+                  a.text-dark(href='#') Batu akik raja
+                  | ,
+                  a(href='#')  view more>
+              .media
+                .media-body.mb-4
+                  h5
+                    a.text-dark(href='#') Business
+                  a.text-dark(href='#') Konsultan dagang & bisnis Kaliurang
+                  | ,
+                  a.text-dark(href='#') Wonderlabs
+                  | ,
+                  a.text-dark(href='#') Milenium Danatama Investasindo
+                  | ,
+                  a.text-dark(href='#') Lorem Ipsum dolor
+                  | ,
+                  a.text-dark(href='#') kursi direktur 
+              .media
+                .media-body.mb-4
+                  h5
+                    a.text-dark(href='#') Computers
+                  a.text-dark(href='#') Toko bunga yogyakarta
+                  | ,
+                  a.text-dark(href='#') Toko lukisan indah
+                  | ,
+                  a.text-dark(href='#') Toko barang antik "UNIQ"
+                  | ,
+                  a.text-dark(href='#') Toko hiasan "Monalisa"
+                  | ,
+                  a.text-dark(href='#') Batu akik raja
+                  | ,
+                  a(href='#')  view more>
+              .media
+                .media-body.mb-4
+                  h5
+                    a.text-dark(href='#') Games
+                  a.text-dark(href='#') Konsultan dagang & bisnis Kaliurang
+                  | ,
+                  a.text-dark(href='#') Wonderlabs
+                  | ,
+                  a.text-dark(href='#') Milenium Danatama Investasindo
+                  | ,
+                  a.text-dark(href='#') Lorem Ipsum dolor
+                  | ,
+                  a.text-dark(href='#') kursi direktur 
+              .media
+                .media-body.mb-4
+                  h5
+                    a.text-dark(href='#') Health
+                  a.text-dark(href='#') Toko bunga yogyakarta
+                  | ,
+                  a.text-dark(href='#') Toko lukisan indah
+                  | ,
+                  a.text-dark(href='#') Toko barang antik "UNIQ"
+                  | ,
+                  a.text-dark(href='#') Toko hiasan "Monalisa"
+                  | ,
+                  a.text-dark(href='#') Batu akik raja
+                  | ,
+                  a(href='#')  view more>
+          .col-sm.mr-4
+            div
+              .media
+                .media-body.mb-4
+                  h5
+                    a.text-dark(href='#') News
+                  a.text-dark(href='#') Toko bunga yogyakarta
+                  | ,
+                  a.text-dark(href='#') Toko lukisan indah
+                  | ,
+                  a.text-dark(href='#') Toko barang antik "UNIQ"
+                  | ,
+                  a.text-dark(href='#') Toko hiasan "Monalisa"
+                  | ,
+                  a.text-dark(href='#') Batu akik raja
+                  | ,
+                  a(href='#')  view more>
+              .media
+                .media-body.mb-4
+                  h5
+                    a.text-dark(href='#') Recreation
+                  a.text-dark(href='#') Konsultan dagang & bisnis Kaliurang
+                  | ,
+                  a.text-dark(href='#') Wonderlabs
+                  | ,
+                  a.text-dark(href='#') Milenium Danatama Investasindo
+                  | ,
+                  a.text-dark(href='#') Lorem Ipsum dolor
+                  | ,
+                  a.text-dark(href='#') kursi direktur 
+              .media
+                .media-body.mb-4
+                  h5
+                    a.text-dark(href='#') Reference
+                  a.text-dark(href='#') Toko bunga yogyakarta
+                  | ,
+                  a.text-dark(href='#') Toko lukisan indah
+                  | ,
+                  a.text-dark(href='#') Toko barang antik "UNIQ"
+                  | ,
+                  a.text-dark(href='#') Toko hiasan "Monalisa"
+                  | ,
+                  a.text-dark(href='#') Batu akik raja
+                  | ,
+                  a(href='#')  view more>
+              .media
+                .media-body.mb-4
+                  h5
+                    a.text-dark(href='#') Regional
+                  a.text-dark(href='#') Konsultan dagang & bisnis Kaliurang
+                  | ,
+                  a.text-dark(href='#') Wonderlabs
+                  | ,
+                  a.text-dark(href='#') Milenium Danatama Investasindo
+                  | ,
+                  a.text-dark(href='#') Lorem Ipsum dolor
+                  | ,
+                  a.text-dark(href='#') kursi direktur 
+              .media
+                .media-body.mb-4
+                  h5
+                    a.text-dark(href='#') Science
+                  a.text-dark(href='#') Toko bunga yogyakarta
+                  | ,
+                  a.text-dark(href='#') Toko lukisan indah
+                  | ,
+                  a.text-dark(href='#') Toko barang antik "UNIQ"
+                  | ,
+                  a.text-dark(href='#') Toko hiasan "Monalisa"
+                  | ,
+                  a.text-dark(href='#') Batu akik raja
+                  | ,
+                  a(href='#')  view more>
+          .col-sm
+            div
+              .media
+                .media-body.mb-4
+                  h5
+                    a.text-dark(href='#') Arts
+                  a.text-dark(href='#') Toko bunga yogyakarta
+                  | ,
+                  a.text-dark(href='#') Toko lukisan indah
+                  | ,
+                  a.text-dark(href='#') Toko barang antik "UNIQ"
+                  | ,
+                  a.text-dark(href='#') Toko hiasan "Monalisa"
+                  | ,
+                  a.text-dark(href='#') Batu akik raja
+                  | ,
+                  a(href='#')  view more>
+              .media
+                .media-body.mb-4
+                  h5
+                    a.text-dark(href='#') Business
+                  a.text-dark(href='#') Konsultan dagang & bisnis Kaliurang
+                  | ,
+                  a.text-dark(href='#') Wonderlabs
+                  | ,
+                  a.text-dark(href='#') Milenium Danatama Investasindo
+                  | ,
+                  a.text-dark(href='#') Lorem Ipsum dolor
+                  | ,
+                  a.text-dark(href='#') kursi direktur 
+              .media
+                .media-body.mb-4
+                  h5
+                    a.text-dark(href='#') Arts
+                  a.text-dark(href='#') Toko bunga yogyakarta
+                  | ,
+                  a.text-dark(href='#') Toko lukisan indah
+                  | ,
+                  a.text-dark(href='#') Toko barang antik "UNIQ"
+                  | ,
+                  a.text-dark(href='#') Toko hiasan "Monalisa"
+                  | ,
+                  a.text-dark(href='#') Batu akik raja
+                  | ,
+                  a(href='#')  view more>
+              .media
+                .media-body.mb-4
+                  h5
+                    a.text-dark(href='#') Business
+                  a.text-dark(href='#') Konsultan dagang & bisnis Kaliurang
+                  | ,
+                  a.text-dark(href='#') Wonderlabs
+                  | ,
+                  a.text-dark(href='#') Milenium Danatama Investasindo
+                  | ,
+                  a.text-dark(href='#') Lorem Ipsum dolor
+                  | ,
+                  a.text-dark(href='#') kursi direktur 
+              .media
+                .media-body.mb-4
+                  h5
+                    a.text-dark(href='#') Arts
+                  a.text-dark(href='#') Toko bunga yogyakarta
+                  | ,
+                  a.text-dark(href='#') Toko lukisan indah
+                  | ,
+                  a.text-dark(href='#') Toko barang antik "UNIQ"
+                  | ,
+                  a.text-dark(href='#') Toko hiasan "Monalisa"
+                  | ,
+                  a.text-dark(href='#') Batu akik raja
+                  | ,
+                  a(href='#')  view more>
+    footer.footer.py-2.bg-1
+      .row
+        .col-sm(style='color: white')
+          .container(style='font-size:12px')
+            span Copyright @ 2018 - Wonderlabs Academy
+            br
+            span All Right Reserved
+        .col-sm.block
+          .container.block
+            .float-right(style='font-size:12px')
+              a.block.mr-8.ml-4.text-light(href='#') Term of Use
+              a.block.mr-8.ml-4.text-light(href='#') Privacy Policy
