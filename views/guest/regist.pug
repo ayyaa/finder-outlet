@@ -1,0 +1,33 @@
+extends layout-form
+
+block content
+    .limiter
+      .container-login100
+        .wrap-login100
+          form.login100-form.validate-form
+            span.login100-form-title.p-b-2
+              | Sign up
+            // <img src="imageedit_12_7024664115.png" alt="logo" width="25">
+            //
+              <span class="p-b-10 content-center p-l-45">
+              <img src="logo2.png" alt="logo" width="200">
+              </span>
+            span.login100-form-title.p-b-48
+              i.zmdi.zmdi-font
+            .wrap-input100.validate-input
+              input.input100(type='text', name='username')
+              span.focus-input100(data-placeholder='Username')
+            .wrap-input100.validate-input(data-validate='Valid email is: a@b.c')
+              input.input100(type='text', name='email')
+              span.focus-input100(data-placeholder='Email')
+            .container-login100-form-btn
+              .wrap-login100-form-btn
+                .login100-form-bgbtn
+                button.login100-form-btn
+                  | Sign up
+            .text-center.p-t-115
+              span.txt1
+                | Back to
+              a.txt2(href='/')
+                |   Home
+    #dropDownSelect1

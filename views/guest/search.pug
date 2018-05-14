@@ -1,0 +1,108 @@
+extends layout
+
+block content  
+    header.search(style='background-color:white')
+      .search(style='background-color:#edfafd')
+        .ml-auto
+          .row
+            .col-md-12
+              form.container.ml-auto.form-inline.mt-4
+                .from-group.col-md-3
+                  select.option-index.border.bg-white.mb-2.form-control(name='city', style='width: 100%;')
+                    option(value='') Select City...
+                    option(value='jogja') Yogyakarta
+                    option(value='semarang') Semarang
+                    option(value='jakarta') Jakarta
+                    option(value='bandung') Bandung
+                    option(value='surabaya') Surabaya
+                    option(value='kudus') Kudus
+                .from-group.col-md-3
+                  select.option-index.border.bg-white.mb-2.form-control(name='category', style='width: 100%;')
+                    option(value='') Select Line of Bussines
+                    option(value='arts') Arts
+                    option(value='computers') Computers
+                    option(value='games') Games
+                .from-group.col-md-3
+                  input.form-control.input-index.border.rounded.mb-2(type='text', placeholder='keyword', name='keyword', style='width: 100%;')
+                .from-group.col-md-3
+                  button.btn.btn-secondary.mb-2(type='button', onclick='search_list.html')
+                    i.fas.fa-filter.mr-1
+                    | Search
+      div(style='background-color:#edfafd')
+        .ml-auto.container.pt-3.align-content-center
+          #nav-tab.nav.nav-tabs(role='tablist')
+            a#nav-home-tab.nav-item.nav-link.pull-right.active(data-toggle='tab', href='#nav-home', role='tab', aria-controls='nav-home', aria-selected='true') List
+            a#nav-profile-tab.nav-item.pull-right.nav-link(data-toggle='tab', href='#nav-profile', role='tab', aria-controls='nav-profile', aria-selected='false') Maps
+          #nav-tabContent.tab-content.pb-4
+            #nav-home.container.tab-pane.fade.show.active.border-right.border-left.border-bottom.mb-4(role='tabpanel', aria-labelledby='nav-home-tab', style='background-color: white')
+              .container.media
+                img.align-self-start.mr-3.mt-4(src='https://cdn0.iconfinder.com/data/icons/bbq/512/bread-256.png', alt='Generic placeholder image', width='64px', height='64px')
+                .media-body.mt-4
+                  h5.mt-0 Top-aligned media
+                  p
+                    | Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
+              .container.media
+                img.align-self-start.mr-3.mt-4(src='https://png.icons8.com/color/1600/small-business.png', alt='Generic placeholder image', width='64px', height='64px')
+                .media-body.mt-4
+                  h5.mt-0 Top-aligned media
+                  p
+                    | Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
+              .container.media
+                img.align-self-start.mr-3.mt-4(src='https://png.icons8.com/color/1600/slr-small-lens.png', alt='Generic placeholder image', width='64px', height='64px')
+                .media-body.mt-4
+                  h5.mt-0 Top-aligned media
+                  p
+                    | Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
+              .container.media
+                img.align-self-start.mr-3.mt-4(src='https://cdn1.iconfinder.com/data/icons/devices-7/128/devices-10-256.png', alt='Generic placeholder image', width='64px', height='64px')
+                .media-body.mt-4
+                  h5.mt-0 Top-aligned media
+                  p
+                    | Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
+              .container.media
+                img.align-self-start.mr-3.mt-4(src='https://cdn0.iconfinder.com/data/icons/bbq/512/bread-256.png', alt='Generic placeholder image', width='64px', height='64px')
+                .media-body.mt-4
+                  h5.mt-0 Top-aligned media
+                  p
+                    | Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
+              .container.media
+                img.align-self-start.mr-3.mt-4(src='https://cdn0.iconfinder.com/data/icons/bbq/512/bread-256.png', alt='Generic placeholder image', width='64px', height='64px')
+                .media-body.mt-4
+                  h5.mt-0 Top-aligned media
+                  p
+                    | Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
+              nav(aria-label='Page navigation')
+                ul.pagination.d-flex.justify-content-center
+                  li.page-item
+                    a.page-link(href='#', aria-label='Previous')
+                      span(aria-hidden='true') «
+                      span.sr-only Previous
+                  li.page-item
+                    a.page-link(href='#') 1
+                  li.page-item
+                    a.page-link(href='#') 2
+                  li.page-item
+                    a.page-link(href='#') 3
+                  li.page-item
+                    a.page-link(href='#', aria-label='Next')
+                      span(aria-hidden='true') »
+                      span.sr-only Next
+            #nav-profile.tab-pane.fade.border-right.border-left.border-bottom.mb-4(role='tabpanel', aria-labelledby='nav-profile-tab', style='background-color: white')
+              iframe(width='100%', height='600px', frameborder='0', scrolling='no', marginheight='0', marginwidth='0', src='https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d63245.983635672164!2d110.33982538316076!3d-7.80316397292277!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e7a5787bd5b6bc5%3A0x21723fd4d3684f71!2sYogyakarta%2C+Kota+Yogyakarta%2C+Daerah+Istimewa+Yogyakarta!5e0!3m2!1sid!2sid!4v1525590578541')
+    // Page Content
+    // /.container
+    // Footer
+    footer.footer.py-2.bg-dark
+      .row
+        .col-sm(style='color: white')
+          .container(style='font-size:12px')
+            span Copyright @ 2018 - Wonderlabs Academy
+            br
+            span All Right Reserved
+        .col-sm.block
+          .container.block
+            .float-right(style='font-size:12px')
+              a.block.mr-8.ml-4.text-light(href='#') Term of Use
+              a.block.mr-8.ml-4.text-light(href='#') Privacy Policy
+      // /.container
+

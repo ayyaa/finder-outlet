@@ -1,0 +1,25 @@
+extends layout-form
+
+block content
+    .limiter
+      .container-login100
+        .wrap-login100
+          form.login100-form.validate-form
+            span.login100-form-title.p-b-2
+              | Forgot Password
+            span.login100-form-title.p-b-48
+              i.zmdi.zmdi-font
+            .wrap-input100.validate-input(data-validate='Valid email is: a@b.c')
+              input.input100(type='text', name='email')
+              span.focus-input100(data-placeholder='Your Email Address')
+            .container-login100-form-btn
+              .wrap-login100-form-btn
+                .login100-form-bgbtn
+                button.login100-form-btn
+                  | Reset my Password
+            .text-center.p-t-115
+              span.txt1
+                | or Back to
+              a.txt2(href='/')
+                |  Home
+    #dropDownSelect1
