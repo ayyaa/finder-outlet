@@ -1,0 +1,167 @@
+extends layout
+
+block content 
+  .bg-light.pt-4.pb-4
+    .content-wrapper.container
+      .container-fluid
+        ol.breadcrumb
+          li.breadcrumb-item
+            h4 Reviews
+        .card.mb-3
+          .card-header
+            i.fa.fa-table
+            |  Data List Reviews
+          .card-body
+            div.col-md-12
+              form.form-inline(method='GET', style='overflow-x:auto;')
+                .form-group.col-md-3
+                  input#pwd.form-control(type='text', placeholder='Keyword', name='search', style='width:100%;')
+                .form-group.col-md-3
+                  select.custom-select.form-control(style='width:100%;', name='get_atr')
+                    option(value='') Business
+                    option(value='') Name
+                    option(value='') Address
+                .form-group.col-md-2
+                  select.custom-select.form-control(style='width:100%;', name='get_atr')
+                    option(value='') Outlets
+                    option(value='') Name
+                    option(value='') Address
+                .form-group.col-md-2
+                  button.btn.btn-success.form-control(type='submit', style='width:100%;')
+                    span.fa.fa-filter
+                    |  Filter
+            .col-md-10
+              .media.mt-2.container
+                .media-body
+                  .mt-0
+                    .pt-2.pb-2.mb-2
+                      .divider.mb-2
+                      span.pb-1(style='font-size: 16px') Anonim
+                      p(style='font-size: 12px; color:#808080')
+                        | 2 days Ago 
+                        a(data-toggle='modal', data-target='#exampleModal2')
+                          i.fas.fa-flag(data-toggle="tooltip" data-placement="right" title="Cick to report review")
+                      p(style='color:#4d4d4d')
+                        | Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
+                      div(style='color: orange')
+                        i.fa.fa-star
+                        i.fa.fa-star
+                        i.fa.fa-star
+                        i.fa.fa-star
+                        i.fa.fa-star
+              .media.container
+                .media-body
+                  .mt-0
+                    .pt-2.pb-2.mb-2
+                      .divider.mb-2
+                      span.pb-1(style='font-size: 16px') Anonim
+                      p(style='font-size: 12px; color:#808080')
+                        | 2 days Ago 
+                        a(data-toggle='modal', data-target='#exampleModal2')
+                          i.fas.fa-flag(data-toggle="tooltip" data-placement="right" title="Cick to report review")
+                      p(style='color:#4d4d4d')
+                        | Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
+                      div(style='color: orange')
+                        i.fa.fa-star
+                        i.fa.fa-star
+                        i.fa.fa-star
+                        i.fa.fa-star
+                        i.fa.fa-star
+              .media.container
+                .media-body
+                  .mt-0
+                    .pt-2.pb-2.mb-2
+                      .divider.mb-2
+                      span.pb-1(style='font-size: 16px') Anonim
+                      p(style='font-size: 12px; color:#808080')
+                        | 2 days Ago 
+                        a(data-toggle='modal', data-target='#exampleModal2')
+                          i.fas.fa-flag(data-toggle="tooltip" data-placement="right" title="Cick to report review")
+                      p(style='color:#4d4d4d')
+                        | Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
+                      div(style='color: orange')
+                        i.fa.fa-star
+                        i.fa.fa-star
+                        i.fa.fa-star
+                        i.fa.fa-star
+                        i.fa.fa-star
+              .media.container
+                .media-body
+                  .mt-0
+                    .pt-2.pb-2.mb-2
+                      .divider.mb-2
+                      span.pb-1(style='font-size: 16px') Anonim
+                      p(style='font-size: 12px; color:#808080')
+                        | 2 days Ago 
+                        a(data-toggle='modal', data-target='#exampleModal2')
+                          i.fas.fa-flag(data-toggle="tooltip" data-placement="right" title="Cick to report review")
+                      p(style='color:#4d4d4d')
+                        | Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
+                      div(style='color: orange')
+                        i.fa.fa-star
+                        i.fa.fa-star
+                        i.fa.fa-star
+                        i.fa.fa-star
+                        i.fa.fa-star
+              .media.container
+                .media-body
+                  .mt-0
+                    .pt-2.pb-2.mb-2
+                      .divider.mb-2
+                      span.pb-1(style='font-size: 16px') Anonim
+                      p(style='font-size: 12px; color:#808080')
+                        | 2 days Ago 
+                        a(data-toggle='modal', data-target='#exampleModal2')
+                          i.fas.fa-flag(data-toggle="tooltip" data-placement="right" title="Cick to report review")
+                      p(style='color:#4d4d4d')
+                        | Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
+                      div(style='color: orange')
+                        i.fa.fa-star
+                        i.fa.fa-star
+                        i.fa.fa-star
+                        i.fa.fa-star
+                        i.fa.fa-star
+              .media.container
+                .media-body
+                  .mt-0
+                    .pt-2.pb-2.mb-2
+                      .divider.mb-2
+                      span.pb-1(style='font-size: 16px') Anonim
+                      p(style='font-size: 12px; color:#808080')
+                        | 2 days Ago 
+                        a(data-toggle='modal', data-target='#exampleModal2')
+                          i.fas.fa-flag(data-toggle="tooltip" data-placement="right" title="Cick to report review")
+                      p(style='color:#4d4d4d')
+                        | Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
+                      div(style='color: orange')
+                        i.fa.fa-star
+                        i.fa.fa-star
+                        i.fa.fa-star
+                        i.fa.fa-star
+                        i.fa.fa-star
+              nav.float-right.mt-4(aria-label='Page navigation example')
+                ul.pagination
+                  li.page-item
+                    a.page-link(href='#', aria-label='Previous')
+                      span(aria-hidden='true') «
+                      span.sr-only Previous
+                  li.page-item
+                    a.page-link(href='#') 1
+                  li.page-item
+                    a.page-link(href='#', aria-label='Next')
+                      span(aria-hidden='true') »
+                      span.sr-only Next
+          .card-footer.small.text-muted Updated yesterday at 11:59 PM
+    footer.footer.py-2
+      .row
+        .col-sm(style='color: white')
+          .container(style='font-size:12px')
+            span Copyright @ 2018 - Wonderlabs Academy
+            br
+            span All Right Reserved
+        .col-sm.block
+          .container.block
+            .float-right(style='font-size:12px')
+              a.block.mr-8.ml-4.text-light(href='#') Term of Use
+              a.block.mr-8.ml-4.text-light(href='#') Privacy Policy
+

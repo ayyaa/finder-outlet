@@ -29,4 +29,8 @@ router.get('/outletinfo', function(req, res, next) {
 router.get('/search', function(req, res, next) {
   res.render('guest/search', { title: 'Express' });
 });
+
+router.get('/reviews', function(req, res, next) {
+  res.render('guest/review', { title: 'Express' });
+});
 module.exports = router;

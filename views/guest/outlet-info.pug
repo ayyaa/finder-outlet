@@ -2,13 +2,13 @@ extends layout
 
 block content    
     div(style='background-color: white')
-      .card.hovercard
-        .card-background
+      .card.hovercard.crd
+        .card-background.crd
           img.card-bkimg(alt='', src='../images/wonderlabs.png')
         .useravatar
           img(alt='', src='../images/wonderlabs.png')
-        .card-info
-          span.card-title
+        .card-info.crd
+          span.card-title.crd
             | Wonderlabs 
             br
             |  Amstrong Campus
@@ -33,15 +33,15 @@ block content
               span.col.nav-link-text Jalan Laksda Adisucipto no 27, Kota Yogyaarta, Depok, 55238
         .col.container.align-content-center
           #nav-tab.nav.nav-fill.navi.mr-4(role='tablist')
-            a#nav-home-tab.nav-item.nav-link.pull-right.active(data-toggle='pill', href='#nav-home', role='tab', aria-controls='nav-home', aria-selected='true') Info
-            a#nav-profile-tab.nav-item.pull-right.nav-link(data-toggle='pill', href='#nav-profile', role='tab', aria-controls='nav-profile', aria-selected='false') Maps
-            a#nav-rev-tab.nav-item.pull-right.nav-link(data-toggle='pill', href='#nav-rev', role='tab', aria-controls='nav-rev', aria-selected='false') Review
-            a#nav-outlet-tab.nav-item.pull-right.nav-link(data-toggle='pill', href='#nav-outlet', role='tab', aria-controls='nav-outlet', aria-selected='false') Other Outlet
+            a#nav-home-tab.nav-item.nav-link.pull-right.text-grey.active(data-toggle='pill', href='#nav-home', role='tab', aria-controls='nav-home', aria-selected='true') Info
+            a#nav-profile-tab.nav-item.pull-right.nav-link.text-grey(data-toggle='pill', href='#nav-profile', role='tab', aria-controls='nav-profile', aria-selected='false') Maps
+            a#nav-rev-tab.nav-item.pull-right.nav-link.text-grey(data-toggle='pill', href='#nav-rev', role='tab', aria-controls='nav-rev', aria-selected='false') Review
+            a#nav-outlet-tab.nav-item.pull-right.nav-link.text-grey(data-toggle='pill', href='#nav-outlet', role='tab', aria-controls='nav-outlet', aria-selected='false') Other Outlet
           #nav-tabContent.tab-content.pb-4.mr-4
             #nav-home.container.tab-pane.fade.show.active.mb-4.border(role='tabpanel', aria-labelledby='nav-home-tab', style='background-color: white')
-              .container.pt-3
+              .container.pt-3(style='color:#404040')
                 p
-                h5 Wonderlabs Armstrong Campus
+                h5(style='color:black') Wonderlabs Armstrong Campus
                 p
                 p
                   | Website: 
@@ -88,12 +88,12 @@ block content
                 .mt-2
                   .pt-2.pb-2.mb-2
                     .divider.mb-2
-                    h5 Anonim
-                    p
+                    span.pb-1(style='font-size: 16px') Anonim
+                    p(style='font-size: 12px; color:#808080')
                       | 2 days Ago 
-                      a(href='#')
-                        i.fas.fa-flag
-                    p
+                      a(data-toggle='modal', data-target='#exampleModal2')
+                        i.fas.fa-flag(data-toggle="tooltip" data-placement="right" title="Cick to report review")
+                    p(style='color:#4d4d4d')
                       | Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
                     div(style='color: orange')
                       i.fa.fa-star
@@ -103,12 +103,12 @@ block content
                       i.fa.fa-star
                   .pt-2.pb-2.mb-2
                     .divider.mb-2
-                    h5 Anonim
-                    p
+                    span.pb-1(style='font-size: 16px') Anonim
+                    p(style='font-size: 12px; color:#808080')
                       | 2 days Ago 
-                      a(href='#')
-                        i.fas.fa-flag
-                    p
+                      a(data-toggle='modal', data-target='#exampleModal2')
+                        i.fas.fa-flag(data-toggle="tooltip" data-placement="right" title="Click to report review")
+                    p(style='color:#4d4d4d')
                       | Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
                     i.fa.fa-star(style='color: orange')
                     i.fa.fa-star(style='color: orange')
@@ -116,7 +116,7 @@ block content
                     i.fa.fa-star
                     i.fa.fa-star
                   p
-                    a(href='#') More Reviews>
+                    a(href='/reviews') More Reviews>
                   // Button trigger modal
                   button.btn.btn-primary(type='button', data-toggle='modal', data-target='#exampleModal')
                     | Write Reviews
@@ -167,6 +167,31 @@ block content
                             .modal-footer
                               button.btn.btn-secondary(type='button', data-dismiss='modal') Close
                               button.btn.btn-primary(type='button') Send Review
+                  #exampleModal2.modal.fade(tabindex='-1', role='dialog', aria-labelledby='exampleModalLabel', aria-hidden='true')
+                    .modal-dialog(role='document')
+                      .modal-content
+                        .modal-header
+                          h5#exampleModalLabel.modal-title Report review
+                          button.close(type='button', data-dismiss='modal', aria-label='Close')
+                            span(aria-hidden='true') ×
+                        .modal-body
+                          form
+                            .form-group
+                              label(for='exampleInputEmail1') Email address
+                              input#exampleInputEmail1.form-control(type='email', aria-describedby='emailHelp', placeholder='Enter email')
+                              small#emailHelp.form-text.text-muted We'll never share your email with anyone else.
+                            .form-group
+                              label choose a reason for reporting this review
+                              .radio.p-1
+                                input(type='radio', name='gender', value='1')
+                                |  it's spam
+                              .radio.p-1
+                                input(type='radio', name='gender', value='2')
+                                |  it’s inappropriate
+                              
+                            .modal-footer
+                              button.btn.btn-secondary(type='button', data-dismiss='modal') Close
+                              button.btn.btn-primary(type='button') Send Report
             #nav-outlet.tab-pane.fade.border.p-4(role='tabpanel', aria-labelledby='nav-outlet-tab', style='background-color: white')
               .container
                 p(style='font-size: 20px') Other Outlet
