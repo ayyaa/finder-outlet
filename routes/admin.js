@@ -35,4 +35,16 @@ router.get('/list-reviews', function(req, res, next) {
   res.render('admin/list-reviews');
 });
 
+router.get('/list-report-reviews', function(req, res, next) {
+  res.render('admin/list-report-reviews');
+});
+
+router.get('/list-business-owner', function(req, res, next) {
+  res.render('admin/list-bo');
+});
+
+router.get('/lay', function(req, res, next) {
+  res.render('admin/layout-admin');
+});
+
 module.exports = router;

@@ -1,0 +1,64 @@
+extends layout-admin
+
+block content 
+  .content-wrapper
+    .container-fluid
+      ol.breadcrumb
+        li.breadcrumb-item
+          h4 Business Owner
+      .card.mb-3
+        .card-header
+          i.fa.fa-table
+          |  Data List Business Owner
+        .card-body
+          div
+            form.form-inline(method='GET', style='overflow-x:auto;')
+              .form-group.col-md-3
+                input#pwd.form-control(type='text', placeholder='Keyword', name='search', style='width:100%')
+              .form-group.col-md-3
+                select.custom-select.form-control(style='width:100%', name='get_atr')
+                  option(value='') Line of Business
+                  option(value='') Name
+                  option(value='') Address
+              .form-groupcol-md-3
+                button.btn.btn-success.form-control(type='submit', style='width:100%;')
+                  span.fa.fa-filter
+                  |  Filter
+          .col-md-12
+            .table-responsive.mt-4
+              table#dataTable.table.table-bordered(width='100%', cellspacing='0')
+                thead
+                  tr.bg-2.text-white
+                    th(scope='col') Username
+                    th(scope='col') Email
+                    th(scope='col') No.Phone
+                    th(scope='col') Business
+                    th(scope='col') Outlets
+                tbody
+                  tr
+                    th(scope='row') Evania
+                    td evania@gmail.com
+                    td 09876567876
+                    td wonderlabs
+                    td wonderlabs Amstrong
+                  tr
+                    th(scope='row') Evania
+                    td evania@gmail.com
+                    td 09876567876
+                    td wonderlabs
+                    td wonderlabs Amstrong
+            nav.float-right(aria-label='Page navigation example')
+              ul.pagination
+                li.page-item
+                  a.page-link(href='#', aria-label='Previous')
+                    span(aria-hidden='true') «
+                    span.sr-only Previous
+                li.page-item
+                  a.page-link(href='#') 1
+                li.page-item
+                  a.page-link(href='#', aria-label='Next')
+                    span(aria-hidden='true') »
+                    span.sr-only Next
+        .card-footer.small.text-muted Updated yesterday at 11:59 PM
+    a.scroll-to-top.rounded(href='#page-top')
+      i.fa.fa-angle-up

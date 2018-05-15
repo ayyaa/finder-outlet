@@ -1,0 +1,88 @@
+extends layout-admin
+
+block content 
+  .content-wrapper
+    .container-fluid
+      ol.breadcrumb
+        li.breadcrumb-item
+          h4 Report Reviews
+      .card.mb-3
+        .card-header
+          i.fa.fa-table
+          |  Data List Report Reviews
+        .card-body
+          div
+            form.form-inline(method='GET', style='overflow-x:auto;')
+              .form-group.col-md-3
+                input#pwd.form-control(type='text', placeholder='Keyword', name='search', style='width:100%')
+              .form-group.col-md-3
+                select.custom-select.form-control(style='width:100%', name='get_atr')
+                  option(value='') Line of Business
+                  option(value='') Name
+                  option(value='') Address
+              .form-groupcol-md-3
+                button.btn.btn-success.form-control(type='submit', style='width:100%;')
+                  span.fa.fa-filter
+                  |  Filter
+          .col-md-12
+            .table-responsive.mt-4
+              table#dataTable.table.table-bordered(width='100%', cellspacing='0')
+                tr.bg-2.text-white.text-center
+                  th(rowspan='2') 
+                    | id 
+                    br 
+                    | reviews
+                  th(rowspan='2') Business
+                  th(rowspan='2') Outlets
+                  th(colspan='2') Report
+                  th(rowspan='2') 
+                    | Num. of 
+                    br
+                    | Report
+                  th(rowspan='2') Action
+                tr.bg-2.text-white.text-center
+                    th spam
+                    th inappropriate
+                tr
+                  th.text-center(scope='row') 1
+                  td Wonderlabs
+                  td Wonderlabs Amstrong Campus
+                  td.text-center
+                    a(href="" data-toggle="tooltip" data-placement="bottom" title="ayyaa.ats12@gmail.com") 1 
+                  td.text-center
+                    a(href="" data-toggle="tooltip" data-placement="bottom" title="ayyaa.ats12@gmail.com") 1
+                  td.text-center
+                    a(href="" data-toggle="tooltip" data-placement="bottom" title="ayyaa.ats12@gmail.com") 2
+                  td.text-center
+                    button.btn.bg-5.btn-sm.border(type='button' data-toggle='modal', data-target='#deleteModal')
+                      i.fa.fa-trash
+                      |  Delete
+                tr
+                  th.text-center 2
+                  td(scope='row') Wonderfood
+                  td Wonderlabs Sputnik Campus 
+                  td.text-center 
+                    a(href="" data-toggle="tooltip" data-placement="bottom" title="ayyaa.ats12@gmail.com") 1
+                  td.text-center 
+                    a(href="" data-toggle="tooltip" data-placement="bottom" title="") 0
+                  td.text-center
+                    a(href="" data-toggle="tooltip" data-placement="bottom" title="ayyaa.ats12@gmail.com") 1
+                  td.text-center
+                    button.btn.bg-5.btn-sm.border(type='button' data-toggle='modal', data-target='#deleteModal')
+                      i.fa.fa-trash
+                      |  Delete
+            nav.float-right(aria-label='Page navigation example')
+              ul.pagination
+                li.page-item
+                  a.page-link(href='#', aria-label='Previous')
+                    span(aria-hidden='true') «
+                    span.sr-only Previous
+                li.page-item
+                  a.page-link(href='#') 1
+                li.page-item
+                  a.page-link(href='#', aria-label='Next')
+                    span(aria-hidden='true') »
+                    span.sr-only Next
+        .card-footer.small.text-muted Updated yesterday at 11:59 PM
+    a.scroll-to-top.rounded(href='#page-top')
+      i.fa.fa-angle-up
