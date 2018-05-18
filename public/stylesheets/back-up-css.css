@@ -467,9 +467,9 @@ body.sidenav-toggled .navbar-sidenav-tooltip.show {
 }
 
 .divider{
-  border-color: #606970 !important;
+  border-color: black !important;
   border-style: solid;
-  border-width: 0 0 2px;
+  border-width: 0 0 1px;
   height: 10px;
   line-height: 20px;
   text-align:center;
@@ -531,18 +531,11 @@ body.sidenav-toggled .navbar-sidenav-tooltip.show {
     /* overflow-y: scroll;  */
     /* overflow-x: scroll; */
   /* } */
-  /* .table-responsive {
-    overflow: visible !important;
-  } */
 }
 
 @media (min-width: 768px) {
   .card-columns {
     column-count: 2;
-  }
-
-  .table-responsive {
-    overflow: visible !important;
   }
 }
 
@@ -663,9 +656,6 @@ a.float:hover + div.label-container{
 .breadcrumb {
   background-color: #faf9f8 !important;}
 
-  #nav-tab .active{
-  background-color: #2a93d5 !important;
-}
 
   /* toltip */
   /* .tooltip {

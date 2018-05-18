@@ -11,10 +11,14 @@ head
   link(rel='stylesheet', href='https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css', integrity='sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4', crossorigin='anonymous')
   link(rel='stylesheet', href='https://use.fontawesome.com/releases/v5.0.12/css/all.css', integrity='sha384-G0fIWCsCzJIMAVNQPfjH08cyYaUtMwjJwqiRKxxE/rx96Uroj1BtIQ6MLJuheaO9', crossorigin='anonymous')
   link(rel='stylesheet', href='https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css')
+  link(rel='stylesheet', href='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0/css/bootstrap.css')
+  link(rel='stylesheet', href='https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap4.min.css')
   script(src='https://code.jquery.com/jquery-3.2.1.slim.min.js', integrity='sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN', crossorigin='anonymous')
   script(src='https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js', integrity='sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q', crossorigin='anonymous')
   script(src='https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js', integrity='sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl', crossorigin='anonymous')
   script(type='text/javascript', src='../javascripts/business-own.js')
+  script(type='text/javascript', src='https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js')
+  script(type='text/javascript', src='https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap4.min.js')
 body
   #page-top.fixed-nav.bg-1
     nav#mainNav.navbar.navbar-expand-lg.navbar-dark.bg-1.fixed-top
@@ -30,22 +34,22 @@ body
               h5.text-center.mt-3.mb-0.main-text
                 strong Doraemon Nobita Chan
               p.text-center.mb-4.main-text(style='font-size:12px') - Business Owner -
-          li.nav-item(data-toggle='tooltip', data-placement='right', title='Dashboard')
+          li.nav-item(class=active1)
             a.nav-link(href='/business-owner/dashboard')
               i.fa.fa-fw.fa-dashboard
-              span.nav-link-text Dashboard
-          li.nav-item(data-toggle='tooltip', data-placement='right', title='Charts')
+              span.nav-link-text  Dashboard
+          li.nav-item(class=active2)
             a.nav-link(href='/business-owner/list-business')
               i.fa.fa-fw.fa-briefcase
-              span.nav-link-text Business
-          li.nav-item(data-toggle='tooltip', data-placement='right', title='Tables')
+              span.nav-link-text  Business
+          li.nav-item(class=active3)
             a.nav-link(href='/business-owner/list-outlets')
               i.fa.fa-fw.fa-bank
-              span.nav-link-text Outlets
-          li.nav-item(data-toggle='tooltip', data-placement='right', title='Components')
+              span.nav-link-text  Outlets
+          li.nav-item(class=active4)
             a.nav-link(href='/business-owner/list-reviews')
               i.fa.fa-fw.fa-comment-o
-              span.nav-link-text Reviews
+              span.nav-link-text  Reviews
         ul.navbar-nav.sidenav-toggler
           li.nav-item
             span.nav-link.text-center(style='font-size:12px; color:#135589')

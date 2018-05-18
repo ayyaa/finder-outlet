@@ -47,70 +47,72 @@ block content
               span.float-left Reviews
               span.float-right
                 i.fa.fa-angle-right
-      .row.mt-4
-        .col-md-6
+      .card.mb-3
+        .card-header
           a(href='')
-            h5 New Business
-      .row
-        .col-md-12
-          .table-responsive.mt-2
-            table#dataTable.table.table-bordered(width='100%', cellspacing='0')
-              thead
-                tr.bg-2.text-white
-                  th(scope='col') Name
-                  th(scope='col') Line of Business
-                  th(scope='col') Outlets
-                  th.text-center(scope='col') Action
-              tbody
-                tr
-                  th(scope='row') Wonderlabs
-                  td Wonderlabs
-                  td
-                    | 2 
-                    a(href='/admin/list-outlets') view outlets
-                  td
-                    a(href='/admin/list-business') view business
-                tr
-                  th(scope='row') Wonderfood
-                  td Wonderlabs
-                  td
-                    | 1 
-                    a(href='/admin/list-outlets') view outlets
-                  td
-                    a(href='/admin/list-business') view business
-      .row.mt-4
-        .col-md-6
+            h5 New Businesses
+        .card-body
+          .row
+            .col-md-12
+              .table-responsive.mt-2
+                table#dataTable1.table.table-bordered(width='100%', cellspacing='0')
+                  thead
+                    tr.bg-2.text-white
+                      th(scope='col') Name
+                      th(scope='col') Line of Business
+                      th(scope='col') Outlets
+                      th.text-center(scope='col') Action
+                  tbody
+                    tr
+                      th(scope='row') Wonderlabs
+                      td Wonderlabs
+                      td
+                        | 2 
+                        a(href='/admin/list-outlets') view outlets
+                      td
+                        a(href='/admin/list-business') view business
+                    tr
+                      th(scope='row') Wonderfood
+                      td Wonderlabs
+                      td
+                        | 1 
+                        a(href='/admin/list-outlets') view outlets
+                      td
+                        a(href='/admin/list-business') view business
+      .card.mb-3
+        .card-header
           a(href='')
             h5 New Outlets
-      .row
-        .col-md-12
-          .table-responsive.mt-2
-            table#dataTable.table.table-bordered(width='100%', cellspacing='0')
-              thead
-                tr.bg-2.text-white
-                  th(scope='col') Name
-                  th(scope='col') Business
-                  th(scope='col') City
-                  th.text-center(scope='col') Action
-              tbody
-                tr
-                  th(scope='row') Wonderlabs Amstrong
-                  td Wonderlabs
-                  td Yogyakarta
-                  td
-                    a(href='/admin/list-outlets') view outlets
-                tr
-                  th(scope='row') Wonderlabs Exploler
-                  td Wonderlabs
-                  td Yogyakarta
-                  td
-                    a(href='/admin/list-outlets') view outlets
-                tr
-                  th(scope='row') Wonderlabs Sputnik
-                  td Wonderlabs
-                  td Yogyakarta
-                  td
-                    a(href='/admin/list-outlets') view outlets
+        .card-body
+          .row
+            .col-md-12
+              .table-responsive.mt-2
+                table#dataTable2.table.table-bordered(width='100%', cellspacing='0')
+                  thead
+                    tr.bg-2.text-white
+                      th(scope='col') Name
+                      th(scope='col') Business
+                      th(scope='col') City
+                      th.text-center(scope='col') Action
+                  tbody
+                    tr
+                      th(scope='row') Wonderlabs Amstrong
+                      td Wonderlabs
+                      td Yogyakarta
+                      td
+                        a(href='/admin/list-outlets') view outlets
+                    tr
+                      th(scope='row') Wonderlabs Exploler
+                      td Wonderlabs
+                      td Yogyakarta
+                      td
+                        a(href='/admin/list-outlets') view outlets
+                    tr
+                      th(scope='row') Wonderlabs Sputnik
+                      td Wonderlabs
+                      td Yogyakarta
+                      td
+                        a(href='/admin/list-outlets') view outlets
     a.scroll-to-top.rounded(href='#page-top')
       i.fa.fa-angle-up
 

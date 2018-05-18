@@ -32,7 +32,7 @@ block content
           i.fa.fa-table
           |  Data List Outlets
         .card-body
-          .mb-3
+          .ml-3
             form.form-inline(method='GET')
               .form-group.col-md-3
                 input#pwd.form-control(type='text', placeholder='Keyword', name='search', style='width:100%')
@@ -52,7 +52,7 @@ block content
                   |  Filter
           .col-md-12
             .table-responsive.mt-4
-              table#dataTable.table.table-bordered(width='100%', cellspacing='0')
+              table#dataTable6.table.table-bordered(width='100%', cellspacing='0')
                 thead
                   tr.bg-2.text-white
                     th(scope='col') Name
@@ -68,17 +68,13 @@ block content
                     td 30
                     td.text-center
                       .dropdown
-                        button.btn.bg-2.dropdown-toggle.btn-sm.text-white(type='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
+                        button.btn.bg-5.dropdown-toggle.btn-sm.border(type='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
                           | Action
                           span.caret
                         .dropdown-menu.dropdown-menu-right
                           a.dropdown-item(href='#')
                             i.fa.fa-user
                             |  View
-                          .dropdown-divider
-                          a.dropdown-item(href='#')
-                            i.fa.fa-pencil
-                            |  Edit
                           .dropdown-divider
                           a.dropdown-item(data-toggle='modal', data-target='#deleteModal')
                             i.fa.fa-trash
@@ -90,17 +86,13 @@ block content
                     td 9
                     td.text-center
                       .dropdown.clearfix
-                        button.btn.bg-2.dropdown-toggle.btn-sm.text-white(type='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
+                        button.btn.bg-5.dropdown-toggle.btn-sm.border(type='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
                           | Action
                           span.caret
                         .dropdown-menu.dropdown-menu-right
                           a.dropdown-item(href='#')
                             i.fa.fa-user
                             |  View
-                          .dropdown-divider
-                          a.dropdown-item(href='#')
-                            i.fa.fa-pencil
-                            |  Edit
                           .dropdown-divider
                           a.dropdown-item(data-toggle='modal', data-target='#deleteModal')
                             i.fa.fa-trash
@@ -112,34 +104,18 @@ block content
                     td 9
                     td.text-center
                       .dropdown
-                        button.btn.bg-2.dropdown-toggle.btn-sm.text-white(type='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
+                        button.btn.bg-5.dropdown-toggle.btn-sm.border(type='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
                           | Action
                         .dropdown-menu.dropdown-menu-right
                           a.dropdown-item(href='#')
                             i.fa.fa-user
                             |  View
                           .dropdown-divider
-                          a.dropdown-item(href='#')
-                            i.fa.fa-pencil
-                            |  Edit
-                          .dropdown-divider
                           a.dropdown-item(data-toggle='modal', data-target='#deleteModal')
                             i.fa.fa-trash
                             |  Delete
-            nav.float-right(aria-label='Page navigation example')
-              ul.pagination
-                li.page-item
-                  a.page-link(href='#', aria-label='Previous')
-                    span(aria-hidden='true') «
-                    span.sr-only Previous
-                li.page-item
-                  a.page-link(href='#') 1
-                li.page-item
-                  a.page-link(href='#', aria-label='Next')
-                    span(aria-hidden='true') »
-                    span.sr-only Next
         .card-footer.small.text-muted Updated yesterday at 11:59 PM
-      a.float(href='#')
+      a.float(href='/business-owner/create-outlet')
         i.fa.fa-plus.fa-2x.my-float
       .label-container
         .label-text Add Outlets
