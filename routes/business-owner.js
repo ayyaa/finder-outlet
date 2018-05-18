@@ -3,7 +3,7 @@ var router = express.Router();
 
 /* GET home page. */
 router.get('/dashboard', function(req, res, next) {
-  res.render('business-owner/dashboard', { title: 'Express' });
+  res.render('business-owner/dashboard', { active1: 'active' });
 });
 
 router.get('/create-business', function(req, res, next) {
@@ -20,7 +20,7 @@ router.get('/account', function(req, res, next) {
 });
 
 router.get('/edit-business', function(req, res, next) {
-  res.render('business-owner/edit-business');
+  res.render('business-owner/edit-business' );
 });
 
 router.get('/edit-outlet', function(req, res, next) {
@@ -28,15 +28,15 @@ router.get('/edit-outlet', function(req, res, next) {
 });
 
 router.get('/list-business', function(req, res, next) {
-  res.render('business-owner/list-business');
+  res.render('business-owner/list-business', { active2: 'active' });
 });
 
 router.get('/list-outlets', function(req, res, next) {
-  res.render('business-owner/list-outlets');
+  res.render('business-owner/list-outlets', { active3: 'active' });
 });
 
 router.get('/list-reviews', function(req, res, next) {
-  res.render('business-owner/list-reviews');
+  res.render('business-owner/list-reviews', { active4: 'active' });
 });
 
 module.exports = router;

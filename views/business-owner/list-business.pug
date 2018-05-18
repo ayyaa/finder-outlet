@@ -11,7 +11,7 @@ block content
           i.fa.fa-table
           |  Data List Business
         .card-body
-          div
+          .ml-3
             form.form-inline(method='GET', style='overflow-x:auto;')
               .form-group.col-md-3
                 input#pwd.form-control(type='text', placeholder='Keyword', name='search', style='width:100%')
@@ -26,7 +26,7 @@ block content
                   |  Filter
           .col-md-12
             .table-responsive.mt-4
-              table#dataTable.table.table-bordered(width='100%', cellspacing='0')
+              table#dataTable4.table.table-bordered(width='100%', cellspacing='0')
                 thead
                   tr.bg-2.text-white
                     th(scope='col') Name
@@ -73,20 +73,8 @@ block content
                           a.dropdown-item(data-toggle='modal', data-target='#deleteModal')
                             i.fa.fa-trash
                             |  Delete
-            nav.float-right(aria-label='Page navigation example')
-              ul.pagination
-                li.page-item
-                  a.page-link(href='#', aria-label='Previous')
-                    span(aria-hidden='true') «
-                    span.sr-only Previous
-                li.page-item
-                  a.page-link(href='#') 1
-                li.page-item
-                  a.page-link(href='#', aria-label='Next')
-                    span(aria-hidden='true') »
-                    span.sr-only Next
         .card-footer.small.text-muted Updated yesterday at 11:59 PM
-      a.float(href='#')
+      a.float(href='/business-owner/create-business')
         i.fa.fa-plus.fa-2x.my-float
       .label-container
         .label-text Add Outlets

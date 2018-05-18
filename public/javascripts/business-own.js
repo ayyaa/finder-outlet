@@ -66,20 +66,92 @@
 // });
 // });
 
-  $('#mainNav ul li a').on('click', function(){
-    $(this).addClass("active");
-    $('#mainNav li').removeClass("active");
-  })
+  // $('#mainNav ul li a').on('click', function(){
+  //   $(this).addClass("active");
+  //   $('#mainNav li').removeClass("active");
+  // })
 
-$(document).ready(function(){
-  $(this).addClass("active");
-    $('#mainNav ul li a').on('click', function(){
-      $(this).addClass("active");
-      $('#mainNav li').removeClass("active");
-    })
+// $(document).ready(function(){
+//   $(this).addClass("active");
+//     $('#mainNav ul li a').on('click', function(){
+//       $(this).addClass("active");
+//       $('#mainNav li').removeClass("active");
+//     })
     // $('#mainNav li').removeClass("active");
-});
+// });
 
 $(function () {
   $('[data-toggle="tooltip"]').tooltip()
 })
+
+$(document).ready(function() {
+  $('#dataTable1').DataTable({
+    responsive: true,
+    "searching": false,
+    "paging" : false,
+    "columnDefs": [{
+      "targets": 3,
+      "orderable": false
+      }]
+  });
+
+  $('#dataTable2').DataTable({
+    responsive: true,
+    "searching": false,
+    "paging" : false,
+    "columnDefs": [{
+      "targets": 3,
+      "orderable": false
+      }]
+  });
+
+  $('#dataTable3').DataTable({
+    responsive: true,
+    "searching": false,
+    "lengthChange": false,
+    "columnDefs": [{
+      "targets": 4,
+      "orderable": false
+      }]
+  });
+
+  $('#dataTable4').DataTable({
+    responsive: true,
+    "searching": false,
+    "lengthChange": false,
+    "columnDefs": [{
+      "targets": 3,
+      "orderable": false
+      }]
+  });
+
+  $('#dataTable5').DataTable({
+    responsive: true,
+    "searching": false,
+    "lengthChange": false,
+    "columnDefs": [{
+      "targets": 2,
+      "orderable": false
+      }]
+  });
+
+  $('#dataTable6').DataTable({
+    responsive: true,
+    "searching": false,
+    "lengthChange": false,
+    "columnDefs": [{
+      "targets": 4,
+      "orderable": false
+      }]
+  });
+
+  $('#dataTable7').DataTable({
+    responsive: true,
+    "searching": false,
+    "lengthChange": false,
+    "columnDefs": [{
+      "targets": 6,
+      "orderable": false
+      }]
+  });
+});
