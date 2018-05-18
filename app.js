@@ -1,15 +1,36 @@
-var express = require('express');
-var path = require('path');
-var favicon = require('serve-favicon');
-var logger = require('morgan');
-var cookieParser = require('cookie-parser');
-var bodyParser = require('body-parser');
+const express = require('express');
+const path = require('path');
+const favicon = require('serve-favicon');
+const logger = require('morgan');
+const cookieParser = require('cookie-parser');
+const bodyParser = require('body-parser');
 
-var admin = require('./routes/admin');
-var business = require('./routes/business-owner');
-var guest = require('./routes/guest');
+const admin = require('./routes/admin');
+const business = require('./routes/business-owner');
+const guest = require('./routes/guest');
+// const config = require('./src/config/config')
 
-var app = express();
+const models = require('./src/models');
+const keywords = models.keywords;
+
+models.sequelize.sync().then(user => {
+  console.log('ok')
+}).catch(err => {
+  console.log('err')
+})
+// sequelize
+//   .authenticate()
+//   .then(() => {
+//     console.log('Connection has been established successfully.');
+//   })
+//   .catch(err => {
+//     console.error('Unable to connect to the database:', err);
+//   });
+keywords.findAll().then(user => {
+  console.log(user)
+})
+
+const app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));

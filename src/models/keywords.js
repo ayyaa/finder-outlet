@@ -1,4 +1,5 @@
 /* jshint indent: 2 */
+// const DataTypes = require('sequelize')
 
 module.exports = function(sequelize, DataTypes) {
   return sequelize.define('keywords', {

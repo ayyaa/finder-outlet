@@ -51,11 +51,11 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.INTEGER(1),
       allowNull: true
     },
-    2fa_status: {
+    fa_status: {
       type: DataTypes.INTEGER(1),
       allowNull: true
     },
-    2fa_key: {
+    fa_key: {
       type: DataTypes.CHAR(50),
       allowNull: false,
       defaultValue: '*'

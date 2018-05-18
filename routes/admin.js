@@ -43,10 +43,6 @@ router.get('/list-business-owner', function(req, res, next) {
   res.render('admin/list-bo', {  active4: 'active'});
 });
 
-router.get('/lay', function(req, res, next) {
-  res.render('admin/layout-admin');
-});
-
 // router.get('/create-category', function(req, res, next) {
 //   res.render('admin/layout-admin');
 // });
