@@ -3,11 +3,11 @@ var router = express.Router();
 
 /* GET home page. */
 router.get('/dashboard', function(req, res, next) {
-  res.render('business-owner/dashboard', { title: 'Express' });
+  res.render('business-owner/dashboard', { title: 'Express' , class:'active'});
 });
 
 router.get('/create-business', function(req, res, next) {
-  res.render('business-owner/create-business');
+  res.render('business-owner/create-business',{class:'active'});
 });
 
 router.get('/create-outlet', function(req, res, next) {

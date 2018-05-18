@@ -656,6 +656,9 @@ a.float:hover + div.label-container{
 .breadcrumb {
   background-color: #faf9f8 !important;}
 
+  #nav-tab .active{
+  background-color: #2a93d5 !important;
+}
 
   /* toltip */
   /* .tooltip {

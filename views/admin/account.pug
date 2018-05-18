@@ -8,10 +8,10 @@ block content
           h4 My Account
       .container-fluid.col-sm-12
         #nav-tab.nav.nav-pills.nav-fill.mt-4(role='tablist')
-          a#nav-basic-info-tab.nav-item.nav-link.pull-right.active(data-toggle='tab', href='#nav-basic-info', role='tab', aria-controls='nav-basic-info', aria-selected='true') Basic info
-          a#nav-change-pass-tab.nav-item.pull-right.nav-link(data-toggle='tab', href='#nav-change-pass', role='tab', aria-controls='nav-change-pass', aria-selected='false') Change password
-          a#nav-security-tab.nav-item.pull-right.nav-link(data-toggle='tab', href='#nav-security', role='tab', aria-controls='nav-security', aria-selected='false') Security
-          a#nav-deactivated-tab.nav-item.pull-right.nav-link(data-toggle='tab', href='#nav-deactivated', role='tab', aria-controls='nav-deactivated', aria-selected='false') Deactivated
+          a#nav-basic-info-tab.nav-item.nav-link.pull-right.border.active(data-toggle='tab', href='#nav-basic-info', role='tab', aria-controls='nav-basic-info', aria-selected='true', style='color: #2a93d5') Basic info
+          a#nav-change-pass-tab.nav-item.pull-right.border.nav-link(data-toggle='tab', href='#nav-change-pass', role='tab', aria-controls='nav-change-pass', aria-selected='false', style='color: #2a93d5') Change password
+          a#nav-security-tab.nav-item.pull-right.border.nav-link(data-toggle='tab', href='#nav-security', role='tab', aria-controls='nav-security', aria-selected='false', style='color: #2a93d5') Security
+          a#nav-deactivated-tab.nav-item.pull-right.border.nav-link(data-toggle='tab', href='#nav-deactivated', role='tab', aria-controls='nav-deactivated', aria-selected='false', style='color: #2a93d5') Deactivated
         #nav-tabContent.tab-content
           #nav-basic-info.tab-pane.fade.show.active.border(role='tabpanel', aria-labelledby='nav-basic-info-tab', style='background-color: white')
             form.pt-4(action='/action_page.php')
