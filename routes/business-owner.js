@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 const models = require('../src/models');
+const Sequelize = require('sequelize');
 const business = models.business;
 const categories = models.categories;
 const address = models.address;
@@ -10,21 +11,46 @@ const flash = require('connect-flash');
 
 business.belongsToMany(categories, {through: 'business_category', foreignKey: 'business_id', otherKey: 'category_id'})
 categories.belongsToMany(business, {through: 'business_category', foreignKey: 'category_id', otherKey: 'business_id'})
+address.hasOne(business, {foreignKey: 'address_id'})
+business.belongsTo(address)
 
-business.findAll({
-  attributes: ['name', 'email'],
-  include: [{
-    model: categories,
-    attributes: ['name', 'description'],
-    // through: {
-    //   attributes: ['category_id','business_id' ],
-    // }
-  }]
-}).then(rows => {
-  console.log(rows)
-}).catch(err => {
-  console.error(err)
-})
+// business.findAll({
+//   attributes: ['name', 'email'],
+//   include: [{
+//     model: categories,
+//     attributes: ['name', 'description'],
+//     // through: {
+//     //   attributes: ['category_id','business_id' ],
+//     // }
+//   }]
+// }).then(rows => {
+//   console.log(rows)
+// }).catch(err => {
+//   console.error(err)
+// })
+
+// address.create({
+//   line1: 'jalan adisucipto', 
+//   administrative_area_1: 'yogya', 
+//   administrative_area_2: 'yogya', 
+//   administrative_area_3: 'demangan', 
+//   administrative_area_4: 'gondokusuman', 
+//   postalcode: 55231,
+// }, {
+//   include: [{
+//     model: business,
+//   }]
+// }).then(rows => {
+//   console.log(rows)
+//   business.create({
+//     name: 'Wonderfood',
+//     address_id: rows.id,
+//     owner_id: 1,
+//     category_id: 1,
+//     email: 'wonderfood@gmail.com'
+//   })
+// })
+
 
 
 /* GET home page. */
@@ -41,7 +67,6 @@ router.get('/create-business', function(req, res, next) {
 
 router.post('/create-business', function(req, res, next) {
   validateJoi.validate({
-    image: req.body.image, 
     contact_no: req.body.contact_no, 
     get_category: req.body.get_category, 
     name_business: req.body.name_business, 
@@ -49,43 +74,53 @@ router.post('/create-business', function(req, res, next) {
     website: req.body.website, 
     description: req.body.description, 
     line1: req.body.line1, 
-    line2: req.body.line2, 
+    line2: req.body.line2,
+    state: req.body.state, 
     province: req.body.province, 
     city: req.body.city, 
     postal_code: req.body.postal_code, 
     lat: req.body.lat, 
     lng: req.body.lng}, function(errors, value) {
-    // console.log(errors);
+    console.log(errors);
     if (!errors) {
-      business.findOne({
-        attributes: ['name'],
-        where: {
-          name: req.body.name_business
-        }
-      })
-      .then(rows => {
-        if (rows.length > 0) {
-          console.log(rows);
-          req.flash('error', 'Duplicate entry name business !');
-          // alert("Duplicate entry name category !");          
-        } else {
-          categories.create({ 
-            name: req.body.name_category, 
-            description: req.body.description 
-          })
-          .then(rows => {
-            req.flash('success', 'Successful added categories.');
-            res.redirect('/admin/list-categories');
-            console.log(rows);
-          })
-        }
-      })
-      .catch(() => {
-        res.status(500).json({"status_code": 500,"status_message": "internal server error"});
-      })
+      address.create({
+        line1: req.body.line1, 
+        line2: req.body.line2,
+        administrative_area_1: req.body.state, 
+        administrative_area_2: req.body.province, 
+        administrative_area_3: req.body.city, 
+        administrative_area_4: '', 
+        postalcode: req.body.postal_code,
+        point: `POINT(`+Number(req.body.lat)+` `+Number(req.body.lng)+`)`
+      }, {
+        include: [{
+          model: business,
+        }]
+      }).then(row => {
+        console.log(row)
+        business.create({
+          name: req.body.name_business,
+          address_id: row.id,
+          owner_id: 1,
+          category_id: req.body.get_category,
+          email: req.body.email,
+          website: req.body.website,
+          contact_no: req.body.contact_no,
+          description: req.body.description,
+          image: 'req.body.image'
+        })
+        .then(rowss => {
+          req.flash('success', 'Successful added Business.');
+          res.redirect('/business-owner//list-business');
+          console.log(rowss);
+        })
+      }) 
     } else {
-      req.flash('error', errors);
-      res.render('business-owner/create-business', {active3: 'active', valCategories:rows, error: req.flash('error')});
+      categories.findAll()
+      .then(rows => {
+        req.flash('error', errors);
+        res.render('business-owner/create-business', {active3: 'active', valCategories:rows, error: req.flash('error')});
+      })
       // res.render('admin/create-category', {error: req.flash('error')});
     } 
   })

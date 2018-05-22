@@ -16,11 +16,19 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.STRING(50),
       allowNull: true
     },
-    prov: {
+    administrative_area_1: {
       type: DataTypes.STRING(50),
       allowNull: true
     },
-    city: {
+    administrative_area_2: {
+      type: DataTypes.STRING(50),
+      allowNull: true
+    },
+    administrative_area_3: {
+      type: DataTypes.STRING(50),
+      allowNull: true
+    },
+    administrative_area_4: {
       type: DataTypes.STRING(50),
       allowNull: true
     },

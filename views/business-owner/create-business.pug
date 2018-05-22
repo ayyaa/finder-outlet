@@ -6,6 +6,21 @@ block content
       ol.breadcrumb
         li.breadcrumb-item
           h4 Create Business
+      |
+      - if(error){
+      .alert.alert-danger 
+       .text-center #{error}
+      - }
+      |
+      - if(info){
+      .alert.alert-info 
+        .text-center #{info}
+      - }
+      |
+      - if(success){
+      .alert.alert-success 
+        .text-center #{success}
+      - }
       div
         form.mt-4(action='/business-owner/create-business' method='POST')
           .form-row.col-md-12
@@ -48,30 +63,37 @@ block content
                 input#inputPassword4.form-control(type='text', placeholder='Line 2 address' name='line2')
             .form-row
               .form-group.col-md-6
-                label(for='line1') Province
+                label(for='line1') State
+                select.custom-select(name='state')
+                  option(value='state') State
+                  option(value='name') Name
+                  option(value='address') Address
+              .form-group.col-md-6
+                label(for='line2') Province
                 select.custom-select(name='province')
-                  option(value='') Province
-                  option(value='') Name
-                  option(value='') Address
-              .form-group.col-md-3
+                  option(value='province') Province
+                  option(value='name') Name
+                  option(value='address') Address
+            .form-row
+              .form-group.col-md-6
                 label(for='line2') City
                 select.custom-select(name='city')
-                  option(value='') City
-                  option(value='') Name
-                  option(value='') Address
-              .form-group.col-md-3
+                  option(value='city') City
+                  option(value='name') Name
+                  option(value='address') Address
+              .form-group.col-md-6
                 label(for='zipcode') Postal code
                 input#inputPassword4.form-control(type='text', placeholder='Postal Code' name='postal_code')
             .form-row
-              .form-group.col-md-4
+              .form-group.col-md-3
                 button.btn.btn-secondary.btn-block(type='submit') Geolocate
             .form-row
               .form-group.col-md-3
                 label(for='zipcode') Latitude
-                input#inputPassword4.form-control(type='text', placeholder='Latitude', readonly name='lat')
+                input#inputPassword4.form-control(type='text', placeholder='Latitude',name='lat')
               .form-group.col-md-3
                 label(for='zipcode') Longitude
-                input#inputPassword4.form-control(type='text', placeholder='Longitude', readonly name='lng')
+                input#inputPassword4.form-control(type='text', placeholder='Longitude',name='lng')
             .form-row
               .form-group.col-md-3
                 a(href='')  View in maps >

@@ -19,23 +19,6 @@ const models = require('./src/models');
 const keywords = models.keywords;
 const store = new BetterMemoryStore({ expires: 60 * 60 * 1000, debug: true });
 
-
-//   console.log('ok')
-// }).catch(err => {
-//   console.log('err')
-// })
-// models.sequelize
-//   .authenticate()
-//   .then(() => {
-//     console.log('Connection has been established successfully.');
-//   })
-//   .catch(err => {
-//     console.error('Unable to connect to the database:', err);
-//   });
-
-//   console.log(user)
-// })
-
 const app = express();
 
 // view engine setup
