@@ -6,14 +6,29 @@ block content
       ol.breadcrumb
         li.breadcrumb-item
           h4 Create Category
+      |
+      - if(error){
+      .alert.alert-danger 
+       .text-center #{error}
+      - }
+      |
+      - if(info){
+      .alert.alert-info 
+        .text-center #{info}
+      - }
+      |
+      - if(success){
+      .alert.alert-success 
+        .text-center #{success}
+      - }
       div
-        form.mt-4(action='/action_page.php')
+        form.mt-4(action='/admin/create-category' method='POST')
           .form-group.col-md-6
             label(for='name') Category name:
-            input#pwd.form-control(type='text', placeholder='Name', name='pswd')
+            input#pwd.form-control(type='text', placeholder='Name', name='name_category')
           .form-group.col-md-9
             label(for='description') Description:
-            textarea.form-control(name='', id='', cols='30', rows='5')  Description about is 
+            textarea.form-control(name='description', id='', cols='30', rows='5')  Description about is 
           .form-row
             .form-group.col-md-2.ml-3
               button.btn.btn-primary.btn-block(type='submit') Submit

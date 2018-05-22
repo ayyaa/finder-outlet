@@ -28,44 +28,26 @@ block content
                     th(scope='col') Num. of Business
                     th.text-center(scope='col') Action
                 tbody
-                  tr
-                    th(scope='row') Wonderlabs
-                    td 134
-                    td.text-center
-                      .dropdown
-                        button.btn.bg-5.dropdown-toggle.btn-sm.border(type='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
-                          | Action
-                        .dropdown-menu.dropdown-menu-right
-                          a.dropdown-item(href='#')
-                            i.fa.fa-user
-                            |  View
-                          .dropdown-divider
-                          a.dropdown-item(href='#')
-                            i.fa.fa-pencil
-                            |  Edit
-                          .dropdown-divider
-                          a.dropdown-item(data-toggle='modal', data-target='#deleteModal')
-                            i.fa.fa-trash
-                            |  Delete
-                  tr
-                    th(scope='row') Wonderfood
-                    td 45
-                    td.text-center
-                      .dropdown
-                        button.btn.bg-5.dropdown-toggle.btn-sm.border(type='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
-                          | Action
-                        .dropdown-menu.dropdown-menu-right
-                          a.dropdown-item(href='#')
-                            i.fa.fa-user
-                            |  View
-                          .dropdown-divider
-                          a.dropdown-item(href='#')
-                            i.fa.fa-pencil
-                            |  Edit
-                          .dropdown-divider
-                          a.dropdown-item(data-toggle='modal', data-target='#deleteModal')
-                            i.fa.fa-trash
-                            |  Delete
+                  for categories in data
+                    tr
+                      th(scope='row')= categories.name
+                      td= categories.name
+                      td.text-center
+                        .dropdown
+                          button.btn.bg-5.dropdown-toggle.btn-sm.border(type='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
+                            | Action
+                          .dropdown-menu.dropdown-menu-right
+                            a.dropdown-item(href='#')
+                              i.fa.fa-user
+                              |  View
+                            .dropdown-divider
+                            a.dropdown-item(href='#')
+                              i.fa.fa-pencil
+                              |  Edit
+                            .dropdown-divider
+                            a.dropdown-item(data-toggle='modal', data-target='#deleteModal')
+                              i.fa.fa-trash
+                              |  Delete
         .card-footer.small.text-muted Updated yesterday at 11:59 PM
       a.float(href='/admin/create-category')
         i.fa.fa-plus.fa-2x.my-float

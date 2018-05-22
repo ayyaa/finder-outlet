@@ -5,6 +5,11 @@ const logger = require('morgan');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 
+const sess = require('express-session');
+const Store = require('express-session').Store;
+const BetterMemoryStore = require('session-memory-store')(sess);
+const flash = require('express-flash');
+
 const admin = require('./routes/admin');
 const business = require('./routes/business-owner');
 const guest = require('./routes/guest');
@@ -12,23 +17,19 @@ const guest = require('./routes/guest');
 
 const models = require('./src/models');
 const keywords = models.keywords;
+const store = new BetterMemoryStore({ expires: 60 * 60 * 1000, debug: true });
 
-models.sequelize.sync().then(user => {
-  console.log('ok')
-}).catch(err => {
-  console.log('err')
-})
-// sequelize
-//   .authenticate()
-//   .then(() => {
-//     console.log('Connection has been established successfully.');
-//   })
-//   .catch(err => {
-//     console.error('Unable to connect to the database:', err);
-//   });
-keywords.findAll().then(user => {
-  console.log(user)
-})
+models.sequelize
+  .authenticate()
+  .then(() => {
+    console.log('Connection has been established successfully.');
+  })
+  .catch(err => {
+    console.error('Unable to connect to the database:', err);
+  });
+// keywords.findAll().then(user => {
+//   console.log(user)
+// })
 
 const app = express();
 
@@ -43,6 +44,15 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(sess({
+  name: 'JSESSION',
+  secret: 'MYSECRETISVERYSECRET',
+  store:  store,
+  resave: true,
+  saveUninitialized: true 
+}));
+
+app.use(flash());
 
 app.use('/admin', admin);
 app.use('/business-owner', business);
