@@ -13,12 +13,12 @@ const guest = require('./routes/guest');
 const models = require('./src/models');
 const keywords = models.keywords;
 
-models.sequelize.sync().then(user => {
-  console.log('ok')
-}).catch(err => {
-  console.log('err')
-})
-// sequelize
+// models.sequelize.sync().then(user => {
+//   console.log('ok')
+// }).catch(err => {
+//   console.log('err')
+// })
+// models.sequelize
 //   .authenticate()
 //   .then(() => {
 //     console.log('Connection has been established successfully.');
@@ -26,9 +26,10 @@ models.sequelize.sync().then(user => {
 //   .catch(err => {
 //     console.error('Unable to connect to the database:', err);
 //   });
-keywords.findAll().then(user => {
-  console.log(user)
-})
+
+// keywords.findAll().then(user => {
+//   console.log(user)
+// })
 
 const app = express();
 
