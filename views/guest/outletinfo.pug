@@ -1,0 +1,272 @@
+doctype html
+html(lang='en')
+  head
+    meta(charset='utf-8')
+    meta(name='viewport', content='width=device-width, initial-scale=1, shrink-to-fit=no')
+    meta(name='description', content='')
+    meta(name='author', content='')
+    // Bootstrap core CSS
+    link(href='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.1/css/bootstrap.min.css', rel='stylesheet')
+    // Custom fonts for this template
+    link(rel='stylesheet', href='https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css', integrity='sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4', crossorigin='anonymous')
+    link(rel='stylesheet', href='https://use.fontawesome.com/releases/v5.0.12/css/all.css', integrity='sha384-G0fIWCsCzJIMAVNQPfjH08cyYaUtMwjJwqiRKxxE/rx96Uroj1BtIQ6MLJuheaO9', crossorigin='anonymous')
+    script(src='https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js', integrity='sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ', crossorigin='anonymous')
+    // <link href="http://fonts.googleapis.com/css?family=Lato:400,700" rel="stylesheet">
+    link(href='https://fonts.googleapis.com/css?family=Saira+Extra+Condensed:100,200,300,400,500,600,700,800,900', rel='stylesheet')
+    link(href='https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i,800,800i', rel='stylesheet')
+    link(href='https://cdnjs.cloudflare.com/ajax/libs/devicons/1.8.0/css/devicons.min.css', rel='stylesheet')
+    link(href='https://cdnjs.cloudflare.com/ajax/libs/simple-line-icons/2.4.1/css/simple-line-icons.css', rel='stylesheet')
+    // Custom styles for this template
+    link(href='../stylesheets/resume.css', rel='stylesheet')
+    link(href='../stylesheets/temp.css', rel='stylesheet')
+    // Bootstrap core JavaScript
+    script(src='https://code.jquery.com/jquery-3.3.1.slim.min.js', integrity='sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo', crossorigin='anonymous')
+    script(src='https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js', integrity='sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm', crossorigin='anonymous')
+    // Plugin JavaScript
+    script(src='https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.compatibility.min.js.map')
+  body#page-top(style='background-color: white')
+    nav#topNav.navbar.navbar-expand-lg.navbar-dark.fixed-top.bg-1
+      .container-fluid
+        a(href='/')
+          img(rel='icon', src='../images/logo8.png', height='20px')
+        button.navbar-toggler(type='button', data-toggle='collapse', data-target='#navbarResponsive', aria-controls='navbarResponsive', aria-expanded='false', aria-label='Toggle navigation')
+          span.navbar-toggler-icon
+        #navbarResponsive.collapse.navbar-collapse
+          ul.navbar-nav.ml-auto
+            li.nav-item.active
+              a.nav-link(href='/')
+                | Home
+                span.sr-only (current)
+            li.nav-item
+              a.nav-link(href='/browse') Browse Directory
+            li.nav-item
+              a.nav-link(href='/login') Login
+            li.nav-item
+              a.nav-link(href='/regist') Register
+    nav#sideNav.navbar.navbar-expand-lg.navbar-dark.bg-primary.fixed-top
+      a.navbar-brand.js-scroll-trigger(href='#page-top')
+        span.d-block.d-lg-none
+          img.mx-auto(rel='icon', src='../images/logo8.png', alt='', height='35px')
+        span.d-none.d-lg-block
+          img.img-profile.rounded-circle.mb-2(src='../images/wonderlabs.png', alt='')
+          p Wonderlabs
+          .divider
+      button.navbar-toggler(type='button', data-toggle='collapse', data-target='#navbarResponsive', aria-controls='navbarResponsive', aria-expanded='false', aria-label='Toggle navigation')
+        span.navbar-toggler-icon
+      .collapse.navbar-collapse
+        ul.navbar-nav.ml-auto
+          li.nav-item
+            a.nav-link.js-scroll-trigger(href='#info') Info
+          li.nav-item
+            a.nav-link.js-scroll-trigger(href='#direction') Get direction
+          li.nav-item
+            a.nav-link.js-scroll-trigger(href='#reviews') reviews
+          li.nav-item
+            a.nav-link.js-scroll-trigger(href='#other') other outlet
+    .container-fluid.p-0
+      section#info.resume-section.p-3.p-lg-5.d-flex.d-column
+        .my-auto
+          h2.mb-0
+            | Wonderlabs 
+            span.text-primary Armstrong Campus
+          .subheading.mb-5
+            | Jalan Laksda Adisucipto no 27, Kota Yogyakarta, Depok, 55238 · 0274 567 840 ·
+            a(href='https://wonderlabs.io') https://wonderlabs.io
+          p.mb-3
+            | Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
+          table.table.table-striped.mb-5(style='width:30%')
+            tr.mt-2
+              th Day
+              th Open
+              th Close
+            tr
+              td Monday
+              td 8.00
+              td 18.00
+            tr
+              td Tuesday
+              td 8.00
+              td 18.00
+            tr
+              td Wednesday
+              td 8.00
+              td 18.00
+            tr
+              td Thrusday
+              td 8.00
+              td 18.00
+            tr
+              td Friday
+              td 8.00
+              td 18.00
+          ul.list-inline.list-social-icons.mb-0
+            li.list-inline-item
+              a(href='#')
+                span.fa-stack.fa-lg
+                  i.fa.fa-circle.fa-stack-2x
+                  i.fab.fa-facebook-f.fa-stack-1x.fa-inverse
+            li.list-inline-item
+              a(href='#')
+                span.fa-stack.fa-lg
+                  i.fa.fa-circle.fa-stack-2x
+                  i.fab.fa-twitter.fa-stack-1x.fa-inverse
+            li.list-inline-item
+              a(href='#')
+                span.fa-stack.fa-lg
+                  i.fa.fa-circle.fa-stack-2x
+                  i.fab.fa-linkedin-in.fa-stack-1x.fa-inverse
+            li.list-inline-item
+              a(href='#')
+                span.fa-stack.fa-lg
+                  i.fa.fa-circle.fa-stack-2x
+                  i.fab.fa-github.fa-stack-1x.fa-inverse
+      section#direction.resume-section.p-3.p-lg-5.d-flex.flex-column
+        .my-auto
+          h2.mb-5 Get direction
+          .resume-item.d-flex.flex-column.flex-md-row.mb-5
+          .resume-content.mr-auto
+            div
+              iframe(width='100%', height='500px', frameborder='0', scrolling='no', marginheight='0', marginwidth='0', src='https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d63245.983635672164!2d110.33982538316076!3d-7.80316397292277!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e7a5787bd5b6bc5%3A0x21723fd4d3684f71!2sYogyakarta%2C+Kota+Yogyakarta%2C+Daerah+Istimewa+Yogyakarta!5e0!3m2!1sid!2sid!4v1525590578541')
+            .mt-4.mb-4
+              button.btn.btn-primary.mb-2.mr-2(type='button') Get Direction
+              button.btn.btn-primary.mb-2(type='button') Find Similar Bussines
+      section#reviews.resume-section.p-3.p-lg-5.d-flex.flex-column
+        .my-auto
+          h2.mb-5 Reviews
+          .resume-item.d-flex.flex-column.flex-md-row.mb-5
+            .resume-content.mr-auto
+              .mt-2
+                .pt-2.pb-2.mb-2
+                  .divider.mb-2
+                  h5 Anonim
+                  p(style='font-size: 12px; color:#808080')
+                    | 2 days Ago 
+                    a(data-toggle='modal', data-target='#exampleModal2')
+                      i.fas.fa-flag(data-toggle='tooltip', data-placement='right', title='Click to report review')
+                  p
+                    | Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
+                  div(style='color: orange')
+                    i.fa.fa-star
+                    i.fa.fa-star
+                    i.fa.fa-star
+                    i.fa.fa-star
+                    i.fa.fa-star
+                .pt-2.pb-2.mb-2
+                  .divider.mb-2
+                  h5 Anonim
+                  p(style='font-size: 12px; color:#808080')
+                    | 2 days Ago 
+                    a(data-toggle='modal', data-target='#exampleModal2')
+                      i.fas.fa-flag(data-toggle='tooltip', data-placement='right', title='Click to report review')
+                  p
+                    | Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
+                  i.fa.fa-star(style='color: orange')
+                  i.fa.fa-star(style='color: orange')
+                  i.fa.fa-star
+                  i.fa.fa-star
+                  i.fa.fa-star
+                p
+                  a(href='#') More Reviews>
+                // Button trigger modal
+                button.btn.btn-primary(type='button', data-toggle='modal', data-target='#exampleModal')
+                  | WRITE REVIEWS
+                // Modal
+                #exampleModal.modal.fade(tabindex='-1', role='dialog', aria-labelledby='exampleModalLabel', aria-hidden='true')
+                  .modal-dialog(role='document')
+                    .modal-content(class='box-shadow: 10px 10px 5px grey;')
+                      .modal-header
+                        h5#exampleModalLabel.modal-title Write Reviews
+                        button.close(type='button', data-dismiss='modal', aria-label='Close')
+                          span(aria-hidden='true') ×
+                      .modal-body
+                        form
+                          .form-group
+                            label Name
+                            input.form-control(type='text', placeholder='Enter name')
+                          .form-group
+                            label(for='exampleInputEmail1') Email address
+                            input#exampleInputEmail1.form-control(type='email', aria-describedby='emailHelp', placeholder='Enter email')
+                            small#emailHelp.form-text.text-muted We'll never share your email with anyone else.
+                          .form-group
+                            label Review
+                            textarea.form-control(placeholder='Write Review Here')
+                          .form-group
+                            label Rating
+                            br
+                            fieldset.rating
+                              input#star5(type='radio', name='rating', value='5')
+                              label.full(for='star5', title='Awesome - 5 stars')
+                              input#star4half(type='radio', name='rating', value='4 and a half')
+                              label.half(for='star4half', title='Pretty good - 4.5 stars')
+                              input#star4(type='radio', name='rating', value='4')
+                              label.full(for='star4', title='Pretty good - 4 stars')
+                              input#star3half(type='radio', name='rating', value='3 and a half')
+                              label.half(for='star3half', title='Meh - 3.5 stars')
+                              input#star3(type='radio', name='rating', value='3')
+                              label.full(for='star3', title='Meh - 3 stars')
+                              input#star2half(type='radio', name='rating', value='2 and a half')
+                              label.half(for='star2half', title='Kinda bad - 2.5 stars')
+                              input#star2(type='radio', name='rating', value='2')
+                              label.full(for='star2', title='Kinda bad - 2 stars')
+                              input#star1half(type='radio', name='rating', value='1 and a half')
+                              label.half(for='star1half', title='Meh - 1.5 stars')
+                              input#star1(type='radio', name='rating', value='1')
+                              label.full(for='star1', title='Sucks big time - 1 star')
+                              input#starhalf(type='radio', name='rating', value='half')
+                              label.half(for='starhalf', title='Sucks big time - 0.5 stars')
+                          .modal-footer
+                            button.btn.btn-primary(type='button', data-dismiss='modal') Close
+                            button.btn.btn-primary(type='button') Send Review
+                #exampleModal2.modal.fade(tabindex='-1', role='dialog', aria-labelledby='exampleModalLabel', aria-hidden='true')
+                  .modal-dialog(role='document')
+                    .modal-content
+                      .modal-header
+                        h5#exampleModalLabel.modal-title Report review
+                        button.close(type='button', data-dismiss='modal', aria-label='Close')
+                          span(aria-hidden='true') ×
+                      .modal-body
+                        form
+                          .form-group
+                            label(for='exampleInputEmail1') Email address
+                            input#exampleInputEmail1.form-control(type='email', aria-describedby='emailHelp', placeholder='Enter email')
+                            small#emailHelp.form-text.text-muted We'll never share your email with anyone else.
+                          .form-group
+                            label choose a reason for reporting this review
+                            .radio.p-1
+                              input(type='radio', name='gender', value='1')
+                              |  it's spam
+                            .radio.p-1
+                              input(type='radio', name='gender', value='2')
+                              |  it’s inappropriate
+                          .modal-footer
+                            button.btn.btn-primary(type='button', data-dismiss='modal') Close
+                            button.btn.btn-primary(type='button') Send Report
+      section#other.resume-section.p-3.p-lg-5.d-flex.flex-column
+        .my-auto
+          h2.mb-5 Other Outlet
+          .divider.mb-2
+          .mt-2
+            table.table.table-striped(style='width:100%')
+              tr.mt-2
+                th
+                  | Name
+                th
+                  | City
+                th
+              tr.mt-2
+                td Wonderlabs Explore Campus
+                td Yogyakarta
+                td
+                  a(href='#') View Outlet
+              tr.mt-2
+                td Wonderlabs Sputnik Campus
+                td Yogyakarta
+                td
+                  a(href='#') View Outlet
+              tr.mt-2
+                td Wonderlabs Houston Campus
+                td 8.00
+                td
+                  a(href='#') View Outlet
+    // Custom scripts for this template
+    script(src='../javascripts/resume.js')

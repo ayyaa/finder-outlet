@@ -23,7 +23,7 @@ router.get('/browse', function(req, res, next) {
 });
 
 router.get('/outletinfo', function(req, res, next) {
-  res.render('guest/outlet-info', { title: 'Express' });
+  res.render('guest/outletinfo', { title: 'Express' });
 });
 
 router.get('/search', function(req, res, next) {
