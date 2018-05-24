@@ -3,6 +3,16 @@ extends layout-admin
 block content
   .content-wrapper
     .container-fluid
+      |
+      - if(message){
+      div 
+        | !{message}
+      - }
+      |
+      - if(info){
+      div 
+        | !{info}
+      - }
       ol.breadcrumb
         li.breadcrumb-item
           h4 Dashboard

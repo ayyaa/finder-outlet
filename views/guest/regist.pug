@@ -4,21 +4,31 @@ block content
     .limiter
       .container-login100
         .wrap-login100
-          form.login100-form.validate-form
-            span.login100-form-title.p-b-2
+          form.login100-form.validate-form(method='POST' action='/regist')
+            span.login100-form-title.p-b-25
               | Sign up
             // <img src="imageedit_12_7024664115.png" alt="logo" width="25">
             //
               <span class="p-b-10 content-center p-l-45">
               <img src="logo2.png" alt="logo" width="200">
               </span>
-            span.login100-form-title.p-b-48
+            |
+            - if(error){
+            div
+              | !{error}
+            - }
+            |
+            - if(info){
+            div
+              | !{info}
+            - }   
+            span.login100-form-title.p-b-20
               i.zmdi.zmdi-font
             .wrap-input100.validate-input
-              input.input100(type='text', name='username')
+              input.input100.has-val(type='text', name='username', value = susername)
               span.focus-input100(data-placeholder='Username')
             .wrap-input100.validate-input(data-validate='Valid email is: a@b.c')
-              input.input100(type='text', name='email')
+              input.input100.has-val(type='text', name='email', value = semail)
               span.focus-input100(data-placeholder='Email')
             .container-login100-form-btn
               .wrap-login100-form-btn
@@ -30,4 +40,4 @@ block content
                 | Back to
               a.txt2(href='/')
                 |   Home
-    script(src='../javascripts/main.js')
+    //- script(src='../javascripts/main.js')

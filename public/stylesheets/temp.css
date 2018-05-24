@@ -450,3 +450,7 @@ height:40px;
   -webkit-transition-duration: 0.4s; /* Safari */
   transition-duration: 0.4s;
 }
+
+.text-main{
+  color: #135589;
+}

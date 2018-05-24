@@ -55,7 +55,7 @@ business.belongsTo(address)
 
 /* GET home page. */
 router.get('/dashboard', function(req, res, next) {
-  res.render('business-owner/dashboard', { active1: 'active' });
+  res.render('business-owner/dashboard', { active1: 'active','message': req.flash('message'), 'info': req.flash('info')});
 });
 
 router.get('/create-business', function(req, res, next) {
@@ -154,5 +154,14 @@ router.get('/list-outlets', function(req, res, next) {
 router.get('/list-reviews', function(req, res, next) {
   res.render('business-owner/list-reviews', { active4: 'active' });
 });
+
+router.post('/logout', function (req, res) {
+  if(!req.isAuthenticated()) {
+     notFound404(req, res, next);
+  } else {
+     req.logout();
+     res.redirect('/login');
+  }
+})
 
 module.exports = router;

@@ -1,0 +1,61 @@
+extends layout-form
+
+block content
+    .limiter
+      .container-login100
+        .wrap-login100
+          form.login100-form.validate-form(method='POST')
+            span.login100-form-title.p-b-20
+              | COMPLETE REGISTRATION
+            // <img src="imageedit_12_7024664115.png" alt="logo" width="25">
+            //
+              <span class="p-b-10 content-center p-l-45">
+              <img src="logo2.png" alt="logo" width="200">
+              </span>
+            |
+            - if(error){
+            div
+            | !{error}
+            - }
+            |
+            - if(info){
+            div
+              | !{info}
+            - }   
+            span.login100-form-title.p-b-20
+              i.zmdi.zmdi-font
+            .wrap-input100.validate-input
+              input.input100.has-val(type='text', name='username', value = susername readonly)
+              span.focus-input100(data-placeholder='Username')
+            .wrap-input100.validate-input(data-validate='Valid email is: a@b.c')
+              input.input100.has-val(type='text', name='email', value = semail readonly)
+              span.focus-input100(data-placeholder='Email')
+            .wrap-input100.validate-input
+              input#password.input100.has-val(name = "password" type = "password" onkeyup='check();')
+              span.focus-input100(data-placeholder='Password')
+            .wrap-input100.validate-input(data-validate='Valid email is: a@b.c')
+              input#confirm_password.input100.has-val(name = "cpassword" type = "password" onkeyup='check();')
+              span.focus-input100(data-placeholder='Confirm Password')
+            span#message 
+            .container-login100-form-btn
+              .wrap-login100-form-btn
+                .login100-form-bgbtn
+                button.login100-form-btn
+                  | Sign up
+            .text-center.p-t-115
+              span.txt1
+                | Back to
+              a.txt2(href='/')
+                |   Home
+    //- script(src='../javascripts/main.js')
+    script.
+      var check = function() {
+        if (document.getElementById('password').value ==
+          document.getElementById('confirm_password').value) {
+          document.getElementById('message').style.color = 'green';
+          document.getElementById('message').innerHTML = 'matching';
+        } else {
+          document.getElementById('message').style.color = 'red';
+          document.getElementById('message').innerHTML = 'not matching';
+        }
+      }

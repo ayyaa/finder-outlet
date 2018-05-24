@@ -52,26 +52,26 @@ block content
                 .form-group.col-md-2
                   button.btn.btn-primary.btn-block(type='submit') Save
           #nav-security.tab-pane.fade.border(role='tabpanel', aria-labelledby='nav-security-tab', style='background-color: white')
-            form(action='/action_page.php', style='padding:5%')
-              .form-row
-                .form-group.col-md-8.col-sm-10.ml-4
-                  h6 Enable two-factor autentication token
-                .form-group.col-md-2.text-center
-                  label.switch
-                    input(type='checkbox')
-                    span.slider.round
-              .form-row
-                .form-group.col-md-8.col-sm-10.ml-4
-                  h6
-                    | Preven login from other IP address (current IP address : 
-                    a(href='') 144.205.456.32
-                    | )
-                .form-group.col-md-2.text-center
-                  label.switch
-                    input(type='checkbox')
-                    span.slider.round
-              .form-group.col-md-2.m-2
-                button.btn.btn-primary.btn-block(type='submit') Save
+            div(style='padding:5%')
+              form(action='/action_page.php')
+                .form-row
+                  .form-group.col-md-8.col-sm-10.ml-4
+                    h6 Enable two-factor autentication token
+                  .form-group.col-md-2.text-center
+                    label.switch
+                      input(type='checkbox')
+                      span.slider.round
+              form(action='/action_page.php')
+                .form-row
+                  .form-group.col-md-8.col-sm-10.ml-4
+                    h6
+                      | Preven login from other IP address (current IP address : 
+                      a(href='') 144.205.456.32
+                      | )
+                  .form-group.col-md-2.text-center
+                    label.switch
+                      input(type='checkbox')
+                      span.slider.round
           #nav-deactivated.tab-pane.fade.border(role='tabpanel', aria-labelledby='nav-deactivated-tab', style='background-color: white')
             form(action='/action_page.php', style='padding:5%')
               .form-row

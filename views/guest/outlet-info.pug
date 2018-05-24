@@ -8,28 +8,28 @@ block content
         .useravatar
           img(alt='', src='../images/wonderlabs.png')
         .card-info.crd
-          span.card-title.crd
+          span.card-title.mb-2
             | Wonderlabs 
             br
-            |  Amstrong Campus
+            | Amstrong Campus
           // <p class="card-title" style="font-size: 13px">Amstrong Campus</p>
       .row(style='overflow:auto')
         .col-lg-3.col-12.align-content-center
           ul.container.p-4
             .media-body.p-2
-              h4.mt-0 Wonderlabs
+              h3.mt-0 Wonderlabs
             li.row.p-2(data-placement='right')
-              i.col-1.fas.fa-globe
-              span.col.nav-link-text
+              i.col-1.fas.fa-globe.align-self-center
+              span.col.nav-link-text.align-self-center
                 a(href='https://wonderlabs.io') https://wonderlabs.io
             li.row.p-2(data-placement='right')
-              i.col-1.fas.fa-phone
+              i.col-1.fas.fa-phone.align-self-center
               span.col.nav-link-text 0274 567 840
             li.row.p-2(data-placement='right')
-              i.col-1.fas.fa-envelope-open
+              i.col-1.fas.fa-envelope-open.align-self-center
               span.col.nav-link-text hello@wonderlabs.io 
             li.row.p-2(data-placement='right')
-              i.col-1.fas.fa-map-marker-alt
+              i.col-1.fas.fa-map-marker-alt.align-self-center
               span.col.nav-link-text Jalan Laksda Adisucipto no 27, Kota Yogyaarta, Depok, 55238
         .col.container.align-content-center
           #nav-tab.nav.nav-fill.navi.mr-4(role='tablist')
@@ -38,17 +38,20 @@ block content
             a#nav-rev-tab.nav-item.pull-right.nav-link.text-grey(data-toggle='pill', href='#nav-rev', role='tab', aria-controls='nav-rev', aria-selected='false') Review
             a#nav-outlet-tab.nav-item.pull-right.nav-link.text-grey(data-toggle='pill', href='#nav-outlet', role='tab', aria-controls='nav-outlet', aria-selected='false') Other Outlet
           #nav-tabContent.tab-content.pb-4.mr-4
-            #nav-home.container.tab-pane.fade.show.active.mb-4.border(role='tabpanel', aria-labelledby='nav-home-tab', style='background-color: white')
-              .container.pt-3(style='color:#404040')
-                p
-                h5(style='color:black') Wonderlabs Armstrong Campus
-                p
-                p
-                  | Website: 
+            #nav-home.container.tab-pane.fade.show.active.p-4.border(role='tabpanel', aria-labelledby='nav-home-tab', style='background-color: white')
+              .container(style='color:#404040')
+                h4.mb-0(style='font-size: 40px')
+                  | Wonderlabs 
+                  p.text-main Armstrong Campus
+                .subheading.mb-3
+                  | Jalan Laksda Adisucipto no 27, Kota Yogyakarta, Depok, 55238 · 0274 567 840 ·
                   a(href='https://wonderlabs.io') https://wonderlabs.io
-                p Tel: 0274 567 840
-                p Email: hello@wonderlabs.io
-                p Address: Jalan Laksda Adisucipto no 27, Kota Yogyaarta, Depok, 55238
+                //- p
+                //-   | Website: 
+                //-   a(href='https://wonderlabs.io') https://wonderlabs.io
+                //- p Tel: 0274 567 840
+                //- p Email: hello@wonderlabs.io
+                //- p Address: Jalan Laksda Adisucipto no 27, Kota Yogyaarta, Depok, 55238
                 p
                   | Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
                 table.table.table-striped(style='width:30%')
@@ -76,16 +79,16 @@ block content
                     td Friday
                     td 8.00
                     td 18.00
-            #nav-profile.tab-pane.fade.mb-4.border(role='tabpanel', aria-labelledby='nav-profile-tab', style='background-color: white')
+            #nav-profile.container.tab-pane.fade.p-4.border(role='tabpanel', aria-labelledby='nav-profile-tab', style='background-color: white')
               .col-lg-12.pt-4
                 iframe(width='100%', height='500px', frameborder='0', scrolling='no', marginheight='0', marginwidth='0', src='https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d63245.983635672164!2d110.33982538316076!3d-7.80316397292277!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e7a5787bd5b6bc5%3A0x21723fd4d3684f71!2sYogyakarta%2C+Kota+Yogyakarta%2C+Daerah+Istimewa+Yogyakarta!5e0!3m2!1sid!2sid!4v1525590578541')
               .col-lg-12.mt-4.mb-4
                 button.btn.btn-secondary.mb-2.mr-2(type='button') Get Direction
                 button.btn.btn-secondary.mb-2(type='button') Find Similar Bussines
-            #nav-rev.tab-pane.fade.p-4.border(role='tabpanel', aria-labelledby='nav-rev-tab', style='background-color: white')
+            #nav-rev.container.tab-pane.fade.p-4.border(role='tabpanel', aria-labelledby='nav-rev-tab', style='background-color: white')
               .container
-                p(style='font-size: 20px') Review
-                .mt-2
+                h4.mb-0(style='font-size: 40px') Review
+                .mt-5
                   .pt-2.pb-2.mb-2
                     .divider.mb-2
                     span.pb-1(style='font-size: 16px') Anonim
@@ -116,7 +119,7 @@ block content
                     i.fa.fa-star
                     i.fa.fa-star
                   p
-                    a(href='/reviews') More Reviews>
+                    a(href='/reviews') More Reviews >
                   // Button trigger modal
                   button.btn.btn-primary(type='button', data-toggle='modal', data-target='#exampleModal')
                     | Write Reviews
@@ -192,11 +195,11 @@ block content
                             .modal-footer
                               button.btn.btn-secondary(type='button', data-dismiss='modal') Close
                               button.btn.btn-primary(type='button') Send Report
-            #nav-outlet.tab-pane.fade.border.p-4(role='tabpanel', aria-labelledby='nav-outlet-tab', style='background-color: white')
+            #nav-outlet.container.tab-pane.fade.border.p-4(role='tabpanel', aria-labelledby='nav-outlet-tab', style='background-color: white')
               .container
-                p(style='font-size: 20px') Other Outlet
+                h4.mb-5(style='font-size: 40px') Other Outlet
                 .divider.mb-2
-                .mt-2
+                .mt-0
                   table.table.table-striped(style='width:100%')
                     tr.mt-2
                       th

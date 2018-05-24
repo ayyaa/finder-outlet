@@ -58,7 +58,7 @@ block content
                   h6 Enable two-factor autentication token
                 .form-group.col-md-2.text-center
                   label.switch
-                    input(type='checkbox')
+                    input#check1(type='checkbox' checked=true onchange="cTrig('check1')")
                     span.slider.round
               .form-row
                 .form-group.col-md-8.col-sm-10.ml-4
@@ -72,6 +72,22 @@ block content
                     span.slider.round
               .form-group.col-md-2.m-2
                 button.btn.btn-primary.btn-block(type='submit') Save
+            script(type='text/javascript').
+              function cTrig(clickedid) {
+              if (document.getElementById(clickedid).checked == true) {
+              var box= confirm("Are you sure you want to do this?");
+              if (box==true)
+              return false;
+              else
+              document.getElementById(clickedid).checked = false;
+              } else {
+              var box= confirm("Are you sure you want to do this?");
+              if (box==true)
+              return true;
+              else
+              document.getElementById(clickedid).checked = true;
+              }
+              }
           #nav-deactivated.tab-pane.fade.border(role='tabpanel', aria-labelledby='nav-deactivated-tab', style='background-color: white')
             form(action='/action_page.php', style='padding:5%')
               .form-row

@@ -4,21 +4,29 @@ block content
   .limiter
     .container-login100
       .wrap-login100
-        form.login100-form.validate-form
+        form.login100-form.validate-form(method='GET' action='/signin')
           span.p-b-15.content-center.p-l-80
             img(src='../images/logo6.png', alt='logo', width='120')
-          span.login100-form-title.p-b-2
+          span.login100-form-title.p-b-25
             | Sign in
-          span.login100-form-title.p-b-48
+          - if(success){
+          div
+            | !{success}
+          - }
+          span.login100-form-title.p-b-20
             i.zmdi.zmdi-font
           .wrap-input100.validate-input(data-validate='Valid email is: a@b.c')
-            input.input100(type='text', name='email')
+            input.input100.has-val(type='text', name='username')
             span.focus-input100(data-placeholder='Email or Username')
           .wrap-input100.validate-input(data-validate='Enter password')
             span.btn-show-pass
               i.zmdi.zmdi-eye
-            input.input100(type='password', name='pass')
+            input.input100.has-val(type='password', name='password')
             span.focus-input100(data-placeholder='Password')
+          |
+          - if(message){
+          p(style='color:red') #{message}
+          - }
           .container-login100-form-btn
             .wrap-login100-form-btn
               .login100-form-bgbtn
@@ -37,4 +45,4 @@ block content
               | or Back to
             a.txt2(href='/')
               |  Home
-  script(src='../javascripts/main.js')
+  //- script(src='../javascripts/main.js')

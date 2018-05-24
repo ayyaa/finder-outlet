@@ -30,7 +30,7 @@ module.exports = function(sequelize, DataTypes) {
       type: "LONGBLOB",
       allowNull: true
     },
-    rule: {
+    role: {
       type: DataTypes.ENUM('ADMIN','BO'),
       allowNull: false,
       defaultValue: 'BO'
@@ -57,16 +57,13 @@ module.exports = function(sequelize, DataTypes) {
     },
     fa_key: {
       type: DataTypes.CHAR(50),
-      allowNull: false,
-      defaultValue: '*'
+      allowNull: true
+
     },
     ip_address: {
       type: DataTypes.STRING(20),
-      allowNull: true
-    },
-    dateadd: {
-      type: DataTypes.DATE,
-      allowNull: true
+      allowNull: false,
+      defaultValue: '*'
     },
     password: {
       type: DataTypes.STRING(100),
@@ -79,7 +76,11 @@ module.exports = function(sequelize, DataTypes) {
     last_login: {
       type: DataTypes.DATE,
       allowNull: true
-    }
+    },
+    url_qr: {
+      type: DataTypes.TEXT,
+      allowNull: true
+    },
   }, {
     tableName: 'users'
   });

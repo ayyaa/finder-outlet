@@ -1,21 +1,371 @@
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
+const flash  = require('connect-flash');
+const crypto = require('crypto');
+const passport = require('passport');
+const bcrypt = require('bcrypt-nodejs');
+const async = require('async');
+const sgMail = require('@sendgrid/mail');
+const moment = require('moment');
+const models = require('../src/models');
+const twoFactor = require('node-2fa');
+const users = models.users
+const Sequelize = require ('sequelize');
+const regValidate= require('../src/validation/joi-registration');
+const regcValidate = require('../src/validation/joi-cmplt-reg');
+const op = Sequelize.Op;
+
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
   res.render('guest/home', { title: 'Express' });
 });
 
-router.get('/login', function(req, res, next) {
-  res.render('guest/login', { title: 'Express' });
+users.findAll().then(rows => {
+  console.log('success users')
+})
+
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+
+router.get('/login', function(req, res){
+  if (req.isAuthenticated()) {
+    if (req.user[0].role === 'BO') {
+      req.flash('message' ,'<div class="alert alert-danger"><div class="text-center">You have been logged in</div></div>')
+      res.redirect('/business-owner/dashboard')
+    } else {
+      req.flash('message' ,'<div class="alert alert-danger"><div class="text-center">You have been logged in</div></div>')
+      res.redirect('/admin/dashboard')
+    }
+  } else {
+  res.render('guest/login',{'message' :req.flash('message'),'success' :req.flash('success')});
+  };
 });
 
-router.get('/regist', function(req, res, next) {
-  res.render('guest/regist', { title: 'Express' });
+
+router.get('/signin', function(req, res, next) {
+  passport.authenticate('local', function(err, user, info) {
+    if (err) { return next(err); }
+    if (!user) { return res.redirect('/login'); }
+    req.logIn(user, function(err) {
+      if (err) { return next(err); }
+      console.log(user.role)
+      if(user.role === 'BO') {
+        var role = 'Business Owner'
+        req.flash('info', '<div class="alert alert-success"><div class="text-center">Welcome to Outlet Finder as '+role+' '+user.username+ '!</div></div>');
+        return res.redirect('/business-owner/dashboard');
+      } else {
+        var role = 'Admin'
+        req.flash('info', '<div class="alert alert-success"><div class="text-center">Welcome to Outlet Finder as ' +role+' '+user.username+ '!</div></div>');
+        return res.redirect('/admin/dashboard');
+      }
+    });
+  })(req, res, next);
 });
 
-router.get('/forgot', function(req, res, next) {
-  res.render('guest/forgot', { title: 'Express' });
+
+router.get('/regist', function(req, res){
+  if (req.isAuthenticated()) {
+    if (req.user[0].role === 'BO') {
+      req.flash('message' ,'<div class="alert alert-danger"><div class="text-center">You have been logged in</div></div>')
+      res.redirect('/business-owner/dashboard')
+    } else {
+      req.flash('message' ,'<div class="alert alert-danger"><div class="text-center">You have been logged in</div></div>')
+      res.redirect('/admin/dashboard')
+    }
+  } else {
+  res.render('guest/regist', {'error' :req.flash('error'), 'info' :req.flash('info')});
+  };
+});
+
+router.post('/regist', function(req,res) {
+  regValidate.validate({ username: req.body.username , email: req.body.email}, function(err, value) {
+    if (err) {
+      req.flash('error', '<div class="alert alert-danger"><div class="text-center">'+err+'</div></div>')
+      var susername = req.body.username;
+      var semail = req.body.email;
+      res.render('guest/regist', {'error' :req.flash('error'), susername, semail});
+    } else {
+      users.findAll({
+        where: {
+          username: [req.body.username]
+        }
+      }).then(function(rows) {
+        if (rows.length > 0) {
+          req.flash('error','<div class="alert alert-danger"><div class="text-center">Username is not available</div></div>')
+          var susername = req.body.username;
+          var semail = req.body.email;
+          res.render('guest/regist', {'error' :req.flash('error'), susername, semail});
+        } else {
+          users.findAll({
+            where: {
+              email: [req.body.email]
+            }
+          }).then(function(rows) {
+            if (rows.length > 0) {
+              req.flash('error', '<div class="alert alert-danger"><div class="text-center">Email has been used</div></div>')
+              var susername = req.body.username;
+              var semail = req.body.email;
+              res.render('guest/regist', {'error' :req.flash('error'), susername, semail});
+            } else {
+              async.waterfall([
+                function(done) {
+                  crypto.randomBytes(20, function(err, buf) {
+                    var token = buf.toString('hex');
+                    done(err, token);
+                  });
+                },
+            
+                function(token, done) {
+                  var user = {username: req.body.username, email: req.body.email, reg_token: token, status: 0}
+                  users.bulkCreate([
+                    user
+                  ]).then(function(rows, err) {
+                    users.findAll({
+                      where: {
+                        username: req.body.username
+                      }
+                    }).then(function(rows, err) {
+                      done(err, token, rows)
+                    })
+                  })
+                },
+                
+                function(token, rows, done) {
+                  console.log('email',req.body.email)
+                  var msge = {
+                    to: req.body.email,
+                    from: 'azz@example.com',
+                    subject: 'Confirm your account',
+                    text: 'By clicking on the following link, you are confirming your email address and complete your registration.\n\n' +
+                    'Please click on the following link, or paste this into your browser to complete the process:\n\n' +
+                    'http://' + req.headers.host + '/confirmreg/' + token + '\n\n' +
+                    'If you did not request this, please ig-nore this email.\n',
+                  };
+                  sgMail.send(msge, function(err) {
+                    console.log('success')
+                    req.flash('info', '<div class="alert alert-success"><div class="text-center">An e-mail has been sent to ' + req.body.email + ' to confirm your account. Check it, and complete your registration</div></div>');
+                    done(err, 'done');
+                  });
+                }
+              ], 
+              function(err) {
+                if (err) return next(err);
+                res.redirect('/regist')
+              });
+            }
+          })
+        }
+      })
+    }
+  })  
+})
+
+router.get('/confirmreg/:token', function(req, res) {
+  users.findAll({
+    where: {
+      reg_token: [req.params.token]
+    }
+  }).then(function(rows, err) {
+    if (rows.length<=0) {
+      req.flash('error','<div class="alert alert-danger"><div class="text-center">invalid token or link is broken</div></div>')
+      res.redirect('/regist')
+    } else {
+      res.render('guest/complete_regist', {susername: rows[0].username, semail: rows[0].email})
+    }
+  }).catch(function(err) {
+    console.log(err)
+  })
+})
+
+router.post('/confirmreg/:token', function(req, res, next) {
+  var pass = bcrypt.hashSync(req.body.password);
+  var nsecret = twoFactor.generateSecret({name: 'Student system', account: req.body.username});
+  var user = {password: pass, reg_token: '', status: 1, fa_key: nsecret.secret, url_qr: nsecret.qr}
+  regcValidate.validate({ password: req.body.password}, function(err, value) {
+    if (err) {
+      req.flash('error', '<div class="alert alert-danger"><div class="text-center">'+err+'</div></div>')
+      res.render('guest/complete_regist', {susername: req.body.username, semail: req.body.email, 'error' :req.flash('error')})
+    }
+    users.update(
+      user,
+      { where: {
+        username: req.body.username
+      }}
+    ).then(rows => 
+      users.findOne({
+        where: {
+          username: [req.body.username]
+        },
+        attributes: ['id', 'username', 'password']
+      }).then(user => 
+        req.login(user, function (err) {
+          if (err) {
+            req.flash('error', err.message);
+            console.log('user',user)
+            return res.redirect('back');
+          }
+          console.log('Logged user in using Passport req.login()');
+          console.log('username',req.user.username);
+          req.flash('info', '<div class="alert alert-success"><div class="text-center">Congratulations, you successfully registered</div></div>')
+          res.redirect('/business-owner/dashboard')
+          // res.render('home',{'info' :req.flash('info'), username: req.user.username});
+        })
+      )
+    )
+  })
+})
+
+
+router.get('/forgot', function(req, res){
+  if (req.isAuthenticated()) {
+    res.redirect('back');
+  } else {
+    res.render('guest/forgot',{'error' :req.flash('error'), 'info' :req.flash('info')});
+  };
+});
+
+router.post('/forgot', function(req, res, next) {
+  var email = req.body.email;
+  async.waterfall([
+    function(done) {
+      crypto.randomBytes(20, function(err, buf) {
+        var token = buf.toString('hex');
+        done(err, token);
+      });
+    },
+
+    function(token, done) {
+      console.log(email);
+      users.findAll({
+        where: {
+          email: [email]
+        }
+      }).then(function(rows, err) {
+        if (rows.length <= 0) {
+          req.flash('error', '<div class="alert alert-danger"><div class="text-center">No account with that email address exists.</div></div>');
+          return res.redirect('/forgot');
+        }
+        var spw_token = token;      
+        var spw_exp = moment().toDate();
+        var reset = {password_token: spw_token, password_date: spw_exp}
+        users.update(
+          reset,
+          { where: {email: [email]}}
+        ).then(function(rows, err) {
+          done(err, token, rows)
+          // console.log(token)
+        })
+      })
+    },
+    
+    function(token, rows, done) {
+      console.log('token',token)
+      var msge = {
+        to: email,
+        from: 'azz@example.com',
+        subject: 'Node.js Password Reset',
+        text: 'You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n' +
+        'Please click on the following link, or paste this into your browser to complete the process:\n\n' +
+        'http://' + req.headers.host + '/reset/' + token + '\n\n' +
+        'If you did not request this, please ig-nore this email and your password will remain unchanged.\n',
+      };
+      sgMail.send(msge, function(err) {
+        req.flash('info','<div class="alert alert-success"><div class="text-center">'+ 'An e-mail has been sent to ' + email + ' with further instructions.'+'</div></div>');
+        done(err, 'done');
+      });
+    }
+  ], 
+  function(err) {
+    if (err) return next(err);
+    // res.redirect('/forgot')
+    res.redirect('/forgot');
+  });
+});
+
+router.get('/reset/:token', function(req, res) {
+  users.findAll({
+    where: {
+      password_token: [req.params.token]
+    }
+  }).then(function(rows) {
+    if (rows.length <= 0) {
+      req.flash('error', '<div class="alert alert-danger"><div class="text-center">'+'Password reset token is invalid'+'.</div></div>');
+      return res.redirect('/forgot');
+    }
+    console.log(rows[0].password_date);
+    var min = moment().diff(rows[0].password_date, 'minute')
+    console.log(min);
+
+    if (min >=160) {
+      users.update(
+        {password_token: null, password_date: null},
+        { where: {password_token: [req.params.token]}}
+      ).then().catch(function(err) {
+        console.log(err)
+      })
+      req.flash('error', '<div class="alert alert-danger"><div class="text-center">'+'Password reset token is invalid or has expired.'+'.</div></div>');
+      return res.redirect('/forgot');
+    }
+    var username = rows[0].username
+    res.render('guest/reset', {
+      susername: username
+    })
+  }).catch(function(er) {
+    if(err) throw err
+  })
+});
+
+router.post('/reset/:token', function(req, res, next) {
+  var username = req.body.username;
+  console.log(username)
+  async.waterfall([
+    function(done) {
+      users.findAll({
+        where: {
+          password_token: [req.params.token]
+        }
+      }).then(function(rows, err) {
+        if (rows.length <= 0) {
+          req.flash('error', '<div class="alert alert-danger"><div class="text-center">'+'No account with that email address exists.'+'.</div></div>');
+          return res.redirect('/forgot');
+        }
+        var spw_token = undefined;      
+        var spw_exp = undefined;  
+        var spassword = req.body.password;  
+        var sspassword = bcrypt.hashSync(spassword);
+        
+        var reset = {password_token: spw_token, password_date: spw_exp, password: sspassword}
+        users.update(
+          reset,
+          { where: {username: [username]}}
+        ).then().catch(function(err) {
+          console.log(err)
+        })
+        var email = rows[0].email;
+        console.log(email)
+        done(err, rows);
+      }).catch(function(err) {
+        console.log(error)
+      })
+    },
+    
+    function(rows, done) {
+      var msge = {
+        to: rows[0].email,
+        from: 'vy.phera@gmail.com',
+        subject: 'Your password has been changed',
+        text: 'Hello,\n\n' +
+          'This is a confirmation that the password for your account ' + rows[0].email + ' has just been changed.\n'
+      };
+      sgMail.send(msge, function(err) {
+        req.flash('success','<div class="alert alert-success"><div class="text-center">'+'Success! Your password has been changed.'+'.</div></div>');
+        done(err, 'done');
+      });
+    }
+  ], function(err) {
+    if (err) return next(err);
+    res.redirect('/login');
+  });
 });
 
 router.get('/browse', function(req, res, next) {
@@ -24,6 +374,10 @@ router.get('/browse', function(req, res, next) {
 
 router.get('/outletinfo', function(req, res, next) {
   res.render('guest/outletinfo', { title: 'Express' });
+});
+
+router.get('/outletinfo2', function(req, res, next) {
+  res.render('guest/outlet-info', { title: 'Express' });
 });
 
 router.get('/search', function(req, res, next) {

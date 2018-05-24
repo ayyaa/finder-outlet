@@ -1,0 +1,53 @@
+extends layout-form
+
+block content
+    .limiter
+      .container-login100
+        .wrap-login100
+          form.login100-form.validate-form(method='POST')
+            span.login100-form-title.p-b-20
+              | Reset Password
+            |
+            - if(error){
+            div
+            | !{error}
+            - }
+            |
+            - if(info){
+            div
+              | !{info}
+            - }   
+            span.login100-form-title.p-b-20
+              i.zmdi.zmdi-font
+            .wrap-input100.validate-input(data-validate='Valid email is: a@b.c')
+              input.input100.has-val(type='text', name='username', value=susername readonly)
+              span.focus-input100(data-placeholder='Your Email Address')
+            .wrap-input100.validate-input
+              input#password.input100.has-val(name = "password" type = "password" onkeyup='check();')
+              span.focus-input100(data-placeholder='Password')
+            .wrap-input100.validate-input(data-validate='Valid email is: a@b.c')
+              input#confirm_password.input100.has-val(name = "cpassword" type = "password" onkeyup='check();')
+              span.focus-input100(data-placeholder='Confirm Password')
+            span#message                 
+            .container-login100-form-btn
+              .wrap-login100-form-btn
+                .login100-form-bgbtn
+                button.login100-form-btn(type='submit' , value='submit')
+                  | Reset my Password
+            .text-center.p-t-115
+              span.txt1
+                | or Back to
+              a.txt2(href='/')
+                |  Home
+    //- script(src='../javascripts/main.js')
+    script.
+      var check = function() {
+        if (document.getElementById('password').value ==
+          document.getElementById('confirm_password').value) {
+          document.getElementById('message').style.color = 'green';
+          document.getElementById('message').innerHTML = 'matching';
+        } else {
+          document.getElementById('message').style.color = 'red';
+          document.getElementById('message').innerHTML = 'not matching';
+        }
+      }

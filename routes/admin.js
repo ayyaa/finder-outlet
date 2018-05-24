@@ -6,7 +6,7 @@ const validateJoi = require('../src/validation/joi-create-category');
 const flash = require('connect-flash');
 
 router.get('/dashboard', function(req, res, next) {
-  res.render('admin/dashboard', { title: 'Express' , active1: 'active'});
+  res.render('admin/dashboard', { title: 'Express' , active1: 'active','message': req.flash('message'),'info': req.flash('info')});
 });
 
 router.get('/create-category', function(req, res, next) {
@@ -89,6 +89,15 @@ router.get('/list-report-reviews', function(req, res, next) {
 router.get('/list-business-owner', function(req, res, next) {
   res.render('admin/list-bo', {  active4: 'active'});
 });
+
+router.post('/logout', function (req, res) {
+  if(!req.isAuthenticated()) {
+     notFound404(req, res, next);
+  } else {
+     req.logout();
+     res.redirect('/login');
+  }
+})
 
 // router.get('/create-category', function(req, res, next) {
 //   res.render('admin/layout-admin');

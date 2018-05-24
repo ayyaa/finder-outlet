@@ -3,6 +3,16 @@ extends layout
 block content
   .content-wrapper
     .container-fluid
+      |
+      - if(message){
+      div 
+        | !{message}
+      - }
+      |
+      - if(info){
+      div 
+        | !{info}
+      - }
       // Breadcrumbs
       ol.breadcrumb
         li.breadcrumb-item

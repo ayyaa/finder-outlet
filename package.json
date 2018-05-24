@@ -6,22 +6,32 @@
     "start": "node ./bin/www"
   },
   "dependencies": {
+    "@sendgrid/mail": "^6.2.1",
+    "async": "^2.6.0",
+    "bcrypt-nodejs": "0.0.3",
     "body-parser": "~1.18.2",
     "connect-flash": "^0.1.1",
+    "connect-roles": "^3.1.2",
     "cookie-parser": "~1.4.3",
+    "crypto": "^1.0.1",
     "debug": "~2.6.9",
     "express": "~4.15.5",
     "express-flash": "0.0.2",
     "express-session": "^1.15.6",
     "joi": "^13.3.0",
     "joi-date-extensions": "^1.2.0",
+    "memory": "0.0.3",
     "morgan": "~1.9.0",
+    "mysql": "^2.15.0",
     "mysql2": "^1.5.3",
+    "node-2fa": "^1.1.2",
     "passport": "^0.4.0",
+    "passport-local": "^1.0.0",
     "pug": "2.0.0-beta11",
     "sequelize": "^4.37.7",
     "sequelize-auto": "^0.4.29",
     "serve-favicon": "~2.4.5",
-    "session-memory-store": "^0.2.2"
+    "session-memory-store": "^0.2.2",
+    "unescape": "^1.0.1"
   }
 }
