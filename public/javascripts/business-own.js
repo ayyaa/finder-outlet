@@ -110,7 +110,7 @@ $(document).ready(function() {
     "searching": false,
     "lengthChange": false,
     "columnDefs": [{
-      "targets": 4,
+      "targets": 2,
       "orderable": false
       }]
   });
@@ -128,11 +128,7 @@ $(document).ready(function() {
   $('#dataTable5').DataTable({
     responsive: true,
     "searching": false,
-    "lengthChange": false,
-    "columnDefs": [{
-      "targets": 2,
-      "orderable": false
-      }]
+    "lengthChange": false
   });
 
   $('#dataTable6').DataTable({

@@ -2,3 +2,4 @@
 /node_modules
 src/models/index.js
 sendgrid.env
+src/config/config.js

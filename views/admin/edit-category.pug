@@ -1,19 +1,147 @@
- extends layout-admin
-
- block content   
+doctype html
+head
+  meta(charset='utf-8')
+  meta(http-equiv='X-UA-Compatible', content='IE=edge')
+  meta(name='viewport', content='width=device-width, initial-scale=1, shrink-to-fit=no')
+  meta(name='description', content='')
+  meta(name='author', content='')
+  title outlet-finder
+  link(rel='stylesheet', href='../../stylesheets/business-own.css')
+  link(rel='stylesheet', href='../../stylesheets/business-owner.css')
+  link(rel='stylesheet', href='https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css', integrity='sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4', crossorigin='anonymous')
+  link(rel='stylesheet', href='https://use.fontawesome.com/releases/v5.0.12/css/all.css', integrity='sha384-G0fIWCsCzJIMAVNQPfjH08cyYaUtMwjJwqiRKxxE/rx96Uroj1BtIQ6MLJuheaO9', crossorigin='anonymous')
+  link(rel='stylesheet', href='https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css')
+  link(rel='stylesheet', href='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0/css/bootstrap.css')
+  link(rel='stylesheet', href='https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap4.min.css')
+  link(rel='stylesheet', href='https://cdn.datatables.net/responsive/2.2.1/css/responsive.dataTables.min.css')
+  script(src='https://code.jquery.com/jquery-3.2.1.slim.min.js', integrity='sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN', crossorigin='anonymous')
+  script(src='https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js', integrity='sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q', crossorigin='anonymous')
+  script(src='https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js', integrity='sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl', crossorigin='anonymous')
+  script(type='text/javascript', src='../../javascripts/business-own.js')
+  script(type='text/javascript', src='https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js')
+  script(type='text/javascript', src='https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap4.min.js')
+  script(type='text/javascript', src='https://cdn.datatables.net/responsive/2.2.1/js/dataTables.responsive.min.js')
+body
+  #page-top.fixed-nav.bg-1
+    nav#mainNav.navbar.navbar-expand-lg.navbar-dark.bg-1.fixed-top
+      a(href='/admin/dashboard')
+        img(rel='icon', src='../../images/logo8.png', height='35')
+      button.navbar-toggler.navbar-toggler-right(type='button', data-toggle='collapse', data-target='#navbarResponsive', aria-controls='navbarResponsive', aria-expanded='false', aria-label='Toggle navigation')
+        span.navbar-toggler-icon
+      #navbarResponsive.collapse.navbar-collapse
+        ul#exampleAccordion.navbar-nav.navbar-sidenav
+          li.nav-item.text-center.mt-5.mb-2(data-toggle='tooltip', title='photo-profile')
+            img.img-responsive.rounded-circle(src='https://indrawatidaud.files.wordpress.com/2016/12/kotak-tisu-doraemon.jpg', alt='User', width='100', height='auto')
+            .container
+              h5.text-center.mt-3.mb-0.main-text
+                strong Doraemon Nobita
+              p.text-center.mb-4.main-text(style='font-size:12px') - Administrator -
+          li.nav-item(class=active1)
+            a.nav-link(href='/admin/dashboard')
+              i.fa.fa-fw.fa-dashboard
+              span.nav-link-text  Dashboard
+          li.nav-item(class=active2)
+            a.nav-link(href='/admin/list-categories')
+              i.fa.fa-fw.fa-list
+              span.nav-link-text  Categories
+          li.nav-item(class=active3)
+            a.nav-link(href='/admin/list-business')
+              i.fa.fa-fw.fa-briefcase
+              span.nav-link-text  Business
+          li.nav-item(class=active4)
+            a.nav-link(href='/admin/list-business-owner')
+              i.fa.fa-fw.fa-users
+              span.nav-link-text  Business owner
+          li.nav-item(class=active5)
+            a.nav-link(href='/admin/list-outlets')
+              i.fa.fa-fw.fa-bank
+              span.nav-link-text  Outlets
+          li.nav-item(class=active6)
+            a.nav-link(href='/admin/list-reviews')
+              i.fa.fa-fw.fa-comments-o
+              span.nav-link-text  Reviews
+          li.nav-item(class=active7)
+            a.nav-link(href='/admin/list-report-reviews')
+              i.fa.fa-fw.fa-flag
+              span.nav-link-text  Report reviews
+        ul.navbar-nav.sidenav-toggler
+          li.nav-item
+            span.nav-link.text-center(style='font-size:12px; color:#135589')
+              | Copyright © Outlet Finder 2018
+              | Wonderlabs Alright Reserved
+        ul.navbar-nav.ml-auto
+          li.nav-item.dropdown
+            a#messagesDropdown.nav-link.dropdown-toggle.mr-lg-2(href='#', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
+              i.fa.fa-user
+              |  My Account
+            .dropdown-menu(aria-labelledby='messagesDropdown')
+              a.dropdown-item(href='#')
+                strong Basic Info
+              .dropdown-divider
+              a.dropdown-item(href='#')
+                strong Change Password
+              .dropdown-divider
+              a.dropdown-item(href='#')
+                strong Security
+              .dropdown-divider
+              a.dropdown-item(href='#')
+                strong Deactivated
+          li.nav-item
+            a.nav-link(data-toggle='modal', data-target='#exampleModal')
+              i.fa.fa-fw.fa-sign-out
+              | Logout
+    #exampleModal.modal.fade(tabindex='-1', role='dialog', aria-labelledby='exampleModalLabel', aria-hidden='true')
+      .modal-dialog(role='document')
+        .modal-content
+          .modal-header
+            h5#exampleModalLabel.modal-title Are you sure to logout from this system ?
+            button.close(type='button', data-dismiss='modal', aria-label='Close')
+              span(aria-hidden='true') ×
+          .modal-body Select "Logout" below if you are ready to end your current session.
+          .modal-footer
+            button.btn.btn-secondary(type='button', data-dismiss='modal') Cancel
+            a.btn.btn-primary(href='login.html') Logout
+    #deleteModal.modal.fade(tabindex='-1', role='dialog', aria-labelledby='deleteModalLabel', aria-hidden='true')
+      .modal-dialog(role='document')
+        .modal-content
+          .modal-header
+            h5#deleteModalLabel.modal-title Are you sure to delete ?
+            button.close(type='button', data-dismiss='modal', aria-label='Close')
+              span(aria-hidden='true') ×
+          .modal-body Select "Delete" below if you are ready to delete it.
+          .modal-footer
+            button.btn.btn-secondary(type='button', data-dismiss='modal') Cancel
+            a.btn.btn-primary(href='#') Delete   
   .content-wrapper
     .container-fluid
       ol.breadcrumb
         li.breadcrumb-item
           h4 Edit Category
+      |
+      - if(error){
+      .alert.alert-danger 
+       .text-center #{error}
+      - }
+      |
+      - if(info){
+      .alert.alert-info 
+        .text-center #{info}
+      - }
+      |
+      - if(success){
+      .alert.alert-success 
+        .text-center #{success}
+      - }
       div
-        form.mt-4(action='/action_page.php')
+        form.mt-4(action='/admin/update-category' method='POST')
+          .form-group.col-md-6
+            input#id.form-control(type='hidden', placeholder='Name', name='id', value=id)
           .form-group.col-md-6
             label(for='name') Category name:
-            input#pwd.form-control(type='text', placeholder='Name', name='pswd')
+            input#name.form-control(type='text', placeholder='Name', name='name_category', value=name_category)
           .form-group.col-md-9
             label(for='description') Description:
-            textarea.form-control(name='', id='', cols='30', rows='5')  Description about is 
+            textarea.form-control(name='description', id='', cols='30', rows='5')=description
           .form-row
             .form-group.col-md-2.ml-3
               button.btn.btn-primary.btn-block(type='submit') Submit

@@ -11,52 +11,33 @@ block content
           i.fa.fa-table
           |  Data List Business
         .card-body
-          .ml-3
-            form.form-inline(method='GET', style='overflow-x:auto;')
-              .form-group.col-md-3
-                input#pwd.form-control(type='text', placeholder='Keyword', name='search', style='width:100%')
-              .form-group.col-md-3
-                select.custom-select.form-control(style='width:100%', name='get_atr')
-                  option(value='') Line of Business
-                  option(value='') Name
-                  option(value='') Address
-              .form-group.col-md-3
-                button.btn.btn-success.form-control(type='submit')
-                  span.fa.fa-filter
-                  |  Filter
-          .col-md-12
-            .table-responsive.mt-4
-              table#dataTable4.table.table-bordered(width='100%', cellspacing='0')
-                thead
-                  tr.bg-2.text-white
-                    th(scope='col') Name
-                    th(scope='col') Line of Business
-                    th(scope='col') Outlets
-                    th.text-center(scope='col') Action
-                tbody
+          form.form-inline(method='GET', style='overflow-x:auto;')
+            .form-group.col-md-3
+              input#pwd.form-control(type='text', placeholder='Keyword', name='search', style='width:100%')
+            .form-group.col-md-3
+              select.custom-select.form-control(style='width:100%', name='get_atr')
+                option(value='') Line of Business
+                option(value='') Name
+                option(value='') Address
+            .form-group.col-md-3
+              button.btn.btn-success.form-control(type='submit')
+                span.fa.fa-filter
+                |  Filter
+          .table-responsive.mt-4
+            table#dataTable4.table.table-bordered(width='100%', cellspacing='0')
+              thead
+                tr.bg-2.text-white
+                  th(scope='col') Name
+                  th(scope='col') Line of Business
+                  th(scope='col') Outlets
+                  th.text-center(scope='col') Action
+              tbody
+                for business in data
                   tr
-                    th(scope='row') Wonderlabs
-                    td Wonderlabs
+                    th(scope='row')= business.name
+                    td= business.dataValues.category
                     td
                       | 2 
-                      a(href='/admin/list-outlets') view outlets
-                    td.text-center
-                      .dropdown
-                        button.btn.bg-5.dropdown-toggle.btn-sm.border(type='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
-                          | Action
-                        .dropdown-menu.dropdown-menu-right
-                          a.dropdown-item(href='#')
-                            i.fa.fa-user
-                            |  View
-                          .dropdown-divider
-                          a.dropdown-item(data-toggle='modal', data-target='#deleteModal')
-                            i.fa.fa-trash
-                            |  Delete
-                  tr
-                    th(scope='row') Wonderfood
-                    td Wonderlabs
-                    td
-                      | 1 
                       a(href='/admin/list-outlets') view outlets
                     td.text-center
                       .dropdown

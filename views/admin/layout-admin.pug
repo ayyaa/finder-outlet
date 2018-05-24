@@ -14,7 +14,9 @@ head
   link(rel='stylesheet', href='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0/css/bootstrap.css')
   link(rel='stylesheet', href='https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap4.min.css')
   link(rel='stylesheet', href='https://cdn.datatables.net/responsive/2.2.1/css/responsive.dataTables.min.css')
+  script(src='https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js')
   script(src='https://code.jquery.com/jquery-3.2.1.slim.min.js', integrity='sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN', crossorigin='anonymous')
+  script(type='text/javascript', src='//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js')
   script(src='https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js', integrity='sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q', crossorigin='anonymous')
   script(src='https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js', integrity='sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl', crossorigin='anonymous')
   script(type='text/javascript', src='../javascripts/business-own.js')
@@ -100,6 +102,7 @@ body
           .modal-body Select "Logout" below if you are ready to end your current session.
           .modal-footer
             button.btn.btn-secondary(type='button', data-dismiss='modal') Cancel
+<<<<<<< HEAD
             form(action='/admin/logout', method='POST')
               button.btn.btn-primary Logout
     #deleteModal.modal.fade(tabindex='-1', role='dialog', aria-labelledby='deleteModalLabel', aria-hidden='true')
@@ -113,4 +116,7 @@ body
           .modal-footer
             button.btn.btn-secondary(type='button', data-dismiss='modal') Cancel
             a.btn.btn-primary(href='#') Delete
+=======
+            a.btn.btn-primary(href='login.html') Logout
+>>>>>>> 980fc40ee240c83328625e641b6aae493ce88f62
     block content
