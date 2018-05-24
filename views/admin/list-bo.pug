@@ -25,28 +25,21 @@ block content
                   span.fa.fa-filter
                   |  Filter
           .col-md-12
-            .table-responsive.mt-4
-              table#dataTable3.table.table-bordered(width='100%', cellspacing='0')
+            .table-responsive.mt-4.pl-0
+              table#dataTable5.table.table-bordered(width='100%', cellspacing='0')
                 thead
                   tr.bg-2.text-white
                     th(scope='col') Username
+                    th(scope='col') Full name
                     th(scope='col') Email
-                    th(scope='col') No.Phone
-                    th(scope='col') Business
-                    th(scope='col') Outlets
+                    th(scope='col') Contact Number
                 tbody
-                  tr
-                    th(scope='row') Evania
-                    td evania@gmail.com
-                    td 09876567876
-                    td wonderlabs
-                    td wonderlabs Amstrong
-                  tr
-                    th(scope='row') Evania
-                    td evania@gmail.com
-                    td 09876567876
-                    td wonderlabs
-                    td wonderlabs Amstrong
+                  for user in data
+                    tr
+                      th(scope='row')= user.username
+                      td= user.name
+                      th= user.email
+                      th= user.contact_no
         .card-footer.small.text-muted Updated yesterday at 11:59 PM
     a.scroll-to-top.rounded(href='#page-top')
       i.fa.fa-angle-up

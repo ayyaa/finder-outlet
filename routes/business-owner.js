@@ -8,17 +8,23 @@ const address = models.address;
 const business_category = models.business_category;
 const validateJoi = require('../src/validation/joi-create-business');
 const flash = require('connect-flash');
-
+const config = require('../src/config/config')
+const Request = require('request');
 business.belongsToMany(categories, {through: 'business_category', foreignKey: 'business_id', otherKey: 'category_id'})
 categories.belongsToMany(business, {through: 'business_category', foreignKey: 'category_id', otherKey: 'business_id'})
 address.hasOne(business, {foreignKey: 'address_id'})
 business.belongsTo(address)
 
 // business.findAll({
-//   attributes: ['name', 'email'],
+//   attributes: ['name', 'email',
+//   [Sequelize.fn('GROUP_CONCAT', Sequelize.literal("categories.name SEPARATOR ', '")), 'category']],
+//   group: ['business.id'],
 //   include: [{
 //     model: categories,
-//     attributes: ['name', 'description'],
+//     attributes: [
+//       'name'
+//     ]
+    
 //     // through: {
 //     //   attributes: ['category_id','business_id' ],
 //     // }
@@ -28,6 +34,8 @@ business.belongsTo(address)
 // }).catch(err => {
 //   console.error(err)
 // })
+// var latlng = 678999+' '+67328832;
+// var geom = Sequelize.fn('ST_GEOMFROMTEXT', `POINT(${latlng})`);
 
 // address.create({
 //   line1: 'jalan adisucipto', 
@@ -36,6 +44,7 @@ business.belongsTo(address)
 //   administrative_area_3: 'demangan', 
 //   administrative_area_4: 'gondokusuman', 
 //   postalcode: 55231,
+//   point: geom
 // }, {
 //   include: [{
 //     model: business,
@@ -51,7 +60,22 @@ business.belongsTo(address)
 //   })
 // })
 
+// var currentCities=[];
+// var BATTUTA_KEY=config.batuta_key.key;
+// var url = "https://battuta.medunes.net/api/country/all/?key="+BATTUTA_KEY;
 
+// Request.get(url, (error, response, body) => {
+//     if(error) {
+//         return console.dir(error);
+//     }
+//     var data = JSON.parse(body);
+//     console.dir(JSON.parse(body));
+//     console.log(data[1].name)
+// });
+    // Populate country select box from battuta API
+// url="https://battuta.medunes.net/api/country/all/?key="+BATTUTA_KEY+"&callback=?";
+// http.getJSON(url,function(countries) {
+//   console.log(countries); });
 
 /* GET home page. */
 router.get('/dashboard', function(req, res, next) {
@@ -61,7 +85,19 @@ router.get('/dashboard', function(req, res, next) {
 router.get('/create-business', function(req, res, next) {
   categories.findAll()
   .then(rows => {
-    res.render('business-owner/create-business', {active3: 'active', valCategories:rows});
+    var BATTUTA_KEY=config.batuta_key.key;
+    var url = "https://battuta.medunes.net/api/country/all/?key="+BATTUTA_KEY;
+
+    Request.get(url, (error, response, body) => {
+        if(error) {
+            return console.dir(error);
+        }
+        var data = JSON.parse(body);
+        // console.dir(JSON.parse(body));
+        // console.log(data[1].name)
+        res.render('business-owner/create-business', {active3: 'active', valCategories:rows, valState: data});
+    });
+    
   })
 });
 
@@ -83,6 +119,7 @@ router.post('/create-business', function(req, res, next) {
     lng: req.body.lng}, function(errors, value) {
     console.log(errors);
     if (!errors) {
+      var latlng = req.body.lat+' '+req.body.lng;
       address.create({
         line1: req.body.line1, 
         line2: req.body.line2,
@@ -91,7 +128,7 @@ router.post('/create-business', function(req, res, next) {
         administrative_area_3: req.body.city, 
         administrative_area_4: '', 
         postalcode: req.body.postal_code,
-        point: `POINT(`+Number(req.body.lat)+` `+Number(req.body.lng)+`)`
+        point: Sequelize.fn('ST_GEOMFROMTEXT', `POINT(${latlng})`)
       }, {
         include: [{
           model: business,
@@ -111,7 +148,7 @@ router.post('/create-business', function(req, res, next) {
         })
         .then(rowss => {
           req.flash('success', 'Successful added Business.');
-          res.redirect('/business-owner//list-business');
+          res.redirect('/business-owner/list-business');
           console.log(rowss);
         })
       }) 

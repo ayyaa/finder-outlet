@@ -9,6 +9,9 @@ var config = {
   server: {
       host: 'localhost',
       port: '3000'
+  },
+  batuta_key: {
+      key : '26a8db34fb906dfecf949d17dcbb9761'
   }
 }
 

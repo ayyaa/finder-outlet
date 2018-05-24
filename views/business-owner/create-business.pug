@@ -27,7 +27,7 @@ block content
             .col-md-6
               .form-group
                 label(for='line') Line of Business:
-                select.custom-select(name='get_category')
+                select.custom-select(name='get_category' multiple='multiple')
                   option(value='' selected) Line of Business
                   each value in valCategories
                     option(value=value.id) #{value.name}
@@ -63,21 +63,21 @@ block content
                 input#inputPassword4.form-control(type='text', placeholder='Line 2 address' name='line2')
             .form-row
               .form-group.col-md-6
-                label(for='line1') State
-                select.custom-select(name='state')
-                  option(value='state') State
-                  option(value='name') Name
-                  option(value='address') Address
+                label(for='country') Country
+                select#country.custom-select(name='country')
+                  option(value='' selected) Country
+                  each value in valState
+                    option(value=value.code) #{value.name}
               .form-group.col-md-6
                 label(for='line2') Province
-                select.custom-select(name='province')
+                select#region.custom-select(name='province')
                   option(value='province') Province
                   option(value='name') Name
                   option(value='address') Address
             .form-row
               .form-group.col-md-6
                 label(for='line2') City
-                select.custom-select(name='city')
+                select#city.custom-select(name='city')
                   option(value='city') City
                   option(value='name') Name
                   option(value='address') Address
@@ -104,4 +104,4 @@ block content
               button.btn.btn-primary.btn-block(type='submit') Submit and Add Outlets
     a.scroll-to-top.rounded(href='#page-top')
       i.fa.fa-angle-up
-
+    
