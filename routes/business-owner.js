@@ -134,12 +134,12 @@ router.post('/create-business', function(req, res, next) {
           model: business,
         }]
       }).then(row => {
-        console.log(row)
+        console.log('ini kategory '+req.body.get_category)
         business.create({
           name: req.body.name_business,
           address_id: row.id,
           owner_id: 1,
-          category_id: req.body.get_category,
+          category_id: 1,
           email: req.body.email,
           website: req.body.website,
           contact_no: req.body.contact_no,

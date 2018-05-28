@@ -3,7 +3,7 @@
    var currentCities=[];
    var BATTUTA_KEY='26a8db34fb906dfecf949d17dcbb9761';
        
-      $("#country").on("change",function()
+      $("#state").on("change",function()
       {
         
         countryCode=$("#country").val();

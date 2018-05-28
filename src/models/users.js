@@ -51,23 +51,20 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.INTEGER(1),
       allowNull: true
     },
-    two_fa_status: {
+    fa_status: {
       type: DataTypes.INTEGER(1),
       allowNull: true
     },
-    two_fa_key: {
+    fa_key: {
       type: DataTypes.CHAR(50),
       allowNull: true
 
     },
     ip_address: {
       type: DataTypes.STRING(20),
-<<<<<<< HEAD
       allowNull: false,
       defaultValue: '*'
-=======
-      allowNull: true
->>>>>>> 980fc40ee240c83328625e641b6aae493ce88f62
+
     },
     password: {
       type: DataTypes.STRING(100),

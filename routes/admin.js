@@ -196,7 +196,7 @@ router.get('/list-business-owner', function(req, res, next) {
  
 });
 
-<<<<<<< HEAD
+
 router.post('/logout', function (req, res) {
   if(!req.isAuthenticated()) {
      notFound404(req, res, next);
@@ -211,6 +211,4 @@ router.post('/logout', function (req, res) {
 // });
 
 module.exports = router;
-=======
-module.exports = router;
->>>>>>> 980fc40ee240c83328625e641b6aae493ce88f62
+
