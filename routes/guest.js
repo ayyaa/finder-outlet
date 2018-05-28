@@ -179,7 +179,7 @@ router.get('/confirmreg/:token', function(req, res) {
 
 router.post('/confirmreg/:token', function(req, res, next) {
   var pass = bcrypt.hashSync(req.body.password);
-  var nsecret = twoFactor.generateSecret({name: 'Student system', account: req.body.username});
+  var nsecret = twoFactor.generateSecret({name: 'Outlet Finder', account: req.body.username});
   var user = {password: pass, reg_token: '', status: 1, fa_key: nsecret.secret, url_qr: nsecret.qr}
   regcValidate.validate({ password: req.body.password}, function(err, value) {
     if (err) {
