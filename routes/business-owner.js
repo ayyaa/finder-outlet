@@ -43,8 +43,7 @@ business.belongsTo(address)
 //   administrative_area_2: 'yogya', 
 //   administrative_area_3: 'demangan', 
 //   administrative_area_4: 'gondokusuman', 
-//   postalcode: 55231,
-//   point: geom
+//   postalcode: 55231
 // }, {
 //   include: [{
 //     model: business,
@@ -95,7 +94,7 @@ router.get('/create-business', function(req, res, next) {
         var data = JSON.parse(body);
         // console.dir(JSON.parse(body));
         // console.log(data[1].name)
-        res.render('business-owner/create-business', {active3: 'active', valCategories:rows, valState: data});
+        res.render('business-owner/create-business', {active2: 'active', valCategories:rows, valState: data, api_key: BATTUTA_KEY });
     });
     
   })
@@ -104,7 +103,6 @@ router.get('/create-business', function(req, res, next) {
 router.post('/create-business', function(req, res, next) {
   validateJoi.validate({
     contact_no: req.body.contact_no, 
-    get_category: req.body.get_category, 
     name_business: req.body.name_business, 
     email: req.body.email, 
     website: req.body.website, 
@@ -119,7 +117,6 @@ router.post('/create-business', function(req, res, next) {
     lng: req.body.lng}, function(errors, value) {
     console.log(errors);
     if (!errors) {
-      var latlng = req.body.lat+' '+req.body.lng;
       address.create({
         line1: req.body.line1, 
         line2: req.body.line2,
@@ -128,7 +125,7 @@ router.post('/create-business', function(req, res, next) {
         administrative_area_3: req.body.city, 
         administrative_area_4: '', 
         postalcode: req.body.postal_code,
-        point: Sequelize.fn('ST_GEOMFROMTEXT', `POINT(${latlng})`)
+        point: Sequelize.fn(`ST_GEOMFROMTEXT`, `POINT(`+req.body.lat+` `+req.body.lng+`)`)
       }, {
         include: [{
           model: business,
@@ -139,7 +136,6 @@ router.post('/create-business', function(req, res, next) {
           name: req.body.name_business,
           address_id: row.id,
           owner_id: 1,
-          category_id: 1,
           email: req.body.email,
           website: req.body.website,
           contact_no: req.body.contact_no,
@@ -147,20 +143,42 @@ router.post('/create-business', function(req, res, next) {
           image: 'req.body.image'
         })
         .then(rowss => {
-          req.flash('success', 'Successful added Business.');
-          res.redirect('/business-owner/list-business');
-          console.log(rowss);
+          var length_of_category = req.body.get_category;
+          length_of_category = length_of_category.length;
+          for( var x = 0 ; x < length_of_category ; x++ ) {
+            business_category.create({
+              business_id: rowss.id,
+              category_id: req.body.get_category[x]
+            }).then(rows => {
+              req.flash('success', 'Successful added Business.');
+              res.redirect('/business-owner/list-business');
+              console.log(rowss);
+            })
+          }
         })
       }) 
     } else {
       categories.findAll()
       .then(rows => {
         req.flash('error', errors);
-        res.render('business-owner/create-business', {active3: 'active', valCategories:rows, error: req.flash('error')});
+        res.render('business-owner/create-business', {active2: 'active', valCategories:rows, error: req.flash('error')});
       })
       // res.render('admin/create-category', {error: req.flash('error')});
     } 
   })
+});
+
+// router.post('/create-business', function(req, res, next) {
+//     validateJoi.validate({
+//       get_category: req.body.get_category, 
+// }, function(errors, value) {
+//       var len = req.body.get_category;
+//       console.log(len.length)
+//     })
+//   });
+
+router.get('/get-geolocate', function(req, res, next) {
+  res.render('business-owner/create-outlet');
 });
 
 router.get('/create-outlet', function(req, res, next) {
@@ -181,7 +199,37 @@ router.get('/edit-outlet', function(req, res, next) {
 });
 
 router.get('/list-business', function(req, res, next) {
-  res.render('business-owner/list-business', { active2: 'active' });
+  business.findAll({
+  attributes: [
+    'id',
+    'name', 
+    'email',
+    [Sequelize.fn('GROUP_CONCAT', Sequelize.literal("categories.name SEPARATOR ', '")), 'category']
+  ],
+  group: ['business.id'],
+  include: [{
+    model: categories,
+    // through: {
+    //   attributes: ['category_id','business_id' ],
+    // }
+    }]
+  }).then(rows => {
+    res.render('business-owner/list-business', {  active2: 'active', data: rows, user: req.user[0]});
+  }).catch(err => {
+    console.error(err)
+  })
+});
+
+router.post('/delete-business/:id', function(req, res, next) {
+  business.destroy({ 
+    where: {
+      id: req.params.id
+    },
+    force: true })
+  .then(() => {
+    req.flash('success', 'Selected Business has been removed.')
+    res.redirect('/business-owner/list-business');
+  })
 });
 
 router.get('/list-outlets', function(req, res, next) {

@@ -11,7 +11,7 @@ var config = {
       port: '3000'
   },
   batuta_key: {
-      key : '26a8db34fb906dfecf949d17dcbb9761'
+      key : '4a4098af6b93a68e90f7438a91d2a516'
   }
 }
 

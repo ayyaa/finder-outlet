@@ -27,7 +27,7 @@ block content
             .col-md-6
               .form-group
                 label(for='line') Line of Business:
-                select#get_category.custom-select(name='get_category' data-show-subtext="true" data-live-search="true")
+                select#get_category.custom-select(name='get_category' data-show-subtext="true" data-live-search="true" multiple='multilpe')
                   each value in valCategories
                     option(value=value.id) #{value.name}
               .form-group
@@ -42,15 +42,15 @@ block content
               .form-group
                 label(for='website') Contact Number:
                 input#website.form-control(type='text', placeholder='0812xxxxxx', name='contact_no')
-              .form-group
-                label(for='description') Description:
-                textarea.form-control(name='description', id='', cols='30', rows='5')  Description about is 
-            .col-md-6.pl-3
               .form-group(style="align:center")
-                img.img-responsive.rounded.mx-auto.d-block.mb-4.mt-3.border(src='https://indrawatidaud.files.wordpress.com/2016/12/kotak-tisu-doraemon.jpg', alt='User', width='160', height='auto')
+                label(for='website') Logo:
                 .custom-file
                   input.custom-file-input.border.rounded(type='file', width='4em')
                   label.custom-file-label Choose file..
+              .form-group
+                label(for='description') Description:
+                textarea.form-control(name='description', id='', cols='30', rows='5')  Description about is 
+              
           label.ml-3(for='address') Address :
           .form-group.col-md-11.border.ml-3.pt-2.mr-3
             .form-row
@@ -64,7 +64,6 @@ block content
                 label(for='line2') Region
                 select#region.custom-select(name='province')
                   option(value='0') - select -
-            .form-row
               .form-group.col-md-6
                 label(for='line2') City
                 select#city.custom-select(name='city')
@@ -75,20 +74,21 @@ block content
             .form-row
               .form-group.col
                 label(for='line1') Line 1
-                input#inputEmail4.form-control(type='text', placeholder='Line 1 address' name='line1')
+                input#line1.form-control(type='text', placeholder='Line 1 address' name='line1')
               .form-group.col
                 label(for='line2') Line 2
-                input#inputPassword4.form-control(type='text', placeholder='Line 2 address' name='line2')
+                input#line2.form-control(type='text', placeholder='Line 2 address' name='line2')
             .form-row
               .form-group.col-md-3
-                button.btn.btn-secondary.btn-block(type='submit') Geolocate
+                a#geolocate.btn.btn-secondary.btn-block(type='button') Geolocate
+                //- button.btn.btn-secondary.btn-block 
             .form-row
               .form-group.col-md-3
                 label(for='zipcode') Latitude
-                input#inputPassword4.form-control(type='text', placeholder='Latitude',name='lat')
+                input#lat.form-control(type='text', placeholder='Latitude',name='lat')
               .form-group.col-md-3
                 label(for='zipcode') Longitude
-                input#inputPassword4.form-control(type='text', placeholder='Longitude',name='lng')
+                input#lng.form-control(type='text', placeholder='Longitude',name='lng')
             .form-row
               .form-group.col-md-3
                 a(data-toggle='modal', data-target='#mapsModal' pointer="cursor")  View in maps >
@@ -99,136 +99,100 @@ block content
               button.btn.btn-primary.btn-block(type='submit') Submit and Add Outlets
     a.scroll-to-top.rounded(href='#page-top')
       i.fa.fa-angle-up
-    #mapsModal.modal.fade(tabindex='-1', role='dialog', aria-labelledby='deleteModalLabel', aria-hidden='true' )
+    #mapsModal.modal.modal-wide.fade(tabindex='-1', role='dialog', aria-labelledby='deleteModalLabel', aria-hidden='true' )
       .modal-dialog
         .modal-content
           .modal-header
-            h5#deleteModalLabel.modal-title Are you sure to delete ?
+            h5#deleteModalLabel.modal-title Search address by maps 
             button.close(type='button', data-dismiss='modal', aria-label='Close')
               span(aria-hidden='true') ×
           .modal-body 
-            label.control-label(for='keyword') Cari alamat :
-            input#keyword.span6(type='text', name='keyword')
-            #map(style='width:600px; height:300px')
+            form
+              .form-row
+                .form-group.col-md-12
+                  input#pac-input.form-control(type='text', placeholder='Enter a location' style='min-width:470px')
+              .form-row
+                .form-group.col-md-12
+                  #map(style='width:470px; height:400px')
+                  #infowindow-content
+                    img#place-icon(src='', width='16', height='16')
+                    span#place-name.title
+                    br
+                    span#place-address
+              .form-row
+                .form-group.col-md-6
+                  label(for='zipcode') Latitude
+                  input#lat1.form-control(type='text', placeholder='Latitude',name='lat', style='100%')
+                .form-group.col-md-6
+                  label(for='zipcode') Longitude
+                  input#lng1.form-control(type='text', placeholder='Longitude',name='lng',  style='100%')
           .modal-footer
             button.btn.btn-secondary(type='button', data-dismiss='modal') Cancel
-            button.btn.btn-primary(onclick='deleteCategory()') Delete
-    //- #mapsModal.modal.hide.fade
-    //-   .modal-body
-    //-     button.close(type='button', data-dismiss='modal') ×
-    //-     .control-group
-    //-       label.control-label(for='keyword') Cari alamat :
-    //-       .controls
-    //-         input#keyword.span6(type='text', name='keyword')
-    //-     #map(style='width:530px; height:300px')
-    //-   .modal-footer
-    //-     a.btn(href='#', data-dismiss='modal') Close
-    //-     a.btn.btn-primary(href='#') Save changes
-
+            button.btn.btn-primary(onclick='save()') Save 
     script.
-      $('#get_category').multiSelect({
-        selectableHeader: "<div class='rounded text-center' style='background-color:black; color:white'>Selectable category</div>",
-        selectionHeader: "<div class='rounded text-center' style='background-color:black; color:white'>Selection category</div>"
+      //- $('#get_category').multiSelect({
+      //-   selectableHeader: "<div class='rounded text-center' style='background-color:black; color:white'>Selectable category</div>",
+      //-   selectionHeader: "<div class='rounded text-center' style='background-color:black; color:white'>Selection category</div>"
+      //- });
+      $(document).ready(function() {
+        $("#state").change(function() {
+          var state = $(this).val();
+          $.ajax({
+            url: "http://battuta.medunes.net/api/region/"+state+"/search/?region=&callback=?&key=4a4098af6b93a68e90f7438a91d2a516",
+            dataType: 'json',
+            success:function(response){
+              var len = response.length;
+              $("#region").empty();
+              for( var i = 0; i<len; i++){
+                var id = response[i]['region'];
+                var name = response[i]['region'];
+                $("#region").append("<option value='"+id+"'>"+name+"</option>");
+              }
+            }
+          });
+        });
+        $("#region").change(function() {
+          var region = $(this).val();
+          var state1 = $('#state').val();
+          console.log(region);
+          $.ajax({
+            url: "http://battuta.medunes.net/api/city/"+state1+"/search/?region="+region+"&city=&callback=?&key=4a4098af6b93a68e90f7438a91d2a516",
+            dataType: 'json',
+            success:function(response){
+              console.log(response);
+              var len = response.length;
+              $("#city").empty();
+              for( var i = 0; i<len; i++){
+                var id = response[i]['region'];
+                var name = response[i]['city'];
+                $("#city").append("<option value='"+id+"'>"+name+"</option>");
+              }
+            }
+          });
+        });
+        $("#geolocate").click(function() {
+          var address = $('#line1').val()+', '+$('#line2').val()+', '+$('#city').val()+', '+$('#region').val()+', '+$('#state').val();
+          address = address.split(' ').join('+');
+          console.log(address);
+          $.ajax({
+            url: "https://maps.googleapis.com/maps/api/geocode/json?address=%22"+address+"%22&key=AIzaSyBPfa7eAe7vjoQFO5v_T2hgQmZ2LeQIPxY",
+            dataType: 'json',
+            success:function(response){
+              document.getElementById("lat").value = response.results[0].geometry.location.lat;
+              document.getElementById("lat1").value = response.results[0].geometry.location.lat;
+              document.getElementById("lng").value = response.results[0].geometry.location.lng;
+              document.getElementById("lng1").value = response.results[0].geometry.location.lng;
+              console.log(response.results[0].geometry.location.lat)
+              //- var len = response.length;
+              //- $("#city").empty();
+              //- for( var i = 0; i<len; i++){
+              //-   var id = response[i]['region'];
+              //-   var name = response[i]['city'];
+              //-   $("#city").append("<option value='"+id+"'>"+name+"</option>");
+              //- }
+            }
+          });
+        });
       });
-      $(document).ready(function(){
-        $("#state").change(function(){
-            var state = $(this).val();
-
-            $.ajax({
-                //- url: "http://battuta.medunes.net/api/country/search/?country=fr&callback=?&key=26a8db34fb906dfecf949d17dcbb9761",
-                url: "http://battuta.medunes.net/api/region/"+state+"/search/?region=&callback=?&key=26a8db34fb906dfecf949d17dcbb9761",
-                dataType: 'json',
-                success:function(response){
-                  var len = response.length;
-                  $("#region").empty();
-                  for( var i = 0; i<len; i++){
-                      var id = response[i]['region'];
-                      var name = response[i]['region'];
-                      $("#region").append("<option value='"+id+"'>"+name+"</option>");
-                  }
-                }
-            });
-        });
-        $("#region").change(function(){
-            var region = $(this).val();
-            var state1 = $('#state').val();
-            console.log(region);
-
-            $.ajax({
-                url: "http://battuta.medunes.net/api/city/"+state1+"/search/?region="+region+"&city=&callback=?&key=26a8db34fb906dfecf949d17dcbb9761",
-                dataType: 'json',
-                success:function(response){
-                  console.log(response);
-                  var len = response.length;
-                 $("#city").empty();
-                  for( var i = 0; i<len; i++){
-                      var id = response[i]['region'];
-                      var name = response[i]['city'];
-                      $("#city").append("<option value='"+id+"'>"+name+"</option>");
-                  }
-                }
-            });
-        });
-      });
-      function initMap() {
-        var map = new google.maps.Map(document.getElementById('map'), {
-          center: {lat: -33.8688, lng: 151.2195},
-          zoom: 13
-        });
-        var input = /** @type {!HTMLInputElement} */(
-            document.getElementById('pac-input'));
-
-        var types = document.getElementById('type-selector');
-        map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
-        map.controls[google.maps.ControlPosition.TOP_LEFT].push(types);
-
-        var autocomplete = new google.maps.places.Autocomplete(input);
-        autocomplete.bindTo('bounds', map);
-
-        var infowindow = new google.maps.InfoWindow();
-        var marker = new google.maps.Marker({
-          map: map,
-          anchorPoint: new google.maps.Point(0, -29)
-        });
-
-        autocomplete.addListener('place_changed', function() {
-          infowindow.close();
-          marker.setVisible(false);
-          var place = autocomplete.getPlace();
-          if (!place.geometry) {
-            // User entered the name of a Place that was not suggested and
-            // pressed the Enter key, or the Place Details request failed.
-            window.alert("No details available for input: '" + place.name + "'");
-            return;
-          }
-
-          // If the place has a geometry, then present it on a map.
-          if (place.geometry.viewport) {
-            map.fitBounds(place.geometry.viewport);
-          } else {
-            map.setCenter(place.geometry.location);
-            map.setZoom(17);  // Why 17? Because it looks good.
-          }
-          marker.setIcon(/** @type {google.maps.Icon} */({
-            url: place.icon,
-            size: new google.maps.Size(71, 71),
-            origin: new google.maps.Point(0, 0),
-            anchor: new google.maps.Point(17, 34),
-            scaledSize: new google.maps.Size(35, 35)
-          }));
-          marker.setPosition(place.geometry.location);
-          marker.setVisible(true);
-
-          var address = '';
-          if (place.address_components) {
-            address = [
-              (place.address_components[0] && place.address_components[0].short_name || ''),
-              (place.address_components[1] && place.address_components[1].short_name || ''),
-              (place.address_components[2] && place.address_components[2].short_name || '')
-            ].join(' ');
-          }
-
-          infowindow.setContent('<div><strong>' + place.name + '</strong><br>' + address);
-          infowindow.open(map, marker);
-        });
-      }
+      
+                  

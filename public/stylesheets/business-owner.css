@@ -178,7 +178,7 @@ input:checked + .slider:before {
   border-radius: 50%;
 }
 
-.ms-container{
+/* .ms-container{
   background: transparent url('../images/switch.png') no-repeat 50% 50%;
   width: 370px;
 }
@@ -270,9 +270,20 @@ input:checked + .slider:before {
   background-color: #eee;
   color: #aaa;
   cursor: text;
-}
+} */
 
 #map {
   width: 100%;
   height: 500px;
+}
+
+.pac-container {
+  z-index: 100000;
+}
+
+.modal.modal-wide .modal-dialog {
+  width: 90%;
+}
+.modal-wide .modal-body {
+  overflow-y: auto;
 }

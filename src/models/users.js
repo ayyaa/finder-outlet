@@ -15,7 +15,7 @@ module.exports = function(sequelize, DataTypes) {
     },
     name: {
       type: DataTypes.STRING(100),
-      allowNull: false,
+      allowNull: true,
       defaultValue: ''
     },
     email: {
@@ -64,7 +64,6 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.STRING(20),
       allowNull: false,
       defaultValue: '*'
-
     },
     password: {
       type: DataTypes.STRING(100),

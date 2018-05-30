@@ -35,9 +35,9 @@ body
           li.nav-item.text-center.mt-5.mb-2(data-toggle='tooltip', title='photo-profile')
             img.img-responsive.rounded-circle(src='https://indrawatidaud.files.wordpress.com/2016/12/kotak-tisu-doraemon.jpg', alt='User', width='100', height='auto')
             .container
-              h5.text-center.mt-3.mb-0.main-text
-                strong Doraemon Nobita
-              p.text-center.mb-4.main-text(style='font-size:12px') - Administrator -
+              h6.text-center.mt-3.mb-0.main-text
+                strong !{user.name}
+              p.text-center.mb-4.main-text(style='font-size:12px') !{user.role}
           li.nav-item(class=active1)
             a.nav-link(href='/admin/dashboard')
               i.fa.fa-fw.fa-dashboard
@@ -77,7 +77,7 @@ body
               i.fa.fa-user
               |  My Account
             .dropdown-menu(aria-labelledby='messagesDropdown')
-              a.dropdown-item(href='#')
+              a.dropdown-item(href='/admin/account')
                 strong Basic Info
               .dropdown-divider
               a.dropdown-item(href='#')

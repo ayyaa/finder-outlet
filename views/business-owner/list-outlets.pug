@@ -32,88 +32,86 @@ block content
           i.fa.fa-table
           |  Data List Outlets
         .card-body
-          .ml-3
-            form.form-inline(method='GET')
-              .form-group.col-md-3
-                input#pwd.form-control(type='text', placeholder='Keyword', name='search', style='width:100%')
-              .form-group.col-md-2
-                select.custom-select(style='width:100%', name='get_atr')
-                  option(value='') Business
-                  option(value='') Name
-                  option(value='') Address
-              .form-group.col-md-2
-                select.custom-select.form-control(style='width:100%', name='get_atr')
-                  option(value='') City
-                  option(value='') Name
-                  option(value='') Address
-              .form-group.col-md-2
-                button.btn.btn-success.form-control(type='submit', style='width:100%;')
-                  span.fa.fa-filter
-                  |  Filter
-          .col-md-12
-            .table-responsive.mt-4
-              table#dataTable6.table.table-bordered(width='100%', cellspacing='0')
-                thead
-                  tr.bg-2.text-white
-                    th(scope='col') Name
-                    th(scope='col') Business
-                    th(scope='col') City
-                    th(scope='col') Page Views
-                    th.text-center(scope='col') Action
-                tbody
-                  tr
-                    th(scope='row') Wonderlabs Amstrong
-                    td Wonderlabs
-                    td Yogyakarta
-                    td 30
-                    td.text-center
-                      .dropdown
-                        button.btn.bg-5.dropdown-toggle.btn-sm.border(type='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
-                          | Action
-                          span.caret
-                        .dropdown-menu.dropdown-menu-right
-                          a.dropdown-item(href='#')
-                            i.fa.fa-user
-                            |  View
-                          .dropdown-divider
-                          a.dropdown-item(data-toggle='modal', data-target='#deleteModal')
-                            i.fa.fa-trash
-                            |  Delete
-                  tr
-                    th(scope='row') Wonderlabs Exploler
-                    td Wonderlabs
-                    td Yogyakarta
-                    td 9
-                    td.text-center
-                      .dropdown.clearfix
-                        button.btn.bg-5.dropdown-toggle.btn-sm.border(type='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
-                          | Action
-                          span.caret
-                        .dropdown-menu.dropdown-menu-right
-                          a.dropdown-item(href='#')
-                            i.fa.fa-user
-                            |  View
-                          .dropdown-divider
-                          a.dropdown-item(data-toggle='modal', data-target='#deleteModal')
-                            i.fa.fa-trash
-                            |  Delete
-                  tr
-                    th(scope='row') Wonderlabs Sputnik
-                    td Wonderlabs
-                    td Yogyakarta
-                    td 9
-                    td.text-center
-                      .dropdown
-                        button.btn.bg-5.dropdown-toggle.btn-sm.border(type='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
-                          | Action
-                        .dropdown-menu.dropdown-menu-right
-                          a.dropdown-item(href='#')
-                            i.fa.fa-user
-                            |  View
-                          .dropdown-divider
-                          a.dropdown-item(data-toggle='modal', data-target='#deleteModal')
-                            i.fa.fa-trash
-                            |  Delete
+          form.form-inline(method='GET')
+            .form-group.col-md-3
+              input#pwd.form-control(type='text', placeholder='Keyword', name='search', style='width:100%')
+            .form-group.col-md-2
+              select.custom-select(style='width:100%', name='get_atr')
+                option(value='') Business
+                option(value='') Name
+                option(value='') Address
+            .form-group.col-md-2
+              select.custom-select.form-control(style='width:100%', name='get_atr')
+                option(value='') City
+                option(value='') Name
+                option(value='') Address
+            .form-group.col-md-2
+              button.btn.btn-success.form-control(type='submit', style='width:100%;')
+                span.fa.fa-filter
+                |  Filter
+          .table-responsive.mt-4
+            table#dataTable6.table.table-bordered(width='100%', cellspacing='0')
+              thead
+                tr.bg-2.text-white
+                  th(scope='col') Name
+                  th(scope='col') Business
+                  th(scope='col') City
+                  th(scope='col') Page Views
+                  th.text-center(scope='col') Action
+              tbody
+                tr
+                  th(scope='row') Wonderlabs Amstrong
+                  td Wonderlabs
+                  td Yogyakarta
+                  td 30
+                  td.text-center
+                    .dropdown
+                      button.btn.bg-5.dropdown-toggle.btn-sm.border(type='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
+                        | Action
+                        span.caret
+                      .dropdown-menu.dropdown-menu-right
+                        a.dropdown-item(href='#')
+                          i.fa.fa-user
+                          |  View
+                        .dropdown-divider
+                        a.dropdown-item(data-toggle='modal', data-target='#deleteModal')
+                          i.fa.fa-trash
+                          |  Delete
+                tr
+                  th(scope='row') Wonderlabs Exploler
+                  td Wonderlabs
+                  td Yogyakarta
+                  td 9
+                  td.text-center
+                    .dropdown.clearfix
+                      button.btn.bg-5.dropdown-toggle.btn-sm.border(type='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
+                        | Action
+                        span.caret
+                      .dropdown-menu.dropdown-menu-right
+                        a.dropdown-item(href='#')
+                          i.fa.fa-user
+                          |  View
+                        .dropdown-divider
+                        a.dropdown-item(data-toggle='modal', data-target='#deleteModal')
+                          i.fa.fa-trash
+                          |  Delete
+                tr
+                  th(scope='row') Wonderlabs Sputnik
+                  td Wonderlabs
+                  td Yogyakarta
+                  td 9
+                  td.text-center
+                    .dropdown
+                      button.btn.bg-5.dropdown-toggle.btn-sm.border(type='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
+                        | Action
+                      .dropdown-menu.dropdown-menu-right
+                        a.dropdown-item(href='#')
+                          i.fa.fa-user
+                          |  View
+                        .dropdown-divider
+                        a.dropdown-item(data-toggle='modal', data-target='#deleteModal')
+                          i.fa.fa-trash
+                          |  Delete
         .card-footer.small.text-muted Updated yesterday at 11:59 PM
       a.float(href='/business-owner/create-outlet')
         i.fa.fa-plus.fa-2x.my-float
