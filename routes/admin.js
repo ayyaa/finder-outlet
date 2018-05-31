@@ -344,6 +344,32 @@ router.get('/list-business', function(req, res, next) {
   })
 });
 
+router.post('/delete-business/:id', function(req, res, next) {
+  business.destroy({ 
+    where: {
+      id: req.params.id
+    },
+    force: true })
+  .then(() => {
+    req.flash('success', 'Selected Business has been removed.')
+    res.redirect('/admin/list-business');
+  })
+});
+
+router.get('/list-outlets', function(req, res, next) {
+  res.render('admin/list-outlets', {  active5: 'active', user: req.user[0]});
+});
+
+
+
+router.get('/list-reviews', function(req, res, next) {
+  res.render('admin/list-reviews', {  active6: 'active', user: req.user[0]});
+});
+
+router.get('/list-report-reviews', function(req, res, next) {
+  res.render('admin/list-report-reviews', {  active7: 'active', user: req.user[0]});
+});
+
 router.get('/list-business-owner', function(req, res, next) {
   users.findAll({ 
     where: {

@@ -11,54 +11,36 @@ block content
           i.fa.fa-table
           |  Data List Business
         .card-body
-          .ml-3
-            form.form-inline(method='GET', style='overflow-x:auto;')
-              .form-group.col-md-3
-                input#pwd.form-control(type='text', placeholder='Keyword', name='search', style='width:100%')
-              .form-group.col-md-3
-                select.custom-select.form-control(style='width:100%', name='get_atr')
-                  option(value='') Line of Business
-                  option(value='') Name
-                  option(value='') Address
-              .form-groupcol-md-3
-                button.btn.btn-success.form-control(type='submit', style='width:100%;')
-                  span.fa.fa-filter
-                  |  Filter
-          .col-md-12
-            .table-responsive.mt-4
-              table#dataTable4.table.table-bordered(width='100%', cellspacing='0')
-                thead
-                  tr.bg-2.text-white
-                    th(scope='col') Name
-                    th(scope='col') Line of Business
-                    th(scope='col') Outlets
-                    th.text-center(scope='col') Action
-                tbody
+          form.form-inline(method='GET', style='overflow-x:auto;')
+            .form-group.col-md-3
+              input#pwd.form-control(type='text', placeholder='Keyword', name='search', style='width:100%')
+            .form-group.col-md-3
+              select.custom-select.form-control(style='width:100%', name='get_atr')
+                option(value='') Line of Business
+                option(value='') Name
+                option(value='') Address
+            .form-groupcol-md-3
+              button.btn.btn-success.form-control(type='submit', style='width:100%;')
+                span.fa.fa-filter
+                |  Filter
+          .table-responsive.mt-4
+            table#dataTable4.table.table-bordered(width='100%', cellspacing='0')
+              thead
+                tr.bg-2.text-white
+                  th(scope='col') Name
+                  th(scope='col') Line of Business
+                  th(scope='col') Outlets
+                  th.text-center(scope='col') Action
+              tbody
+                for business in data
                   tr
-                    th(scope='row') Wonderlabs
-                    td Wonderlabs
+                    th(scope='row')= business.name
+                    td= business.dataValues.category
                     td
                       | 2 
-                      a(href='/business-owner/list-outlets') view outlets
+                      a(href='/admin/list-outlets') view outlets
                     td.text-center
-                      .dropdown.show
-                        button.btn.bg-5.dropdown-toggle.btn-sm.border(type='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
-                          | Action
-                        .dropdown-menu.dropdown-menu-right
-                          a.dropdown-item(href='#')
-                            | View
-                          a.dropdown-item(href='#')
-                            | Edit
-                          a.dropdown-item(data-toggle='modal', data-target='#deleteModal')
-                            | Delete
-                  tr
-                    th(scope='row') Wonderfood
-                    td Wonderlabs
-                    td
-                      | 1 
-                      a(href='/business-owner/list-outlets') view outlets
-                    td.text-center
-                      .dropdown.show
+                      .dropdown
                         button.btn.bg-5.dropdown-toggle.btn-sm.border(type='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
                           | Action
                         .dropdown-menu.dropdown-menu-right
@@ -66,11 +48,7 @@ block content
                             i.fa.fa-user
                             |  View
                           .dropdown-divider
-                          a.dropdown-item(href='#')
-                            i.fa.fa-pencil
-                            |  Edit
-                          .dropdown-divider
-                          a.dropdown-item(data-toggle='modal', data-target='#deleteModal')
+                          a.dropdown-item(onclick='delBusiness('+business.id+')')
                             i.fa.fa-trash
                             |  Delete
         .card-footer.small.text-muted Updated yesterday at 11:59 PM
@@ -81,3 +59,32 @@ block content
         i.fa.fa-play.label-arrow
     a.scroll-to-top.rounded(href='#page-top')
       i.fa.fa-angle-up
+    #deleteModal.modal.fade(tabindex='-1', role='dialog', aria-labelledby='deleteModalLabel', aria-hidden='true')
+      .modal-dialog(role='document')
+        .modal-content
+          .modal-header
+            h5#deleteModalLabel.modal-title Are you sure to delete ?
+            button.close(type='button', data-dismiss='modal', aria-label='Close')
+              span(aria-hidden='true') ×
+          .modal-body Select "Delete" below if you are ready to delete it.
+          .modal-footer
+            button.btn.btn-secondary(type='button', data-dismiss='modal') Cancel
+            button.btn.btn-primary(onclick='deleteBusiness()') Delete
+    script(type='text/javascript').
+      function delBusiness(e) {
+        console.log(e);
+        window.idBusiness = e;
+        $("#deleteModal").modal('show');
+      }
+      function deleteBusiness(){
+        var id = window.idBusiness;
+        console.log(idBusiness);
+        $.ajax({
+          url:'/business-owner/delete-business/'+id,
+          type:'POST',
+          success : function (respon) {
+          setTimeout(function() {$("#deleteModal").modal('hide');}, 1000);
+          location.reload();
+          }
+        })
+      }
