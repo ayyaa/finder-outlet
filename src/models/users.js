@@ -15,8 +15,8 @@ module.exports = function(sequelize, DataTypes) {
     },
     name: {
       type: DataTypes.STRING(100),
-      allowNull: true,
-      defaultValue: ''
+      allowNull: false,
+      defaultValue: 'Owner'
     },
     email: {
       type: DataTypes.STRING(100),
@@ -27,8 +27,9 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true
     },
     photo: {
-      type: "LONGBLOB",
-      allowNull: true
+      type: DataTypes.STRING(100),
+      allowNull: false,
+      defaultValue: 'photo-1527578948144.png'
     },
     role: {
       type: DataTypes.ENUM('ADMIN','BO'),
@@ -49,11 +50,13 @@ module.exports = function(sequelize, DataTypes) {
     },
     status: {
       type: DataTypes.INTEGER(1),
-      allowNull: true
+      allowNull: false,
+      defaultValue: 1
     },
     fa_status: {
       type: DataTypes.INTEGER(1),
-      allowNull: true
+      allowNull: false,
+      defaultValue: 0
     },
     fa_key: {
       type: DataTypes.CHAR(50),

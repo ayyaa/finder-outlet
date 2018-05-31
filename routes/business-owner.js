@@ -2,10 +2,14 @@ var express = require('express');
 var router = express.Router();
 const models = require('../src/models');
 const Sequelize = require('sequelize');
+const twoFactor = require('node-2fa');
+const bcrypt = require('bcrypt-nodejs');
 const business = models.business;
+const multer = require('multer')
 const categories = models.categories;
 const address = models.address;
 const business_category = models.business_category;
+const users = models.users;
 const validateJoi = require('../src/validation/joi-create-business');
 const flash = require('connect-flash');
 const config = require('../src/config/config')
@@ -14,6 +18,39 @@ business.belongsToMany(categories, {through: 'business_category', foreignKey: 'b
 categories.belongsToMany(business, {through: 'business_category', foreignKey: 'category_id', otherKey: 'business_id'})
 address.hasOne(business, {foreignKey: 'address_id'})
 business.belongsTo(address)
+const multerConfig = {
+    
+  storage: multer.diskStorage({
+   //Setup where the user's file will go
+   destination: function(req, file, next){
+     next(null, './public/photo-storage');
+     },   
+      
+      //Then give the file a unique name
+      filename: function(req, file, next){
+          console.log(file);
+          const ext = file.mimetype.split('/')[1];
+          next(null, file.fieldname + '-' + Date.now() + '.'+ext);
+        }
+      }),   
+      
+      //A means of ensuring only images are uploaded. 
+      fileFilter: function(req, file, next){
+            if(!file){
+              next();
+            }
+          const image = file.mimetype.startsWith('image/');
+          if(image){
+            console.log('photo uploaded');
+            next(null, true);
+          }else{
+            console.log("file not supported");
+            
+            //TODO:  A better message response to user on failure.
+            return next();
+          }
+      }
+    };
 
 // business.findAll({
 //   attributes: ['name', 'email',
@@ -78,8 +115,37 @@ business.belongsTo(address)
 
 /* GET home page. */
 router.get('/dashboard', function(req, res, next) {
-  res.render('business-owner/dashboard', { active1: 'active','message': req.flash('message'), 'info': req.flash('info')});
+  res.render('business-owner/dashboard', { active1: 'active','message': req.flash('message'),'info': req.flash('info'), user: req.user[0]});
 });
+
+router.post('/upload',multer(multerConfig).single('photo'),function(req,res){
+  console.log(req.file.path)
+  users.update(
+    {photo: req.file.filename}
+  , {where: {
+    id: [req.user[0].id]
+  }}).then(rows => {
+    console.log(rows)
+    res.redirect('/business-owner/account');
+  }).catch(err => {
+    console.error(err)
+    res.send('error')
+  })
+});
+
+router.post('/deactive', function(req, res, next) {
+  users.update(
+    {status: 0}
+  , {where: {
+    id: [req.user[0].id]
+  }}).then(rows => {
+    req.logout();
+    res.redirect('/');
+  }).catch(err => {
+    console.error(err)
+    res.send('error')
+  })
+})
 
 router.get('/create-business', function(req, res, next) {
   categories.findAll()
@@ -94,9 +160,8 @@ router.get('/create-business', function(req, res, next) {
         var data = JSON.parse(body);
         // console.dir(JSON.parse(body));
         // console.log(data[1].name)
-        res.render('business-owner/create-business', {active2: 'active', valCategories:rows, valState: data, api_key: BATTUTA_KEY });
+        res.render('business-owner/create-business', {active2: 'active', valCategories:rows, valState: data, api_key: BATTUTA_KEY , user: req.user[0]});
     });
-    
   })
 });
 
@@ -161,7 +226,8 @@ router.post('/create-business', function(req, res, next) {
       categories.findAll()
       .then(rows => {
         req.flash('error', errors);
-        res.render('business-owner/create-business', {active2: 'active', valCategories:rows, error: req.flash('error')});
+        res.render('business-owner/create-business', {active3: 'active', valCategories:rows, error: req.flash('error'), user: req.user[0]});
+
       })
       // res.render('admin/create-category', {error: req.flash('error')});
     } 
@@ -182,20 +248,107 @@ router.get('/get-geolocate', function(req, res, next) {
 });
 
 router.get('/create-outlet', function(req, res, next) {
-  res.render('business-owner/create-outlet');
+  res.render('business-owner/create-outlet',{user: req.user[0]});
 });
 
+router.post('/update', function(req, res, next) {
+  var upd = {name: req.body.name, email: req.body.email, contact_no: req.body.phone}
+  users.update(
+    upd
+  , {where: {
+    id: [req.user[0].id]
+  }}).then(rows => {
+    console.log(upd)
+    res.send(JSON.stringify(upd))
+  }).catch(err => {
+    console.error(err)
+    res.send('error')
+  })
+})
+
+router.post('/updatepass', function(req, res, next) {
+  var pass = bcrypt.hashSync(req.body.newpass)
+  var upd = {password: pass}
+  users.findOne({
+    where: {
+      id: [req.user[0].id]
+    }
+  }).then(rows => {
+    console.log(rows.password)
+    console.log(req.body.oldpass)
+    bcrypt.compare(req.body.oldpass,rows.password, function(err, respon) {
+      if(respon) {
+        users.update(
+          upd
+        , {where: {
+          id: [req.user[0].id]
+        }}).then(rows => {
+          res.send(true)
+        }).catch(err => {
+          console.error(err)
+          res.send(false)
+        })
+       } else {
+        console.log('password wrong!!')
+        res.send(false)
+       } 
+    });   
+  })
+})
+
+router.get('/check/:token', function(req, res, next) {
+  var verifytoken = twoFactor.verifyToken(req.user[0].fa_key, req.params.token);
+  console.log(req.params.token)
+  if (verifytoken !== null) {
+    res.send(true);
+  } else {
+    res.send(false);
+    // return false
+  }
+ });
+
+router.post('/enable/:id', function(req, res, next) {
+  users.update({
+    fa_status: 1
+  }, {where: {
+    id: [req.params.id]
+  }}).then(rows => {
+    res.send('success')
+  }).catch(err => {
+    console.error(err)
+    res.send('error')
+  })
+});
+
+router.post('/disable/:id', function(req, res, next) {
+  users.update({
+    fa_status: 0
+  }, {where: {
+    id: [req.params.id]
+  }}).then(rows => {
+    res.send('success')
+  }).catch(err => {
+    console.error(err)
+    res.send('error')
+  })
+});
 
 router.get('/account', function(req, res, next) {
-  res.render('business-owner/account');
+  if(req.user[0].fa_status === 1) {
+    var auth = true
+  } else {
+    var auth = false
+  }
+  // console.log(auth)
+  res.render('business-owner/account', {user: req.user[0], vauth: auth});
 });
 
 router.get('/edit-business', function(req, res, next) {
-  res.render('business-owner/edit-business' );
+  res.render('business-owner/edit-business',{user: req.user[0]} );
 });
 
 router.get('/edit-outlet', function(req, res, next) {
-  res.render('business-owner/edit-outlet');
+  res.render('business-owner/edit-outlet',{user: req.user[0]});
 });
 
 router.get('/list-business', function(req, res, next) {
@@ -233,11 +386,11 @@ router.post('/delete-business/:id', function(req, res, next) {
 });
 
 router.get('/list-outlets', function(req, res, next) {
-  res.render('business-owner/list-outlets', { active3: 'active' });
+  res.render('business-owner/list-outlets', { active3: 'active', user: req.user[0]});
 });
 
 router.get('/list-reviews', function(req, res, next) {
-  res.render('business-owner/list-reviews', { active4: 'active' });
+  res.render('business-owner/list-reviews', { active4: 'active',user: req.user[0]});
 });
 
 router.post('/logout', function (req, res) {

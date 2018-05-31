@@ -1,6 +1,6 @@
 extends layout
 
-block content  
+block content
   .content-wrapper
     .container-fluid
       ol.breadcrumb
@@ -8,72 +8,114 @@ block content
           h4 My Account
       .container-fluid.col-sm-12
         #nav-tab.nav.nav-pills.nav-fill.mt-4(role='tablist')
-          a#nav-basic-info-tab.nav-item.nav-link.pull-right.active(data-toggle='tab', href='#nav-basic-info', role='tab', aria-controls='nav-basic-info', aria-selected='true', style='color: black') Basic info
-          a#nav-change-pass-tab.nav-item.pull-right.nav-link(data-toggle='tab', href='#nav-change-pass', role='tab', aria-controls='nav-change-pass', aria-selected='false') Change password
-          a#nav-security-tab.nav-item.pull-right.nav-link(data-toggle='tab', href='#nav-security', role='tab', aria-controls='nav-security', aria-selected='false') Security
-          a#nav-deactivated-tab.nav-item.pull-right.nav-link(data-toggle='tab', href='#nav-deactivated', role='tab', aria-controls='nav-deactivated', aria-selected='false') Deactivated
+          a#nav-basic-info-tab.nav-item.nav-link.pull-right.border.active(data-toggle='tab', href='#nav-basic-info', role='tab', aria-controls='nav-basic-info', aria-selected='true', style='color: #2a93d5') Basic info
+          a#nav-change-pass-tab.nav-item.pull-right.border.nav-link(data-toggle='tab', href='#nav-change-pass', role='tab', aria-controls='nav-change-pass', aria-selected='false', style='color: #2a93d5') Change password
+          a#nav-security-tab.nav-item.pull-right.border.nav-link(data-toggle='tab', href='#nav-security', role='tab', aria-controls='nav-security', aria-selected='false', style='color: #2a93d5') Security
+          a#nav-deactivated-tab.nav-item.pull-right.border.nav-link(data-toggle='tab', href='#nav-deactivated', role='tab', aria-controls='nav-deactivated', aria-selected='false', style='color: #2a93d5') Deactivated
         #nav-tabContent.tab-content
-          #nav-basic-info.tab-pane.fade.show.active.border(role='tabpanel', aria-labelledby='nav-basic-info-tab', style='background-color: white')
-            form.pt-4(action='/action_page.php')
+          #nav-basic-info.tab-pane.fade.show.active.border(role='tabpanel', aria-labelledby='nav-basic-info-tab', style='background-color: white', name='nav-basic-info')
+            .pt-4
               .form-row.container
                 .col-md-6
                   .form-group
                     label(for='name') Name:
-                    input#name.form-control(type='text', placeholder='Your name', name='name')
+                    input#name.form-control(type='text', placeholder='Your name', name='name', value = user.name)
                   .form-group
                     label(for='username') Username:
-                    input#username.form-control(type='text', placeholder='Your Username', name='username')
+                    input#username.form-control(type='text', placeholder='Your Username', name='username', value = user.username readonly)
                   .form-group
                     label(for='email') Email:
-                    input#email.form-control(type='text', placeholder='Your email', name='email')
+                    input#email.form-control(type='text', placeholder='Your email', name='email', value = user.email)
                   .form-group
                     label(for='phone') Phone Number:
-                    input#phone.form-control(type='text', placeholder='Your Phone Number', name='phone')
+                    input#phone.form-control(type='text', placeholder='Your Phone Number', name='phone', value =user.contact_no)
                   .form-group
-                    button.btn.btn-primary.btn-block(type='submit') Save
+                    button#save1.btn.btn-primary.btn-block(onclick='update()' disabled) Save
                 .col-md-6
-                  .form-group(style="align:center")
-                    img.img-responsive.rounded.mx-auto.d-block.pb-4.pt-3(src='https://indrawatidaud.files.wordpress.com/2016/12/kotak-tisu-doraemon.jpg', alt='User', width='160', height='auto')
+                  form.form-group(style="align:center" , action='/business-owner/upload', enctype='multipart/form-data', method='POST')
+                    img.img-responsive.rounded.mx-auto.d-block.pb-4.pt-3(src='../photo-storage/'+user.photo, alt='User', width='160', height='auto')
                     .custom-file
-                      input.custom-file-input.border.rounded(type='file', width='100%', name='image')
+                      input.custom-file-input.border.rounded(type='file', width='100%', name = 'photo')
                       label.custom-file-label Choose file..
-          #nav-change-pass.tab-pane.fade.border(role='tabpanel', aria-labelledby='nav-change-pass-tab', style='background-color: white')
-            form.pt-4(action='/action_page.php')
+                      button#upload.mt-2.btn.btn-primary.btn-block(type="submit" value="Upload Photo") UPLOAD
+          #nav-change-pass.tab-pane.fade.border(role='tabpanel', aria-labelledby='nav-change-pass-tab', style='background-color: white', name='nav-change-pass')
+            .pt-4
               .form-group
                 .form-group.col-md-6
                   label(for='old-pass') Old Password:
-                  input#pwd.form-control(type='text', placeholder='************', name='pswd')
+                  input#oldpass.form-control(type='password', placeholder='************', name='oldpass')
                 .form-group.col-md-6
                   label(for='new-pass') Password:
-                  input#pwd.form-control(type='text', placeholder='*************', name='pswd')
+                  input#newpass.form-control(placeholder='*************', name='newpass',type = "password" onkeyup='check1();')
                 .form-group.col-md-6
                   label(for='con-pass') Confirm Password:
-                  input#pwd.form-control(type='text', placeholder='*************', name='pswd')
+                  input.mb-2#conpass.form-control(placeholder='*************', name='conpass', type = "password" onkeyup='check1();')
+                  span
+                    i
+                      b#message 
                 .form-group.col-md-2
-                  button.btn.btn-primary.btn-block(type='submit') Save
-          #nav-security.tab-pane.fade.border(role='tabpanel', aria-labelledby='nav-security-tab', style='background-color: white')
-            div(style='padding:5%')
-              form(action='/action_page.php')
-                .form-row
-                  .form-group.col-md-8.col-sm-10.ml-4
-                    h6 Enable two-factor autentication token
-                  .form-group.col-md-2.text-center
-                    label.switch
-                      input(type='checkbox')
-                      span.slider.round
-              form(action='/action_page.php')
-                .form-row
-                  .form-group.col-md-8.col-sm-10.ml-4
-                    h6
-                      | Preven login from other IP address (current IP address : 
-                      a(href='') 144.205.456.32
-                      | )
-                  .form-group.col-md-2.text-center
-                    label.switch
-                      input(type='checkbox')
-                      span.slider.round
-          #nav-deactivated.tab-pane.fade.border(role='tabpanel', aria-labelledby='nav-deactivated-tab', style='background-color: white')
-            form(action='/action_page.php', style='padding:5%')
+                  button#save2.btn.btn-primary.btn-block(onclick='updatepw()') Save
+          #nav-security.tab-pane.fade.border(role='tabpanel', aria-labelledby='nav-security-tab', style='background-color: white', name='nav-security')
+            form(style='padding:5%')
+              .form-row
+                .form-group.col-md-8.col-sm-10.ml-4
+                  h6 Enable two-factor autentication token
+                .form-group.col-md-2.text-center
+                  label.switch
+                    input#check1(type='checkbox' checked=vauth)
+                    span.slider.round
+              .form-row
+                .form-group.col-md-8.col-sm-10.ml-4
+                  h6
+                    | Preven login from other IP address (current IP address : 
+                    a(href='') 144.205.456.32
+                    | )
+                .form-group.col-md-2.text-center
+                  label.switch
+                    input(type='checkbox')
+                    span.slider.round
+            #myModal.modal.fade(tabindex='-1', role='dialog')
+              .modal-dialog(role='document')
+                .modal-content
+                  .modal-header
+                    h5.modal-title Set Up a Third Party App to Generate Codes 
+                    button#cancel.close(type='button', data-dismiss='modal', aria-label='Close' , name = 'close1')
+                      span(aria-hidden='true') ×
+                  .modal-body
+                    .pt-4
+                      .form-group
+                        .form-group.col-md-12
+                          label.mr-4(for='old-pass') To get a third-party app working, either scan the QR code below or type the secret key into the app.                     
+                        .form-group.col-md-6
+                          label.mr-4(for='old-pass') Qr-image:
+                          img(src=user.url_qr, alt='SecretKey Barcode')
+                        .form-group.col-md-12
+                          label(for='new-pass') Secret Key:
+                          input.form-control(type='text', value = user.fa_key readonly)
+                          input#id.form-control(type='hidden',  value = user.id readonly)
+                        .form-group.col-md-12
+                          label(for='con-pass') Security Code:
+                          input#token.form-control(type='text', placeholder='Enter token here')
+                          p#p
+                        .form-group.modal-footer
+                          button.btn.btn-primary(type='button', onclick='check()') Check
+                          button#submit.btn.btn-primary(type='button', onclick='enable()' disabled) Save changes
+                          button.btn.btn-secondary(type='button', data-dismiss='modal', name = 'close1') Close
+
+            #myModal1.modal.fade(tabindex='-1', role='dialog')
+              .modal-dialog(role='document')
+                .modal-content
+                  .modal-header
+                    h5#exampleModalLabel.modal-title Are you sure will disable two-factor authentication?
+                    button#cancel2.close(type='button', data-dismiss='modal', aria-label='Close', name = 'close2')
+                      span(aria-hidden='true') ×
+                  .modal-footer
+                    button#cancel2.btn.btn-secondary(type='button', data-dismiss='modal', name = 'close2') Cancel
+                    //- form(action='/admin/logout', method='POST')
+                    button.btn.btn-primary(type='button', onclick='disable()') Yes  
+
+          #nav-deactivated.tab-pane.fade.border(role='tabpanel', aria-labelledby='nav-deactivated-tab', style='background-color: white', name='nav-deactivated')
+            form(action='/business-owner/deactive', style='padding:5%', method='POST')
               .form-row
                 .form-group.col-md-8.ml-4
                   h6 Did you want to deactivated your account
@@ -83,6 +125,7 @@ block content
                     label.form-check-label(for='gridCheck')
                       | I agree that all my data will be deleted and won't be recoverable upon deleted
               .form-group.col-md-2.m-2
-                button.btn.btn-primary.btn-block(type='submit') Save
+                button#deactive.btn.btn-primary.btn-block(type='submit' onclick="confirm('your account has been successfully disabled!');" disabled) Save
+        script(type='text/javascript', src='../javascripts/account_bo.js')  
     a.scroll-to-top.rounded(href='#page-top')
       i.fa.fa-angle-up

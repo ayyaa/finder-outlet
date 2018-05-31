@@ -15,7 +15,7 @@ $('#check1').on('change', function(e){
 function disable(){
   var id = $('#id').val();
   $.ajax({
-    url:'/admin/disable/'+id,
+    url:'/business-owner/disable/'+id,
     type:'POST',
     success : function (respon) {
       $('#myModal1').modal('hide')
@@ -29,7 +29,7 @@ function check(){
   var token = $('#token').val();
   console.log(token);
   $.ajax({
-    url:'/admin/check/'+token,
+    url:'/business-owner/check/'+token,
     type:'GET',
     success : function (respon) {
       if(respon === true) {
@@ -48,7 +48,7 @@ function check(){
 function enable(){
   var id = $('#id').val();
   $.ajax({
-    url:'/admin/enable/'+id,
+    url:'/business-owner/enable/'+id,
     type:'POST',
     success : function (respon) {
       $('#myModal').modal('hide')
@@ -63,7 +63,7 @@ function update(){
   var email= $('#name').val()
   var phone= $('#phone').val()
   $.ajax({
-    url:'/admin/update',
+    url:'/business-owner/update',
     type:'POST',
     data: {
       name: $('#name').val(),
@@ -91,7 +91,7 @@ function updatepw(){
     alert('password must be match')
   } else {  
     $.ajax({
-      url:'/admin/updatepass',
+      url:'/business-owner/updatepass',
       type:'POST',
       data: {
         newpass: $('#newpass').val(),
@@ -127,6 +127,17 @@ $('#nav-basic-info input').on('input',function(e){
   $('#save1').attr('disabled' , false);
 });
 
+
+$(document).ready(function(){
+  $('#gridCheck').on('click',function(){
+    if ($('#gridCheck').is(':checked')) {
+      $('#deactive').attr('disabled' , false);
+    } else {
+      $('#deactive').attr('disabled' , true);
+    }
+  });
+});  
+
 // $(document).ready(function(){
 //   $('#nav-tab a').click(function(e){
 //       if($("#save1").is(":enabled")) {
@@ -156,15 +167,14 @@ $(function () {
 });
 
 
-$(document).ready(function(){
-  $('#gridCheck').on('click',function(){
-    if ($('#gridCheck').is(':checked')) {
-      $('#deactive').attr('disabled' , false);
-    } else {
-      $('#deactive').attr('disabled' , true);
-    }
-  });
-});  
+// $(document).ready(function(){
+//   $('#message').on('DOMSubtreeModified',function(){
+//     var msg = $(this).html();
+//     if(msg ==='matching') {
+//       $('#save2').attr('disabled' , false);
+//     }
+//   });
+// });  
 
 // $("#conpass").blur(function() {
 //   var user_pass = $("#newpass").val();
@@ -185,4 +195,3 @@ $(document).ready(function(){
 // if($('#message').html().is('matching')) {
 //   $('#save2').attr('disabled' , false);
 // }
-
