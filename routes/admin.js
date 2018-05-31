@@ -140,7 +140,7 @@ router.post('/create-category', function(req, res, next) {
   })
 });
 
-router.get('/edit-category/:id', function(req, res, next) {
+router.get('/edit-category=:id', function(req, res, next) {
   categories.findAll({
     where: {
       id: req.params.id
@@ -225,7 +225,6 @@ router.get('/account', function(req, res, next) {
   res.render('admin/account', {user: req.user[0], vauth: auth});
 })
 
-
 router.post('/update', function(req, res, next) {
   var upd = {name: req.body.name, email: req.body.email, contact_no: req.body.phone}
   users.update(
@@ -280,7 +279,7 @@ router.get('/check/:token', function(req, res, next) {
     res.send(false);
     // return false
   }
- });
+});
 
 router.post('/enable/:id', function(req, res, next) {
   users.update({
@@ -307,8 +306,6 @@ router.post('/disable/:id', function(req, res, next) {
     res.send('error')
   })
 });
-
-
 
 router.get('/list-business', function(req, res, next) {
   business.findAll({
@@ -354,16 +351,6 @@ router.post('/delete-business/:id', function(req, res, next) {
     req.flash('success', 'Selected Business has been removed.')
     res.redirect('/admin/list-business');
   })
-});
-
-router.get('/list-outlets', function(req, res, next) {
-  res.render('admin/list-outlets', {  active5: 'active', user: req.user[0]});
-});
-
-
-
-router.get('/list-reviews', function(req, res, next) {
-  res.render('admin/list-reviews', {  active6: 'active', user: req.user[0]});
 });
 
 router.get('/list-report-reviews', function(req, res, next) {
@@ -413,7 +400,22 @@ router.get('/list-outlets', function(req, res, next) {
     })
 });
 
-router.get('/:id', function(req, res, next) {
+
+router.get('/list-reviews', function(req, res, next) {
+  res.render('admin/list-reviews', {  active6: 'active', user: req.user[0]});
+});
+
+
+router.post('/logout', function (req, res) {
+  if(!req.isAuthenticated()) {
+     notFound404(req, res, next);
+  } else {
+     req.logout();
+     res.redirect('/login');
+  }
+})
+
+router.get('/list-outlets=:id', function(req, res, next) {
   outlets.findAll({
     where: {
       id_bussines: req.params.id
@@ -443,27 +445,6 @@ router.get('/:id', function(req, res, next) {
       console.error(err)
     })
 });
-
-
-router.get('/list-reviews', function(req, res, next) {
-  res.render('admin/list-reviews', {  active6: 'active', user: req.user[0]});
-});
-
-router.get('/list-report-reviews', function(req, res, next) {
-  res.render('admin/list-report-reviews', {  active7: 'active', user: req.user[0]});
-});
-
-
-
-router.post('/logout', function (req, res) {
-  if(!req.isAuthenticated()) {
-     notFound404(req, res, next);
-  } else {
-     req.logout();
-     res.redirect('/login');
-  }
-})
-
 
 module.exports = router;
 
