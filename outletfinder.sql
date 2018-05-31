@@ -33,7 +33,7 @@ CREATE TABLE `address` (
   `postalcode` int(11) DEFAULT NULL,
   `point` point DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -42,7 +42,7 @@ CREATE TABLE `address` (
 
 LOCK TABLES `address` WRITE;
 /*!40000 ALTER TABLE `address` DISABLE KEYS */;
-INSERT INTO `address` VALUES (1,'jalan adisucipto no 27','Demangan, Gondokusuman','DI Yogyakarta','DI Yogyakarta','Demangan','Gondokusuman',55281,NULL);
+INSERT INTO `address` VALUES (1,'jalan adisucipto no 27','Demangan, Gondokusuman','DI Yogyakarta','DI Yogyakarta','Demangan','Gondokusuman',55281,NULL),(13,'26 Oakes avenue ','clayton south','address','address','address','',3169,'\0\0\0\0\0\0\0\0\0\0À=ZÁ\0\0\0À\r\ÌWA'),(25,'Jalan C Simanjuntak No. 70, Terban','Gondokusuman','id','Daerah Istimewa Yogyakarta','Daerah Istimewa Yogyakarta','',55223,'\0\0\0\0\0\0\0|Qq\Ò\ê\ZÀu\Âð¶÷—[@'),(26,'jalan papringan','depok ','id','Daerah Istimewa Yogyakarta','Daerah Istimewa Yogyakarta','',55223,'\0\0\0\0\0\0\0 ¯¬\Ùo\"À\ZDµR™[@');
 /*!40000 ALTER TABLE `address` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -58,7 +58,6 @@ CREATE TABLE `business` (
   `name` varchar(100) DEFAULT '',
   `owner_id` int(11) unsigned DEFAULT NULL,
   `address_id` int(11) unsigned DEFAULT NULL,
-  `category_id` int(11) unsigned DEFAULT NULL,
   `email` varchar(100) DEFAULT NULL,
   `website` varchar(100) DEFAULT NULL,
   `contact_no` varchar(20) DEFAULT NULL,
@@ -68,11 +67,9 @@ CREATE TABLE `business` (
   PRIMARY KEY (`id`),
   KEY `id_poeple` (`owner_id`),
   KEY `id_address` (`address_id`),
-  KEY `id_category` (`category_id`),
   CONSTRAINT `business_ibfk_1` FOREIGN KEY (`owner_id`) REFERENCES `users` (`id`),
-  CONSTRAINT `business_ibfk_2` FOREIGN KEY (`address_id`) REFERENCES `address` (`id`),
-  CONSTRAINT `business_ibfk_3` FOREIGN KEY (`category_id`) REFERENCES `categories` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+  CONSTRAINT `business_ibfk_2` FOREIGN KEY (`address_id`) REFERENCES `address` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -81,7 +78,7 @@ CREATE TABLE `business` (
 
 LOCK TABLES `business` WRITE;
 /*!40000 ALTER TABLE `business` DISABLE KEYS */;
-INSERT INTO `business` VALUES (1,'Wonderlabs',1,1,1,'wonderlabs.io','wonderlabs.io','0251876765','software house','https://pbs.twimg.com/profile_images/778811384775577600/vGv5xSR4_400x400.jpg','2018-05-22 09:46:40');
+INSERT INTO `business` VALUES (10,'wonderfooods',1,13,'mtaz.zuhdy@gmail.com','wonderfoods.do','451937184',' Description about is xswxswx','req.body.image','2018-05-23 02:26:05'),(13,'mirota kampus',1,25,'mirota@gmail.com','mirotakapus.com','0274561254',' Description about is ','req.body.image','2018-05-30 04:43:13'),(14,'Indomaret',1,26,'indomaret@gmail.com','indomaret.id','0987898767',' Description about is ','req.body.image','2018-05-30 05:01:22');
 /*!40000 ALTER TABLE `business` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -101,7 +98,7 @@ CREATE TABLE `business_category` (
   KEY `category_id` (`category_id`),
   CONSTRAINT `business_category_ibfk_1` FOREIGN KEY (`business_id`) REFERENCES `business` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `business_category_ibfk_2` FOREIGN KEY (`category_id`) REFERENCES `categories` (`id`) ON DELETE SET NULL ON UPDATE SET NULL
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -110,7 +107,7 @@ CREATE TABLE `business_category` (
 
 LOCK TABLES `business_category` WRITE;
 /*!40000 ALTER TABLE `business_category` DISABLE KEYS */;
-INSERT INTO `business_category` VALUES (1,1,1);
+INSERT INTO `business_category` VALUES (2,10,4),(3,10,5),(6,13,4),(7,13,5),(8,14,4),(9,14,5),(10,14,6);
 /*!40000 ALTER TABLE `business_category` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -128,7 +125,7 @@ CREATE TABLE `categories` (
   `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
   `update_at` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -137,7 +134,7 @@ CREATE TABLE `categories` (
 
 LOCK TABLES `categories` WRITE;
 /*!40000 ALTER TABLE `categories` DISABLE KEYS */;
-INSERT INTO `categories` VALUES (1,'arts',' Description about is arts','2018-05-21 06:14:08','2018-05-21 13:14:31'),(2,'furniture',' Description about is furniture','2018-05-21 06:14:08','2018-05-21 13:14:29'),(4,'computers',' Description about is computers','2018-05-21 06:14:08','2018-05-21 13:14:27'),(5,'food',' Description about is food','2018-05-21 06:14:08','2018-05-21 13:14:26'),(6,'fashion',' Description about is fashion','2018-05-21 06:14:08','2018-05-21 13:14:25'),(7,'academy',' Description about is academy','2018-05-21 06:14:08','2018-05-21 13:14:23'),(8,'IT',' Description about is Information Technologi','2018-05-21 06:14:08','2018-05-21 13:14:22'),(9,'retail',' Description about is retail','2018-05-21 06:14:08','2018-05-21 06:14:08'),(10,'accesories',' Description about is accesories','2018-05-21 06:14:59',NULL),(11,'freeze food',' Description about is freeze food','2018-05-21 06:18:53',NULL),(12,'otomotif',' Description about is otomotif','2018-05-21 06:19:19',NULL);
+INSERT INTO `categories` VALUES (1,'artsssss',' Description about is arts','2018-05-21 06:14:08','2018-05-24 06:26:39'),(4,'computers',' Description about is computers','2018-05-21 06:14:08','2018-05-21 13:14:27'),(5,'food',' Description about is food','2018-05-21 06:14:08','2018-05-21 13:14:26'),(6,'fashion',' Description about is fashion','2018-05-21 06:14:08','2018-05-21 13:14:25'),(12,'otomotif',' Description about is otomotif','2018-05-21 06:19:19',NULL),(13,'furniture',' Description about is dsdsffd','2018-05-22 08:15:33',NULL);
 /*!40000 ALTER TABLE `categories` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -371,19 +368,20 @@ CREATE TABLE `users` (
   `email` varchar(100) DEFAULT NULL,
   `contact_no` varchar(20) DEFAULT NULL,
   `photo` longblob,
-  `rule` enum('ADMIN','BO') NOT NULL DEFAULT 'BO',
+  `role` enum('ADMIN','BO') NOT NULL DEFAULT 'BO',
   `password_token` char(50) DEFAULT NULL,
   `password_date` datetime DEFAULT NULL,
   `reg_token` char(50) DEFAULT NULL,
   `status` tinyint(1) DEFAULT NULL,
-  `2fa_status` tinyint(1) DEFAULT NULL,
-  `2fa_key` char(50) NOT NULL DEFAULT '*',
+  `fa_status` tinyint(1) DEFAULT NULL,
+  `fa_key` char(50) NOT NULL DEFAULT '*',
   `ip_address` varchar(20) DEFAULT NULL,
   `password` varchar(100) DEFAULT NULL,
   `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
   `last_login` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+  `url_qr` text,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -392,7 +390,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'ayya','tsurayya','ayyaa.ats12@gmail.com','081219823417','https://drive.google.com/file/d/1THDHymyd2UNd4s4exdZlYnA5cb6uVMf7/view','BO',NULL,NULL,NULL,NULL,NULL,'*',NULL,NULL,'2018-05-22 09:43:51','2018-05-22 09:45:46');
+INSERT INTO `users` VALUES (1,'ayya','Tsurayya Ats','ayyaa.ats12@gmail.com','081219823417','https://drive.google.com/file/d/1THDHymyd2UNd4s4exdZlYnA5cb6uVMf7/view','ADMIN','b1eda9a910dc6a18356447e0f7062dcb1c547e93','2018-05-24 08:58:35',NULL,NULL,NULL,'*',NULL,'$2a$10$V2SSwvxh3KmZcEqZYSnMdOYW7zdC5ts9LPEDuIjyZQiFrsVkISKC2','2018-05-22 09:43:51','2018-05-28 02:35:11',NULL),(3,'susi','','tsura.san12@gmail.com',NULL,NULL,'BO',NULL,NULL,'',1,NULL,'L5SIYXU2BHDEXF3YORM6R5WWKCC4CHMQ','*','$2a$10$tDrO5scYaCKX0duAJff4becS5Lg.aIgUsQR1U511voEMnrTf.Opeq','2018-05-24 08:56:44','2018-05-24 08:57:28','https://chart.googleapis.com/chart?chs=166x166&chld=L|0&cht=qr&chl=otpauth://totp/Student%20system%3Asusi%3Fsecret=L5SIYXU2BHDEXF3YORM6R5WWKCC4CHMQ');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -405,4 +403,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-05-22 12:00:29
+-- Dump completed on 2018-05-30 14:26:46
