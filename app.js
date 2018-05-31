@@ -6,6 +6,7 @@ const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 
 const passport = require('passport');
+const multer = require('multer')
 const LocalStrategy = require('passport-local').Strategy;
 const bcrypt = require('bcrypt-nodejs');
 const sgMail = require('@sendgrid/mail');
@@ -21,6 +22,8 @@ const business = require('./routes/business-owner');
 const guest = require('./routes/guest');
 // const config = require('./src/config/config')
 
+const Sequelize = require('sequelize');
+const Op = Sequelize.Op;
 const models = require('./src/models');
 const keywords = models.keywords;
 const user = models.users;
@@ -63,12 +66,13 @@ passport.use('local', new LocalStrategy({
 } , function (req, username, password, done, err){
       if(!username || !password ) { return done(null, false, req.flash('message','All fields are required.')); }
       user.findOne({
-        attributes: ['id', 'username','password', 'role'],
+        attributes: ['id', 'username','password', 'role', 'email'],
         where: {
-          username: [username]
+          [Op.or]: [{username: [username]}, {email: [username]}],
+          [Op.and]: {status:1}
         }
       }).then(function(rows, err) {
-        if(!rows){ console.log('gagal'); return done(null, false, req.flash('message','Invalid username.')); }
+        if(!rows){ console.log('gagal'); return done(null, false, req.flash('message','Invalid username or email.')); }
         var dbPassword  = rows.password;
         // console.log('dbpw = ', dbPassword)
         // console.log('pass = ', password)
@@ -139,6 +143,7 @@ function isAuthenticated(req, res, next) {
     return next();
   res.redirect('/login');
 }
+
 
 app.use('/admin', role.can('access admin page'), admin);
 app.use('/business-owner', role.can('access BO page'),business);

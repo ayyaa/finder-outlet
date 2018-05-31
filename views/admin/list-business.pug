@@ -36,9 +36,9 @@ block content
                   tr
                     th(scope='row')= business.name
                     td= business.dataValues.category
-                    td
-                      | 2 
-                      a(href='/admin/list-outlets') view outlets
+                    td= business.dataValues.categories[0].dataValues.countoutlet
+                      | 
+                      a(href='/admin/'+business.id) view outlets
                     td.text-center
                       .dropdown
                         button.btn.bg-5.dropdown-toggle.btn-sm.border(type='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')

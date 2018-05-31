@@ -1,0 +1,35 @@
+extends layout-form
+
+block content
+    .limiter
+      .container-login100
+        .wrap-login100
+          form.login100-form.validate-form(method='POST' action='/two_fa/')
+            span.login100-form-title.p-b-25
+              | Two-factor authentication required
+            |
+            - if(error){
+            div
+              | !{error}
+            - }
+            |
+            - if(info){
+            div
+              | !{info}
+            - }   
+            span.login100-form-title.p-b-20
+              i.zmdi.zmdi-font
+            .wrap-input100.validate-input(data-validate='Valid email is: a@b.c')
+              input.input100.has-val(type='text', name='username', value = susername hidden)
+              input.input100.has-val(type='text', name='token', value = stoken)
+              span.focus-input100(data-placeholder='Token')
+            .container-login100-form-btn
+              .wrap-login100-form-btn
+                .login100-form-bgbtn
+                button.login100-form-btn
+                  | Submit
+            .text-center.p-t-115
+              span.txt1
+                | Back to
+              a.txt2(href='/')
+                |   Home

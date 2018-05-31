@@ -20,14 +20,7 @@ module.exports = function(sequelize, DataTypes) {
         key: 'id'
       }
     },
-    id_category: {
-      type: DataTypes.INTEGER(11).UNSIGNED,
-      allowNull: true,
-      references: {
-        model: 'categories',
-        key: 'id'
-      }
-    },
+
     id_bussines: {
       type: DataTypes.INTEGER(11).UNSIGNED,
       allowNull: true,

@@ -13,8 +13,8 @@ block content
           a#nav-security-tab.nav-item.pull-right.border.nav-link(data-toggle='tab', href='#nav-security', role='tab', aria-controls='nav-security', aria-selected='false', style='color: #2a93d5') Security
           a#nav-deactivated-tab.nav-item.pull-right.border.nav-link(data-toggle='tab', href='#nav-deactivated', role='tab', aria-controls='nav-deactivated', aria-selected='false', style='color: #2a93d5') Deactivated
         #nav-tabContent.tab-content
-          #nav-basic-info.tab-pane.fade.show.active.border(role='tabpanel', aria-labelledby='nav-basic-info-tab', style='background-color: white')
-            form.pt-4
+          #nav-basic-info.tab-pane.fade.show.active.border(role='tabpanel', aria-labelledby='nav-basic-info-tab', style='background-color: white', name='nav-basic-info')
+            .pt-4
               .form-row.container
                 .col-md-6
                   .form-group
@@ -32,26 +32,30 @@ block content
                   .form-group
                     button#save1.btn.btn-primary.btn-block(onclick='update()' disabled) Save
                 .col-md-6
-                  .form-group(style="align:center")
-                    img.img-responsive.rounded.mx-auto.d-block.pb-4.pt-3(src='https://indrawatidaud.files.wordpress.com/2016/12/kotak-tisu-doraemon.jpg', alt='User', width='160', height='auto')
-                    .custom-file
-                      input.custom-file-input.border.rounded(type='file', width='100%')
-                      label.custom-file-label Choose file..
-          #nav-change-pass.tab-pane.fade.border(role='tabpanel', aria-labelledby='nav-change-pass-tab', style='background-color: white')
-            form.pt-4(action='/action_page.php')
+                  form.form-group(style="align:center" , action='/admin/upload', enctype='multipart/form-data', method='POST')
+                    img.img-responsive.rounded.mx-auto.d-block.pb-4.pt-3(src='../photo-storage/'+user.photo, alt='User', width='160', height='auto')
+                    span
+                      label(for='exampleFormControlFile1') 
+                      input#exampleFormControlFile1.form-control-file(type='file' style='border-style: solid; border-width: 1px; border-color: grey;')
+                      button#upload.mt-2.btn.btn-primary.btn-block(type="submit" value="Upload Photo") UPLOAD
+          #nav-change-pass.tab-pane.fade.border(role='tabpanel', aria-labelledby='nav-change-pass-tab', style='background-color: white', name='nav-change-pass')
+            .pt-4
               .form-group
                 .form-group.col-md-6
                   label(for='old-pass') Old Password:
-                  input#oldpwd.form-control(type='password', placeholder='************', name='pswd')
+                  input#oldpass.form-control(type='password', placeholder='************', name='oldpass')
                 .form-group.col-md-6
                   label(for='new-pass') Password:
-                  input#pwd.form-control(type='password', placeholder='*************', name='pswd')
+                  input#newpass.form-control(placeholder='*************', name='newpass',type = "password" onkeyup='check1();')
                 .form-group.col-md-6
                   label(for='con-pass') Confirm Password:
-                  input#cpwd.form-control(type='text', placeholder='*************', name='pswd')
+                  input.mb-2#conpass.form-control(placeholder='*************', name='conpass', type = "password" onkeyup='check1();')
+                  span
+                    i
+                      b#message 
                 .form-group.col-md-2
-                  button.btn.btn-primary.btn-block(type='submit') Save
-          #nav-security.tab-pane.fade.border(role='tabpanel', aria-labelledby='nav-security-tab', style='background-color: white')
+                  button#save2.btn.btn-primary.btn-block(onclick='updatepw()') Save
+          #nav-security.tab-pane.fade.border(role='tabpanel', aria-labelledby='nav-security-tab', style='background-color: white', name='nav-security')
             form(style='padding:5%')
               .form-row
                 .form-group.col-md-8.col-sm-10.ml-4
@@ -78,7 +82,7 @@ block content
                     button#cancel.close(type='button', data-dismiss='modal', aria-label='Close' , name = 'close1')
                       span(aria-hidden='true') ×
                   .modal-body
-                    form.pt-4
+                    .pt-4
                       .form-group
                         .form-group.col-md-12
                           label.mr-4(for='old-pass') To get a third-party app working, either scan the QR code below or type the secret key into the app.                     
@@ -108,12 +112,10 @@ block content
                   .modal-footer
                     button#cancel2.btn.btn-secondary(type='button', data-dismiss='modal', name = 'close2') Cancel
                     //- form(action='/admin/logout', method='POST')
-                    button.btn.btn-primary(type='button', onclick='disable()') Yes
+                    button.btn.btn-primary(type='button', onclick='disable()') Yes  
 
-    script(type='text/javascript', src='../javascripts/account.js')    
-
-          #nav-deactivated.tab-pane.fade.border(role='tabpanel', aria-labelledby='nav-deactivated-tab', style='background-color: white')
-            form(action='/action_page.php', style='padding:5%')
+          #nav-deactivated.tab-pane.fade.border(role='tabpanel', aria-labelledby='nav-deactivated-tab', style='background-color: white', name='nav-deactivated')
+            form(action='/admin/deactive', style='padding:5%', method='POST')
               .form-row
                 .form-group.col-md-8.ml-4
                   h6 Did you want to deactivated your account
@@ -123,6 +125,7 @@ block content
                     label.form-check-label(for='gridCheck')
                       | I agree that all my data will be deleted and won't be recoverable upon deleted
               .form-group.col-md-2.m-2
-                button.btn.btn-primary.btn-block(type='submit') Save
+                button#deactive.btn.btn-primary.btn-block(type='submit' onclick="confirm('your account has been successfully disabled!');" disabled) Save
+        script(type='text/javascript', src='../javascripts/account.js')  
     a.scroll-to-top.rounded(href='#page-top')
       i.fa.fa-angle-up

@@ -41,26 +41,113 @@ router.get('/login', function(req, res){
   };
 });
 
-
 router.get('/signin', function(req, res, next) {
   passport.authenticate('local', function(err, user, info) {
     if (err) { return next(err); }
     if (!user) { return res.redirect('/login'); }
-    req.logIn(user, function(err) {
-      if (err) { return next(err); }
-      console.log(user.role)
-      if(user.role === 'BO') {
-        var role = 'Business Owner'
-        req.flash('info', '<div class="alert alert-success"><div class="text-center">Welcome to Outlet Finder as '+role+' '+user.username+ '!</div></div>');
-        return res.redirect('/business-owner/dashboard');
-      } else {
-        var role = 'Admin'
-        req.flash('info', '<div class="alert alert-success"><div class="text-center">Welcome to Outlet Finder as ' +role+' '+user.username+ '!</div></div>');
-        return res.redirect('/admin/dashboard');
+    users.findAll({
+      where: {
+        [op.or]: [{username: [req.query.username]}, {email: [req.query.username]}]
       }
-    });
+    }).then(function(rows) {
+      console.log(rows[0].fa_status)
+      if (rows[0].fa_status == 0) {
+        req.logIn(user, function(err) {
+          if (err) { return next(err); }
+          console.log(user.role)
+          if(user.role === 'BO') {
+            var role = 'Business Owner'
+            req.flash('info', '<div class="alert alert-success"><div class="text-center">Welcome to Outlet Finder as '+role+' '+user.username+ '!</div></div>');
+            return res.redirect('/business-owner/dashboard');
+          } else {
+            var role = 'Admin'
+            req.flash('info', '<div class="alert alert-success"><div class="text-center">Welcome to Outlet Finder as ' +role+' '+user.username+ '!</div></div>');
+            return res.redirect('/admin/dashboard');
+          }
+        });
+      } else {
+        req.flash('username',req.query.username)
+        res.redirect('/two_fa/')
+      }
+    })
   })(req, res, next);
 });
+
+router.get('/two_fa/', function(req, res) {
+  // console.log('username ',req.params.username )
+   var f = req.flash('username');
+   console.log(f.toString())
+   res.render('guest/two_fa', {susername: f.toString()})
+  //  users.findAll({
+  //    where: {
+  //      username: [f.toString()]
+  //    }
+  //  }).then(function(rows) {
+  //    console.log(twoFactor.generateToken(rows[0].secretkey))
+  //  })
+ })
+
+ router.post('/two_fa/', function(req, res) {
+  console.log(req.body.username)
+  users.findAll({
+    where: {
+      username: [req.body.username]
+    }
+  }).then(function(rows) {
+    var verifytoken = twoFactor.verifyToken(rows[0].fa_key, req.body.token);
+    console.log(req.body.token)
+    var newToken = twoFactor.generateToken(rows[0].fa_key)
+    console.log(newToken)
+    if (verifytoken !== null) {
+      users.findOne({
+        where: {
+          username: [req.body.username]
+        },
+        attributes: ['id', 'username', 'password']
+      }).then(user => 
+        req.login(user, function (err) {
+          if (err) { return next(err); }
+          console.log(user.role)
+          if(user.role === 'BO') {
+            var role = 'Business Owner'
+            req.flash('info', '<div class="alert alert-success"><div class="text-center">Welcome to Outlet Finder as '+role+' '+user.username+ '!</div></div>');
+            return res.redirect('/business-owner/dashboard');
+          } else {
+            var role = 'Admin'
+            req.flash('info', '<div class="alert alert-success"><div class="text-center">Welcome to Outlet Finder as ' +role+' '+user.username+ '!</div></div>');
+            return res.redirect('/admin/dashboard');
+          }
+        })
+      ) 
+    } else {
+      req.flash('failed','<div class="alert alert-danger"><div class="text-center">wrong token, try again !</div></div>')
+      res.render('guest/two_fa',{'error': req.flash('failed'),stoken: req.body.token, susername: req.body.username})
+    }
+  }).catch(error => {
+    req.flash('failed','<div class="alert alert-danger"><div class="text-center">wrong token, try again !</div></div>')
+    res.render('guest/two_fa',{'error': req.flash('failed'),stoken: req.body.token, susername: req.body.username})
+  })
+})
+
+// router.get('/signin', function(req, res, next) {
+//   passport.authenticate('local', function(err, user, info) {
+//     if (err) { return next(err); }
+//     if (!user) { return res.redirect('/login'); }
+//     req.logIn(user, function(err) {
+//       if (err) { return next(err); }
+//       console.log(user.role)
+//       if(user.role === 'BO') {
+//         var role = 'Business Owner'
+//         req.flash('info', '<div class="alert alert-success"><div class="text-center">Welcome to Outlet Finder as '+role+' '+user.username+ '!</div></div>');
+//         return res.redirect('/business-owner/dashboard');
+//       } else {
+//         var role = 'Admin'
+//         req.flash('info', '<div class="alert alert-success"><div class="text-center">Welcome to Outlet Finder as ' +role+' '+user.username+ '!</div></div>');
+//         return res.redirect('/admin/dashboard');
+//       }
+//     });
+//   })(req, res, next);
+// });
 
 
 router.get('/regist', function(req, res){
@@ -170,7 +257,7 @@ router.get('/confirmreg/:token', function(req, res) {
       req.flash('error','<div class="alert alert-danger"><div class="text-center">invalid token or link is broken</div></div>')
       res.redirect('/regist')
     } else {
-      res.render('guest/complete_regist', {susername: rows[0].username, semail: rows[0].email})
+      res.render('guest/complete_regist', {susername: rows[0].username, semail: rows[0].email, 'error' : req.flash('error')})
     }
   }).catch(function(err) {
     console.log(err)
@@ -181,9 +268,9 @@ router.post('/confirmreg/:token', function(req, res, next) {
   var pass = bcrypt.hashSync(req.body.password);
   var nsecret = twoFactor.generateSecret({name: 'Outlet Finder', account: req.body.username});
   var user = {password: pass, reg_token: '', status: 1, fa_key: nsecret.secret, url_qr: nsecret.qr}
-  regcValidate.validate({ password: req.body.password}, function(err, value) {
-    if (err) {
-      req.flash('error', '<div class="alert alert-danger"><div class="text-center">'+err+'</div></div>')
+  regcValidate.validate({ password: req.body.password}, function(error, value) {
+    if (error) {
+      req.flash('error', '<div class="alert alert-danger"><div class="text-center">'+error+'</div></div>')
       res.render('guest/complete_regist', {susername: req.body.username, semail: req.body.email, 'error' :req.flash('error')})
     }
     users.update(
@@ -210,8 +297,12 @@ router.post('/confirmreg/:token', function(req, res, next) {
           res.redirect('/business-owner/dashboard')
           // res.render('home',{'info' :req.flash('info'), username: req.user.username});
         })
-      )
-    )
+      ).catch(err => {
+        console.log(err)
+      })
+    ).catch(err => {
+      console.log(err)
+    })
   })
 })
 

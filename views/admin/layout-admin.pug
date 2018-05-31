@@ -33,7 +33,7 @@ body
       #navbarResponsive.collapse.navbar-collapse
         ul#exampleAccordion.navbar-nav.navbar-sidenav
           li.nav-item.text-center.mt-5.mb-2(data-toggle='tooltip', title='photo-profile')
-            img.img-responsive.rounded-circle(src='https://indrawatidaud.files.wordpress.com/2016/12/kotak-tisu-doraemon.jpg', alt='User', width='100', height='auto')
+            img.img-responsive.rounded-circle(src='../photo-storage/'+user.photo, alt='User', width='100', height='auto')
             .container
               h6.text-center.mt-3.mb-0.main-text
                 strong !{user.name}
@@ -77,16 +77,16 @@ body
               i.fa.fa-user
               |  My Account
             .dropdown-menu(aria-labelledby='messagesDropdown')
-              a.dropdown-item(href='/admin/account')
+              a.dropdown-item(href='/admin/account#nav-basic-info')
                 strong Basic Info
               .dropdown-divider
-              a.dropdown-item(href='#')
+              a.dropdown-item(href='/admin/account#nav-change-pass')
                 strong Change Password
               .dropdown-divider
-              a.dropdown-item(href='#')
+              a.dropdown-item(href='/admin/account#nav-security')
                 strong Security
               .dropdown-divider
-              a.dropdown-item(href='#')
+              a.dropdown-item(href='/admin/account#nav-deactivated')
                 strong Deactivated
           li.nav-item
             a.nav-link(data-toggle='modal', data-target='#exampleModal')

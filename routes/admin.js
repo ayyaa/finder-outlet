@@ -3,18 +3,89 @@ var router = express.Router();
 const Sequelize = require('sequelize');
 const models = require('../src/models');
 const twoFactor = require('node-2fa');
+const bcrypt = require('bcrypt-nodejs');
+const multer = require('multer')
 const categories = models.categories;
 const business = models.business;
 const business_category = models.business_category;
 const users = models.users;
+const outlets = models.outlets;
+const address = models.address;
 const validateJoi = require('../src/validation/joi-create-category');
 const flash = require('connect-flash');
+
+const multerConfig = {
+    
+  storage: multer.diskStorage({
+   //Setup where the user's file will go
+   destination: function(req, file, next){
+     next(null, './public/photo-storage');
+     },   
+      
+      //Then give the file a unique name
+      filename: function(req, file, next){
+          console.log(file);
+          const ext = file.mimetype.split('/')[1];
+          next(null, file.fieldname + '-' + Date.now() + '.'+ext);
+        }
+      }),   
+      
+      //A means of ensuring only images are uploaded. 
+      fileFilter: function(req, file, next){
+            if(!file){
+              next();
+            }
+          const image = file.mimetype.startsWith('image/');
+          if(image){
+            console.log('photo uploaded');
+            next(null, true);
+          }else{
+            console.log("file not supported");
+            
+            //TODO:  A better message response to user on failure.
+            return next();
+          }
+      }
+    };
+
 business.belongsToMany(categories, {through: 'business_category', foreignKey: 'business_id', otherKey: 'category_id'})
 categories.belongsToMany(business, {through: 'business_category', foreignKey: 'category_id', otherKey: 'business_id'})
+outlets.belongsTo(business, {foreignKey: 'id_bussines'});
+business.hasOne(outlets, {foreignKey: 'id_bussines'});
+outlets.belongsTo(address, {foreignKey: 'id_address'});
+address.hasOne(outlets, {foreignKey: 'id_address'});
 
 router.get('/dashboard', function(req, res, next) {
   res.render('admin/dashboard', { title: 'Express' , active1: 'active','message': req.flash('message'),'info': req.flash('info'), user: req.user[0]});
 });
+
+router.post('/upload',multer(multerConfig).single('photo'),function(req,res){
+  console.log(req.file.path)
+  users.update(
+    {photo: req.file.filename}
+  , {where: {
+    id: [req.user[0].id]
+  }}).then(rows => {
+    res.redirect('/admin/account');
+  }).catch(err => {
+    console.error(err)
+    res.send('error')
+  })
+});
+
+router.post('/deactive', function(req, res, next) {
+  users.update(
+    {status: 0}
+  , {where: {
+    id: [req.user[0].id]
+  }}).then(rows => {
+    req.logout();
+    res.redirect('/');
+  }).catch(err => {
+    console.error(err)
+    res.send('error')
+  })
+})
 
 router.get('/list-categories', function(req, res, next) {
   categories.findAll()
@@ -154,6 +225,7 @@ router.get('/account', function(req, res, next) {
   res.render('admin/account', {user: req.user[0], vauth: auth});
 })
 
+
 router.post('/update', function(req, res, next) {
   var upd = {name: req.body.name, email: req.body.email, contact_no: req.body.phone}
   users.update(
@@ -169,6 +241,35 @@ router.post('/update', function(req, res, next) {
   })
 })
 
+router.post('/updatepass', function(req, res, next) {
+  var pass = bcrypt.hashSync(req.body.newpass)
+  var upd = {password: pass}
+  users.findOne({
+    where: {
+      id: [req.user[0].id]
+    }
+  }).then(rows => {
+    console.log(rows.password)
+    console.log(req.body.oldpass)
+    bcrypt.compare(req.body.oldpass,rows.password, function(err, respon) {
+      if(respon) {
+        users.update(
+          upd
+        , {where: {
+          id: [req.user[0].id]
+        }}).then(rows => {
+          res.send(true)
+        }).catch(err => {
+          console.error(err)
+          res.send(false)
+        })
+       } else {
+        console.log('password wrong!!')
+        res.send(false)
+       } 
+    });   
+  })
+})
 
 router.get('/check/:token', function(req, res, next) {
   var verifytoken = twoFactor.verifyToken(req.user[0].fa_key, req.params.token);
@@ -212,37 +313,35 @@ router.post('/disable/:id', function(req, res, next) {
 router.get('/list-business', function(req, res, next) {
   business.findAll({
   attributes: [
+    'id',
     'name', 
     'email',
-    [Sequelize.fn('GROUP_CONCAT', Sequelize.literal("categories.name SEPARATOR ', '")), 'category']
+    [Sequelize.fn('GROUP_CONCAT', Sequelize.literal("DISTINCT(categories.name) SEPARATOR ', '")), 'category']
   ],
   group: ['business.id'],
-  include: [{
+  include: [
+    {
     model: categories,
-    // through: {
-    //   attributes: ['category_id','business_id' ],
-    // }
-    }]
-  }).then(rows => {
-    console.log(rows)
+    attributes: [
+      [Sequelize.literal('COUNT(DISTINCT(outlet.id))'), 'countoutlet']
+    ],
+    },
+    {
+      model: outlets,
+      group: ['business.id']
+    }
+  ]
+  })
+  .then(rows => {
+    console.log(rows.length)
+    for(var i = 0; i< rows.length; i++) {
+      console.log(rows[i].dataValues.categories[0].dataValues.countoutlet)
+    }
+    // console.log(rows[0].dataValues.categories)
     res.render('admin/list-business', {  active3: 'active', data: rows, user: req.user[0]});
   }).catch(err => {
     console.error(err)
   })
-});
-
-router.get('/list-outlets', function(req, res, next) {
-  res.render('admin/list-outlets', {  active5: 'active', user: req.user[0]});
-});
-
-
-
-router.get('/list-reviews', function(req, res, next) {
-  res.render('admin/list-reviews', {  active6: 'active', user: req.user[0]});
-});
-
-router.get('/list-report-reviews', function(req, res, next) {
-  res.render('admin/list-report-reviews', {  active7: 'active', user: req.user[0]});
 });
 
 router.get('/list-business-owner', function(req, res, next) {
@@ -259,6 +358,76 @@ router.get('/list-business-owner', function(req, res, next) {
   })
  
 });
+
+router.get('/list-outlets', function(req, res, next) {
+  outlets.findAll({
+    attributes: [
+      'id',
+      'name', 
+    ],
+    include: [
+      {
+      model: business,
+      attributes: [
+        'name'
+      ],
+      },
+      {
+        model: address,
+        attributes: [
+          'administrative_area_2'
+        ],
+      }
+    ]
+    }).then(rows => {
+      console.log(rows)
+      res.render('admin/list-outlets', {  active5: 'active', user: req.user[0], data: rows});
+    }).catch(err => {
+      console.error(err)
+    })
+});
+
+router.get('/:id', function(req, res, next) {
+  outlets.findAll({
+    where: {
+      id_bussines: req.params.id
+    },
+    attributes: [
+      'id',
+      'name', 
+    ],
+    include: [
+      {
+      model: business,
+      attributes: [
+        'name'
+      ],
+      },
+      {
+        model: address,
+        attributes: [
+          'administrative_area_2'
+        ],
+      }
+    ]
+    }).then(rows => {
+      console.log(rows)
+      res.render('admin/list-outlets', {  active5: 'active', user: req.user[0], data: rows});
+    }).catch(err => {
+      console.error(err)
+    })
+});
+
+
+router.get('/list-reviews', function(req, res, next) {
+  res.render('admin/list-reviews', {  active6: 'active', user: req.user[0]});
+});
+
+router.get('/list-report-reviews', function(req, res, next) {
+  res.render('admin/list-report-reviews', {  active7: 'active', user: req.user[0]});
+});
+
+
 
 router.post('/logout', function (req, res) {
   if(!req.isAuthenticated()) {
