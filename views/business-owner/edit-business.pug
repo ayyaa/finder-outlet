@@ -6,66 +6,203 @@ block content
       ol.breadcrumb
         li.breadcrumb-item
           h4 Edit Business
+      |
+      - if(error){
+      .alert.alert-danger 
+       .text-center #{error}
+      - }
+      |
+      - if(info){
+      .alert.alert-info 
+        .text-center #{info}
+      - }
+      |
+      - if(success){
+      .alert.alert-success 
+        .text-center #{success}
+      - }
       div
-        form.mt-4(action='/action_page.php')
-          .form-group.col-md-6
-            label(for='line') Line of Business:
-            select.custom-select(name='get_atr')
-              option(value='') Line of Business
-              option(value='') Name
-              option(value='') Address
-          .form-group.col-md-6
-            label(for='name') Name of Business:
-            input#pwd.form-control(type='text', placeholder='Name', name='pswd')
-          .form-group.col-md-6
-            label(for='email') Email:
-            input#pwd.form-control(type='text', placeholder='somthing@something.com', name='pswd')
-          .form-group.col-md-6
-            label(for='website') Website:
-            input#website.form-control(type='text', placeholder='http://www.something.com', name='pswd')
-          .form-group.col-md-9
-            label(for='description') Description:
-            textarea.form-control(name='', id='', cols='30', rows='5')  Description about is 
+        form.mt-4(action='/business-owner/edit-business' method='POST')
+          .form-row.col-md-12
+            .col-md-6
+              .form-group
+                label(for='line') Line of Business:
+                input#cat_id.form-control(type='hidden' name='cat_id', value=cat_id)
+                select#get_category.form-control.selectpicker(name='get_category' multiple='multilpe')
+                  each value in valCategories
+                    option(value=value.id) #{value.name}     
+              .form-group
+                label(for='name') Name of Business:
+                input#id.form-control(type='hidden', placeholder='Name', name='id', value=id)
+                input#name_business.form-control(type='text', placeholder='Name', name='name_business', value=name_business)
+              .form-group
+                label(for='email') Email:
+                input#email.form-control(type='text', placeholder='somthing@something.com', name='email', value=email)
+              .form-group
+                label(for='website') Website:
+                input#website.form-control(type='text', placeholder='http://www.something.com', name='website', value=website)
+              .form-group
+                label(for='website') Contact Number:
+                input#contact_no.form-control(type='text', placeholder='0812xxxxxx', name='contact_no', value=contact_no)
+              .form-group(style="align:center")
+                label(for='website') Logo:
+                .custom-file
+                  input.custom-file-input.border.rounded(type='file', width='4em')
+                  label.custom-file-label Choose file..
+              .form-group
+                label(for='description') Description:
+                textarea.form-control(name='description', id='', cols='30', rows='5')=description
+              
           label.ml-3(for='address') Address :
-          .form-group.col-md-9.border.ml-3.pt-2
+          .form-group.col-md-11.border.ml-3.pt-2.mr-3
+            .form-row
+              .form-group.col-md-6
+                label(for='state') State
+                input#temp_state.form-control(type='text' name='temp_state', value=temp_state)
+                select#state.form-control.selectpicker(name='state')
+                  each value in valState
+                    option(value=value.code) #{value.name}
+              .form-group.col-md-6
+                label(for='line2') Region
+                select#region.custom-select(name='province')
+                  option(value=region) #{region}
+              .form-group.col-md-6
+                label(for=city) City
+                select#city.custom-select(name='city')
+                  option(value='0') #{city}
+              .form-group.col-md-6
+                label(for='zipcode') Postal code
+                input#inputPassword4.form-control(type='text', placeholder='Postal Code' name='postal_code' value=postal_code)
             .form-row
               .form-group.col
                 label(for='line1') Line 1
-                input#inputEmail4.form-control(type='text', placeholder='Line 1 address')
+                input#address_id.form-control(type='hidden' name='address_id' value=address_id)
+                input#line1.form-control(type='text', placeholder='Line 1 address' name='line1' value=line1)
               .form-group.col
                 label(for='line2') Line 2
-                input#inputPassword4.form-control(type='text', placeholder='Line 2 address')
+                input#line2.form-control(type='text', placeholder='Line 2 address' name='line2' value=line2)
             .form-row
-              .form-group.col-md-6
-                label(for='line1') Province
-                select.custom-select(name='get_atr')
-                  option(value='') Province
-                  option(value='') Name
-                  option(value='') Address
               .form-group.col-md-3
-                label(for='line2') City
-                select.custom-select(name='get_atr')
-                  option(value='') City
-                  option(value='') Name
-                  option(value='') Address
-              .form-group.col-md-3
-                label(for='zipcode') Postal code
-                input#inputPassword4.form-control(type='text', placeholder='Postal Code')
-            .form-row
-              .form-group.col-md-4
-                button.btn.btn-secondary.btn-block(type='submit') Geolocate
+                a#geolocate.btn.btn-secondary.btn-block(type='button') Geolocate
             .form-row
               .form-group.col-md-3
                 label(for='zipcode') Latitude
-                input#inputPassword4.form-control(type='text', placeholder='Latitude', readonly='')
+                input#lat.form-control(type='text', placeholder='Latitude',name='lat', value=lat)
               .form-group.col-md-3
                 label(for='zipcode') Longitude
-                input#inputPassword4.form-control(type='text', placeholder='Longitude', readonly='')
+                input#lng.form-control(type='text', placeholder='Longitude',name='lng', value=lng)
             .form-row
               .form-group.col-md-3
-                a(href='')  View in maps >
+                a(data-toggle='modal', data-target='#mapsModal' pointer="cursor")  View in maps >
           .form-row
             .form-group.col-md-2.ml-3
-              button.btn.btn-primary.btn-block(type='submit') Save changes
+              button.btn.btn-primary.btn-block(type='submit') Save
     a.scroll-to-top.rounded(href='#page-top')
       i.fa.fa-angle-up
+    #mapsModal.modal.modal-wide.fade(tabindex='-1', role='dialog', aria-labelledby='deleteModalLabel', aria-hidden='true' )
+      .modal-dialog
+        .modal-content
+          .modal-header
+            h5#deleteModalLabel.modal-title Search address by maps 
+            button.close(type='button', data-dismiss='modal', aria-label='Close')
+              span(aria-hidden='true') ×
+          .modal-body 
+            form
+              .form-row
+                .form-group.col-md-12
+                  input#pac-input.form-control(type='text', placeholder='Enter a location' style='min-width:470px')
+              .form-row
+                .form-group.col-md-12
+                  #map(style='width:470px; height:400px')
+                  #infowindow-content
+                    img#place-icon(src='', width='16', height='16')
+                    span#place-name.title
+                    br
+                    span#place-address
+              .form-row
+                .form-group.col-md-6
+                  label(for='zipcode') Latitude
+                  input#lat1.form-control(type='text', placeholder='Latitude',name='lat', style='100%')
+                .form-group.col-md-6
+                  label(for='zipcode') Longitude
+                  input#lng1.form-control(type='text', placeholder='Longitude',name='lng',  style='100%')
+          .modal-footer
+            button.btn.btn-secondary(type='button', data-dismiss='modal') Cancel
+            button.btn.btn-primary(onclick='save()') Save 
+    script.
+      var values = $("#cat_id").val();
+      console.log(values);
+      $.each(values.split(","), function(i,e){
+        $("select[name='get_category'] option[value='" + e + "']").prop("selected", true);
+      });
+
+      $('.selectpicker').selectpicker({
+        size: 4
+      });
+      $(document).ready(function() {
+        var temp = $("#temp_state").val();
+        console.log(temp_state)
+        $("select[name=state]").val('id');
+      });
+      
+
+      $(document).ready(function() {
+        $("#state").change(function() {
+          var state = $("#state").val();
+          $.ajax({
+            url: "http://battuta.medunes.net/api/region/"+state+"/search/?region=&callback=?&key=4a4098af6b93a68e90f7438a91d2a516",
+            dataType: 'json',
+            success:function(response){
+              var len = response.length;
+              $("#region").empty();
+              for( var i = 0; i<len; i++){
+                var id = response[i]['region'];
+                var name = response[i]['region'];
+                $("#region").append("<option value='"+id+"'>"+name+"</option>");
+              }
+            }
+          });
+        });
+        $("#region").change(function() {
+          var region = $("#region").val();
+          var state1 = $('#state').val();
+          console.log(region);
+          $.ajax({
+            url: "http://battuta.medunes.net/api/city/"+state1+"/search/?region="+region+"&city=&callback=?&key=4a4098af6b93a68e90f7438a91d2a516",
+            dataType: 'json',
+            success:function(response){
+              console.log(response);
+              var len = response.length;
+              $("#city").empty();
+              for( var i = 0; i<len; i++){
+                var id = response[i]['region'];
+                var name = response[i]['city'];
+                $("#city").append("<option value='"+id+"'>"+name+"</option>");
+              }
+            }
+          });
+        });
+        $("#geolocate").click(function() {
+          var address = $('#line1').val()+', '+$('#line2').val()+', '+$('#city').val()+', '+$('#region').val()+', '+$('#state').val();
+          address = address.split(' ').join('+');
+          console.log(address);
+          $.ajax({
+            url: "https://maps.googleapis.com/maps/api/geocode/json?address=%22"+address+"%22&key=AIzaSyBPfa7eAe7vjoQFO5v_T2hgQmZ2LeQIPxY",
+            dataType: 'json',
+            success:function(response){
+              document.getElementById("lat").value = response.results[0].geometry.location.lat;
+              document.getElementById("lat1").value = response.results[0].geometry.location.lat;
+              document.getElementById("lng").value = response.results[0].geometry.location.lng;
+              document.getElementById("lng1").value = response.results[0].geometry.location.lng;
+              console.log(response.results[0].geometry.location.lat)
+              //- var len = response.length;
+              //- $("#city").empty();
+              //- for( var i = 0; i<len; i++){
+              //-   var id = response[i]['region'];
+              //-   var name = response[i]['city'];
+              //-   $("#city").append("<option value='"+id+"'>"+name+"</option>");
+              //- }
+            }
+          });
+        });
+      });

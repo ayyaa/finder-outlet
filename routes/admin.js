@@ -60,7 +60,7 @@ router.get('/dashboard', function(req, res, next) {
 });
 
 router.post('/upload',multer(multerConfig).single('photo'),function(req,res){
-  console.log(req.file.path)
+  console.log(req.file)
   users.update(
     {photo: req.file.filename}
   , {where: {

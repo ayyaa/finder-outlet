@@ -6,64 +6,80 @@ block content
       ol.breadcrumb
         li.breadcrumb-item
           h4 Create Outlet
+      |
+      - if(error){
+      .alert.alert-danger 
+       .text-center #{error}
+      - }
+      |
+      - if(info){
+      .alert.alert-info 
+        .text-center #{info}
+      - }
+      |
+      - if(success){
+      .alert.alert-success 
+        .text-center #{success}
+      - }
       div
         form.mt-4(action='/action_page.php')
           .form-group.col-md-6
             label(for='line') Business:
-            select.custom-select(name='get_atr')
-              option(value='') Business
-              option(value='') Name
-              option(value='') Address
+            select#get_business.form-control.selectpicker(name='get_business')
+              each buss in valBusiness
+                    option(value=buss.id) #{buss.name}
           .form-group.col-md-6
             label(for='name') Name of Business:
-            input#pwd.form-control(type='text', placeholder='Name', name='pswd')
+            input#name.form-control(type='text', placeholder='Name', name='name')
           .form-group.col-md-6
             label(for='email') Email:
-            input#pwd.form-control(type='text', placeholder='somthing@something.com', name='pswd')
+            input#email.form-control(type='text', placeholder='somthing@something.com', name='email')
           .form-group.col-md-6
             label(for='website') Website:
-            input#website.form-control(type='text', placeholder='http://www.something.com', name='pswd')
+            input#website.form-control(type='text', placeholder='http://www.something.com', name='website')
           .form-group.col-md-9
             label(for='description') Description:
             textarea.form-control(name='', id='', cols='30', rows='5')  Description about is 
           label.ml-3(for='description') Address :
           .form-group.col-md-9.border.ml-3.pt-2
             .form-row
+              .form-group.col-md-6
+                label(for='state') State
+                select#state.custom-select(name='state')
+                  option(value='' selected) - select -
+                  //- each value in valState
+                    option(value=value.code) #{value.name}
+              .form-group.col-md-6
+                label(for='line2') Region
+                select#region.custom-select(name='province')
+                  option(value='0') - select -
+              .form-group.col-md-6
+                label(for='line2') City
+                select#city.custom-select(name='city')
+                  option(value='0') - select -
+              .form-group.col-md-6
+                label(for='zipcode') Postal code
+                input#inputPassword4.form-control(type='text', placeholder='Postal Code' name='postal_code')
+            .form-row
               .form-group.col
                 label(for='line1') Line 1
-                input#inputEmail4.form-control(type='text', placeholder='Line 1 address')
+                input#line1.form-control(type='text', placeholder='Line 1 address' name='line1')
               .form-group.col
                 label(for='line2') Line 2
-                input#inputPassword4.form-control(type='text', placeholder='Line 2 address')
+                input#line2.form-control(type='text', placeholder='Line 2 address' name='line2')
             .form-row
-              .form-group.col-md-6
-                label(for='line1') Province
-                select.custom-select(name='get_atr')
-                  option(value='') Province
-                  option(value='') Name
-                  option(value='') Address
               .form-group.col-md-3
-                label(for='line2') City
-                select.custom-select(name='get_atr')
-                  option(value='') City
-                  option(value='') Name
-                  option(value='') Address
-              .form-group.col-md-3
-                label(for='zipcode') Postal code
-                input#inputPassword4.form-control(type='text', placeholder='Postal Code')
-            .form-row
-              .form-group.col-md-4
-                button.btn.btn-secondary.btn-block(type='submit') Geolocate
+                a#geolocate.btn.btn-secondary.btn-block(type='button') Geolocate
             .form-row
               .form-group.col-md-3
                 label(for='zipcode') Latitude
-                input#inputPassword4.form-control(type='text', placeholder='Latitude', readonly='')
+                input#lat.form-control(type='text', placeholder='Latitude',name='lat')
               .form-group.col-md-3
                 label(for='zipcode') Longitude
-                input#inputPassword4.form-control(type='text', placeholder='Longitude', readonly='')
+                input#lng.form-control(type='text', placeholder='Longitude',name='lng')
             .form-row
               .form-group.col-md-3
-                a(href='')  View in maps >
+                a(data-toggle='modal', data-target='#mapsModal' pointer="cursor")  View in maps >
           label.ml-3(for='description') Open Hours :
           .form-group.col-md-9.border.ml-3.pt-2
             .form-row

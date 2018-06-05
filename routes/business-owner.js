@@ -16,8 +16,12 @@ const config = require('../src/config/config')
 const Request = require('request');
 business.belongsToMany(categories, {through: 'business_category', foreignKey: 'business_id', otherKey: 'category_id'})
 categories.belongsToMany(business, {through: 'business_category', foreignKey: 'category_id', otherKey: 'business_id'})
+business_category.belongsTo(business, {foreignKey: 'business_id'})
+business.hasOne(business_category, {foreignKey: 'business_id'})
+business_category.belongsTo(categories, {foreignKey: 'category_id'})
+categories.hasOne(business_category, {foreignKey: 'category_id'})
 address.hasOne(business, {foreignKey: 'address_id'})
-business.belongsTo(address)
+business.belongsTo(address, {foreignKey: 'address_id'})
 const multerConfig = {
     
   storage: multer.diskStorage({
@@ -200,7 +204,7 @@ router.post('/create-business', function(req, res, next) {
         business.create({
           name: req.body.name_business,
           address_id: row.id,
-          owner_id: 1,
+          owner_id: req.user[0].id,
           email: req.body.email,
           website: req.body.website,
           contact_no: req.body.contact_no,
@@ -248,7 +252,13 @@ router.get('/get-geolocate', function(req, res, next) {
 });
 
 router.get('/create-outlet', function(req, res, next) {
-  res.render('business-owner/create-outlet',{user: req.user[0]});
+  business.findAll({
+  })
+  .then(rows => {
+    console.log(rows)
+    res.render('business-owner/create-outlet',{user: req.user[0], valBusiness: rows});
+  })
+  
 });
 
 router.post('/update', function(req, res, next) {
@@ -343,8 +353,122 @@ router.get('/account', function(req, res, next) {
   res.render('business-owner/account', {user: req.user[0], vauth: auth});
 });
 
-router.get('/edit-business', function(req, res, next) {
-  res.render('business-owner/edit-business',{user: req.user[0]} );
+// router.get('/edit-business=:id', function(req, res, next) {
+//   business_category.findAll({
+//     attributes: [
+//       'category_id'
+//     ],
+//     where: {
+//       business_id: req.params.id
+//     }
+//   })
+//   .then(business_category => {
+//     // console.log(business_category)
+//     var category = business_category.category_id;
+//     business.findAll({
+//       where: {
+//         id: req.params.id
+//       }
+//     })
+//     .then(business => {
+//       address.findAll({
+//         where: {
+//           id: business.address_id
+//         }
+//       })
+//       .then(address => {
+//         console.log(business_category);
+//         console.log(business);
+//         console.log(address);
+
+//       })
+//     })
+//   })
+// });
+
+router.get('/edit-business=:id', function(req, res) {
+  business.findAll({
+    where: {
+      id: [req.params.id]
+    },
+    attributes: [
+      'id',
+      'name', 
+      'email',
+      'website',
+      'contact_no',
+      'description',
+
+      [Sequelize.fn('GROUP_CONCAT', Sequelize.literal("categories.id SEPARATOR ','")), 'category']
+    ],
+    group: ['business.id'],
+    include: [{
+      model: categories,
+      // through: {
+      //   attributes: ['category_id','business_id' ],
+      // }
+      },
+      {
+        model: address
+        }],
+      distinct: true,
+      raw:true
+      })
+  // business.findAll({
+  //   where: {
+  //     id: [req.params.id]
+  //   },
+  //   include: [ {
+  //     model: business_category,
+  //     where: {
+  //       business_id:req.params.id
+  //     },
+  //     include: [ {
+  //       model: categories,
+  //     }
+  //   ]
+  //   }, {
+  //     model: address
+  //     }
+  //   ],
+  //   // group: ['business.id'],
+  //   distinct: true,
+  //   raw:true
+  // })
+  .then(rows => {
+    categories.findAll({
+    })
+    .then(row => {
+      console.log(rows)
+      var BATTUTA_KEY=config.batuta_key.key;
+      var url = "https://battuta.medunes.net/api/country/all/?key="+BATTUTA_KEY;
+
+      Request.get(url, (error, response, body) => {
+          if(error) {
+              return console.dir(error);
+          }
+          var data = JSON.parse(body);
+          // console.dir(JSON.parse(body));
+          console.log(rows.category)
+          res.render('business-owner/edit-business', {
+            id:  rows[0].id,
+            name_business:  rows[0].name, contact_no: rows[0].contact_no, email: rows[0].email, website: rows[0].website, description: rows[0].description, 
+            address_id: rows[0]['address.id'],
+            line1: rows[0]['address.line1'], line2: rows[0]['address.line2'],
+            temp_state: rows[0]['address.administrative_area_1'], region: rows[0]['address.administrative_area_2'], city: rows[0]['address.administrative_area_3'],
+            postal_code: rows[0]['address.postalcode'],
+            lat: rows[0]['address.point'].coordinates[0], lng: rows[0]['address.point'].coordinates[1],
+            active3: 'active',
+            user: req.user[0], 
+            valState: data,
+            cat_id: rows[0].category,
+            valCategories: row 
+          })
+      });
+    })
+  }).catch(err => {
+    console.error(err);
+  });
 });
 
 router.get('/edit-outlet', function(req, res, next) {

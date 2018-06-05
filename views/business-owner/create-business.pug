@@ -27,7 +27,7 @@ block content
             .col-md-6
               .form-group
                 label(for='line') Line of Business:
-                select#get_category.custom-select(name='get_category' data-show-subtext="true" data-live-search="true" multiple='multilpe')
+                select#get_category.form-control.selectpicker(name='get_category' multiple='multilpe')
                   each value in valCategories
                     option(value=value.id) #{value.name}
               .form-group
@@ -130,10 +130,10 @@ block content
             button.btn.btn-secondary(type='button', data-dismiss='modal') Cancel
             button.btn.btn-primary(onclick='save()') Save 
     script.
-      //- $('#get_category').multiSelect({
-      //-   selectableHeader: "<div class='rounded text-center' style='background-color:black; color:white'>Selectable category</div>",
-      //-   selectionHeader: "<div class='rounded text-center' style='background-color:black; color:white'>Selection category</div>"
-      //- });
+      $('.selectpicker').selectpicker({
+        style: 'btn-info',
+        size: 4
+      });
       $(document).ready(function() {
         $("#state").change(function() {
           var state = $(this).val();
@@ -183,13 +183,6 @@ block content
               document.getElementById("lng").value = response.results[0].geometry.location.lng;
               document.getElementById("lng1").value = response.results[0].geometry.location.lng;
               console.log(response.results[0].geometry.location.lat)
-              //- var len = response.length;
-              //- $("#city").empty();
-              //- for( var i = 0; i<len; i++){
-              //-   var id = response[i]['region'];
-              //-   var name = response[i]['city'];
-              //-   $("#city").append("<option value='"+id+"'>"+name+"</option>");
-              //- }
             }
           });
         });
