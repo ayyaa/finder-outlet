@@ -4,7 +4,7 @@ const Sequelize = require('sequelize');
 const models = require('../src/models');
 const twoFactor = require('node-2fa');
 const bcrypt = require('bcrypt-nodejs');
-const multer = require('multer')
+const multer = require('multer');
 const categories = models.categories;
 const business = models.business;
 const business_category = models.business_category;
@@ -56,7 +56,63 @@ outlets.belongsTo(address, {foreignKey: 'id_address'});
 address.hasOne(outlets, {foreignKey: 'id_address'});
 
 router.get('/dashboard', function(req, res, next) {
-  res.render('admin/dashboard', { title: 'Express' , active1: 'active','message': req.flash('message'),'info': req.flash('info'), user: req.user[0]});
+  business.findAll({
+    attributes: [
+      'id',
+      'name', 
+      'email',
+      [Sequelize.fn('GROUP_CONCAT', Sequelize.literal("DISTINCT(categories.name) SEPARATOR ', '")), 'category']
+    ],
+    group: ['business.id'],
+    include: [
+      {
+        model: categories,
+        attributes: [
+          [Sequelize.literal('COUNT(DISTINCT(outlet.id))'), 'countoutlet']
+        ],
+      },
+      {
+        model: outlets,
+        group: ['business.id']
+      }
+    ]
+  })
+  .then(rows1 => {
+    outlets.findAll({
+      attributes: [
+        'id',
+        'name', 
+      ],
+      include: [
+        {
+          model: business,
+          attributes: [
+            'name'
+          ],
+        },
+        {
+          model: address,
+          attributes: [
+            'administrative_area_2'
+          ],
+        }
+      ]
+    }).then(rows2 => {
+      res.render('admin/dashboard', { 
+        title: 'Express' , 
+        active1: 'active',
+        'message': req.flash('message'),
+        'info': req.flash('info'), 
+        user: req.user[0],
+        data: rows1,
+        data2: rows2
+      });
+    }).catch(err => {
+      console.error(err)
+    })
+  }).catch(err => {
+    console.error(err)
+  })
 });
 
 router.post('/upload',multer(multerConfig).single('photo'),function(req,res){
@@ -156,7 +212,8 @@ router.get('/edit-category=:id', function(req, res, next) {
         id: rows[0].id,
         name_category: rows[0].name,
         description: rows[0].description
-        , user: req.user[0]
+        , user: req.user[0],
+        active2: 'active'
       });
     }
   })
@@ -307,6 +364,27 @@ router.post('/disable/:id', function(req, res, next) {
   })
 });
 
+router.post('/refresh_sk/:id', function(req, res, next) {
+  users.findOne({
+    where: {
+      id: [req.params.id]
+    }
+  }).then(rows => {
+    var nsecret = twoFactor.generateSecret({name: 'Outlet Finder', account: rows.username});
+    users.update({
+      fa_key: nsecret.secret,
+      url_qr: nsecret.qr
+    }, {where: {
+      id: [req.params.id]
+    }}).then(rows => {
+      res.send('success')
+    }).catch(err => {
+      console.error(err)
+      res.send('error')
+    })
+  })
+});
+
 router.get('/list-business', function(req, res, next) {
   business.findAll({
   attributes: [
@@ -360,7 +438,7 @@ router.get('/list-report-reviews', function(req, res, next) {
 router.get('/list-business-owner', function(req, res, next) {
   users.findAll({ 
     where: {
-      role: 'BO'
+      role: 'BUSINESS OWNER'
     }
   })
   .then(rows => {
@@ -380,10 +458,10 @@ router.get('/list-outlets', function(req, res, next) {
     ],
     include: [
       {
-      model: business,
-      attributes: [
-        'name'
-      ],
+        model: business,
+        attributes: [
+          'name'
+        ],
       },
       {
         model: address,
@@ -392,12 +470,12 @@ router.get('/list-outlets', function(req, res, next) {
         ],
       }
     ]
-    }).then(rows => {
-      console.log(rows)
-      res.render('admin/list-outlets', {  active5: 'active', user: req.user[0], data: rows});
-    }).catch(err => {
-      console.error(err)
-    })
+  }).then(rows => {
+    console.log(rows)
+    res.render('admin/list-outlets', {  active5: 'active', user: req.user[0], data: rows});
+  }).catch(err => {
+    console.error(err)
+  })
 });
 
 
@@ -439,8 +517,8 @@ router.get('/list-outlets=:id', function(req, res, next) {
       }
     ]
     }).then(rows => {
-      console.log(rows)
-      res.render('admin/list-outlets', {  active5: 'active', user: req.user[0], data: rows});
+      console.log(rows[0].dataValues.business.name)
+      res.render('admin/list-outlets', {  active5: 'active', user: req.user[0], data: rows, business: rows[0].dataValues.business.name });
     }).catch(err => {
       console.error(err)
     })

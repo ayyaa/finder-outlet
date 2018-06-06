@@ -29,7 +29,7 @@ block content
               each buss in valBusiness
                     option(value=buss.id) #{buss.name}
           .form-group.col-md-6
-            label(for='name') Name of Business:
+            label(for='name') Name of Outlet:
             input#name.form-control(type='text', placeholder='Name', name='name')
           .form-group.col-md-6
             label(for='email') Email:
@@ -87,127 +87,85 @@ block content
                 h6 Monday
               .form-group.col
                 .form-check
-                  input#gridCheck.form-check-input(type='checkbox')
-                  label.form-check-label(for='gridCheck')
+                  input#gridCheck1.form-check-input(type='checkbox')
+                  label.form-check-label(for='gridCheck1')
                     | Closed
               .form-group.col
-                select.custom-select(name='get_atr')
-                  option(value='') 08.00
-                  option(value='') Name
-                  option(value='') Address
+                input(type='time' value='08:00' style='width: 100%')
               .form-group.col
-                select.custom-select(name='get_atr')
-                  option(value='') 08.00
-                  option(value='') Name
-                  option(value='') Address
+                input(type='time' value='18:00' style='width: 100%')
             .form-row
               .form-group.col
                 h6 Tuesday
               .form-group.col
                 .form-check
-                  input#gridCheck.form-check-input(type='checkbox')
-                  label.form-check-label(for='gridCheck')
+                  input#gridCheck1.form-check-input(type='checkbox')
+                  label.form-check-label(for='gridCheck1')
                     | Closed
               .form-group.col
-                select.custom-select(name='get_atr')
-                  option(value='') 08.00
-                  option(value='') Name
-                  option(value='') Address
+                input(type='time' value='08:00' style='width: 100%')
               .form-group.col
-                select.custom-select(name='get_atr')
-                  option(value='') 08.00
-                  option(value='') Name
-                  option(value='') Address
+                input(type='time' value='18:00' style='width: 100%')
             .form-row
               .form-group.col
                 h6 Wednesday
               .form-group.col
                 .form-check
-                  input#gridCheck.form-check-input(type='checkbox')
-                  label.form-check-label(for='gridCheck')
+                  input#gridCheck1.form-check-input(type='checkbox')
+                  label.form-check-label(for='gridCheck1')
                     | Closed
               .form-group.col
-                select.custom-select(name='get_atr')
-                  option(value='') 08.00
-                  option(value='') Name
-                  option(value='') Address
+                input(type='time' value='08:00' style='width: 100%')
               .form-group.col
-                select.custom-select(name='get_atr')
-                  option(value='') 08.00
-                  option(value='') Name
-                  option(value='') Address
+                input(type='time' value='18:00' style='width: 100%')
             .form-row
               .form-group.col
                 h6 Thursday
               .form-group.col
                 .form-check
-                  input#gridCheck.form-check-input(type='checkbox')
-                  label.form-check-label(for='gridCheck')
+                  input#gridCheck1.form-check-input(type='checkbox')
+                  label.form-check-label(for='gridCheck1')
                     | Closed
               .form-group.col
-                select.custom-select(name='get_atr')
-                  option(value='') 08.00
-                  option(value='') Name
-                  option(value='') Address
+                input(type='time' value='08:00' style='width: 100%')
               .form-group.col
-                select.custom-select(name='get_atr')
-                  option(value='') 08.00
-                  option(value='') Name
-                  option(value='') Address
+                input(type='time' value='18:00' style='width: 100%')
             .form-row
               .form-group.col
                 h6 Friday
               .form-group.col
                 .form-check
-                  input#gridCheck.form-check-input(type='checkbox')
-                  label.form-check-label(for='gridCheck')
+                  input#gridCheck1.form-check-input(type='checkbox')
+                  label.form-check-label(for='gridCheck1')
                     | Closed
               .form-group.col
-                select.custom-select(name='get_atr')
-                  option(value='') 08.00
-                  option(value='') Name
-                  option(value='') Address
+                input(type='time' value='08:00' style='width: 100%')
               .form-group.col
-                select.custom-select(name='get_atr')
-                  option(value='') 08.00
-                  option(value='') Name
-                  option(value='') Address
+                input(type='time' value='18:00' style='width: 100%')
             .form-row
               .form-group.col
                 h6 Saturday
               .form-group.col
                 .form-check
-                  input#gridCheck.form-check-input(type='checkbox', checked='')
-                  label.form-check-label(for='gridCheck')
+                  input#gridCheck1.form-check-input(type='checkbox', checked='')
+                  label.form-check-label(for='gridCheck1')
                     | Closed
               .form-group.col
-                select.custom-select(name='get_atr', disabled='')
-                  option(value='')  
-                  option(value='') Name
-                  option(value='') Address
+                input(type='time' value='08:00' style='width: 100%' disabled)
               .form-group.col
-                select.custom-select(name='get_atr', disabled='')
-                  option(value='')  
-                  option(value='') Name
-                  option(value='') Address
+                input(type='time' value='18:00' style='width: 100%' disabled)
             .form-row
               .form-group.col
                 h6 Sunday
               .form-group.col
                 .form-check
-                  input#gridCheck.form-check-input(type='checkbox', checked='')
+                  input#gridCheck1.form-check-input(type='checkbox', checked='')
                   label.form-check-label(for='gridCheck')
                     | Closed
               .form-group.col
-                select.custom-select(name='get_atr', disabled='')
-                  option(value='')  
-                  option(value='') Name
-                  option(value='') Address
+                input(type='time' value='08:00' style='width: 100%' disabled)
               .form-group.col
-                select.custom-select(name='get_atr', disabled='')
-                  option(value='')  
-                  option(value='') Name
-                  option(value='') Address
+                input(type='time' value='18:00' style='width: 100%' disabled)
             .form-group
               .form-check
                 input#gridCheck.form-check-input(type='checkbox', checked='')

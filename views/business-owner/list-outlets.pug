@@ -5,7 +5,7 @@ block content
     .container-fluid
       ol.breadcrumb
         li.breadcrumb-item
-          h4 Outlets
+          h4 Outlets !{business}
       .row
         .col-xl-3.col-sm-6.mb-3
           .card.secondary-text.o-hidden.h-100(style='background-color:#d6955b')
@@ -27,10 +27,6 @@ block content
               span.float-left Local Competitor
               span.float-right
                 i.fa.fa-angle-right
-      .card.mb-3
-        .card-header
-          i.fa.fa-table
-          |  Data List Outlets
         .card-body
           form.form-inline(method='GET')
             .form-group.col-md-3
@@ -46,7 +42,7 @@ block content
                 option(value='') Name
                 option(value='') Address
             .form-group.col-md-2
-              button.btn.btn-success.form-control(type='submit', style='width:100%;')
+              button.btn.btn-success.form-control(type='submit')
                 span.fa.fa-filter
                 |  Filter
           .table-responsive.mt-4
@@ -59,59 +55,25 @@ block content
                   th(scope='col') Page Views
                   th.text-center(scope='col') Action
               tbody
-                tr
-                  th(scope='row') Wonderlabs Amstrong
-                  td Wonderlabs
-                  td Yogyakarta
-                  td 30
-                  td.text-center
-                    .dropdown
-                      button.btn.bg-5.dropdown-toggle.btn-sm.border(type='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
-                        | Action
-                        span.caret
-                      .dropdown-menu.dropdown-menu-right
-                        a.dropdown-item(href='#')
-                          i.fa.fa-user
-                          |  View
-                        .dropdown-divider
-                        a.dropdown-item(data-toggle='modal', data-target='#deleteModal')
-                          i.fa.fa-trash
-                          |  Delete
-                tr
-                  th(scope='row') Wonderlabs Exploler
-                  td Wonderlabs
-                  td Yogyakarta
-                  td 9
-                  td.text-center
-                    .dropdown.clearfix
-                      button.btn.bg-5.dropdown-toggle.btn-sm.border(type='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
-                        | Action
-                        span.caret
-                      .dropdown-menu.dropdown-menu-right
-                        a.dropdown-item(href='#')
-                          i.fa.fa-user
-                          |  View
-                        .dropdown-divider
-                        a.dropdown-item(data-toggle='modal', data-target='#deleteModal')
-                          i.fa.fa-trash
-                          |  Delete
-                tr
-                  th(scope='row') Wonderlabs Sputnik
-                  td Wonderlabs
-                  td Yogyakarta
-                  td 9
-                  td.text-center
-                    .dropdown
-                      button.btn.bg-5.dropdown-toggle.btn-sm.border(type='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
-                        | Action
-                      .dropdown-menu.dropdown-menu-right
-                        a.dropdown-item(href='#')
-                          i.fa.fa-user
-                          |  View
-                        .dropdown-divider
-                        a.dropdown-item(data-toggle='modal', data-target='#deleteModal')
-                          i.fa.fa-trash
-                          |  Delete
+                for outlet in data
+                  tr
+                    th(scope='row')= outlet.name
+                    td= outlet.dataValues.business.name
+                    td= outlet.dataValues.address.administrative_area_2
+                    td 30
+                    td.text-center
+                      .dropdown
+                        button.btn.bg-5.dropdown-toggle.btn-sm.border(type='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
+                          | Action
+                          span.caret
+                        .dropdown-menu.dropdown-menu-right
+                          a.dropdown-item(href='#')
+                            i.fa.fa-user
+                            |  View
+                          .dropdown-divider
+                          a.dropdown-item(data-toggle='modal', data-target='#deleteModal')
+                            i.fa.fa-trash
+                            |  Delete
         .card-footer.small.text-muted Updated yesterday at 11:59 PM
       a.float(href='/business-owner/create-outlet')
         i.fa.fa-plus.fa-2x.my-float

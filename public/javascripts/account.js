@@ -12,6 +12,7 @@ $('#check1').on('change', function(e){
   }
 });
 
+
 function disable(){
   var id = $('#id').val();
   $.ajax({
@@ -109,19 +110,29 @@ function updatepw(){
 }  
 
 $(document).ready(function(){
-    $('button[name="close1"]').click(function(){
-        $( "#check1" ).prop( "checked", false ); 
-        $("#p").replaceWith("<p id='p'> </p>")
-        $("#token").val('')
-    });
+  $('button[name="close1"], button[name="close2"]').click(function(){
+    $( "#check1" ).prop( "checked", false ); 
+    $("#p").replaceWith("<p id='p'> </p>")
+    $("#token").val('')
+    var id = $('#id').val();
+    $.ajax({
+      url:'/admin/refresh_sk/'+id,
+      type:'POST',
+      success : function (respon) {
+        window.location.reload(true)
+      }
+    })
+  });
 });    
 
 
-$(document).ready(function(){
-    $('button[name="close2"]').click(function(){
-        $( "#check1" ).prop( "checked", true ); 
-    });
-});  
+// $(document).ready(function(){
+//     $('button[name="close2"]').click(function(){
+//         $( "#check1" ).prop( "checked", true ); 
+//         $("#p").replaceWith("<p id='p'> </p>")
+//         $("#token").val('')
+//     });
+// });  
 
 $('#nav-basic-info input').on('input',function(e){
   $('#save1').attr('disabled' , false);
@@ -146,16 +157,6 @@ var check1 = function() {
   }
 }
 
-// $(document).ready(function(){
-//   activeTab('nav-basic-info');
-// });
-
-$(function () {
-  var activeTab = $('[href=' + location.hash + ']');
-  activeTab && activeTab.tab('show');
-});
-
-
 $(document).ready(function(){
   $('#gridCheck').on('click',function(){
     if ($('#gridCheck').is(':checked')) {
@@ -165,6 +166,45 @@ $(document).ready(function(){
     }
   });
 });  
+
+
+// $(document).ready(function(){
+//   activeTab('nav-basic-info');
+// });
+
+$(function () {
+  var activeTab = $('[href=' + location.hash + ']');
+  activeTab && activeTab.tab('show');
+});
+
+$(function(){
+  var hash = window.location.hash;
+  hash && $('ul.nav a[href="' + hash + '"]').tab('show');
+
+  $('#nav-tab a').click(function (e) {
+    $(this).tab('show');
+    var scrollmem = $('body').scrollTop() || $('html').scrollTop();
+    window.location.hash = this.hash;
+    $('html,body').scrollTop(scrollmem);
+  });
+});
+
+// $( "#tabs" ).tabs({
+//   create: function(event, ui) {
+//       window.location.hash = ui.panel.attr('id');
+//   },
+//   activate: function(event, ui) {
+//       window.location.hash = ui.newPanel.attr('id');
+//   }
+// });
+
+// $(function() {
+//   $("#nav-tab").tabs({
+//     activate: function(event, ui) {
+//       window.location.hash = ui.newPanel.attr('id');
+//     }
+//   });
+// });
 
 // $("#conpass").blur(function() {
 //   var user_pass = $("#newpass").val();

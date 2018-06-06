@@ -17,7 +17,7 @@ module.exports = function(sequelize, DataTypes) {
       }
     },
     rating: {
-      type: DataTypes.INTEGER(11),
+      type: DataTypes.DOUBLE,
       allowNull: true
     },
     content: {

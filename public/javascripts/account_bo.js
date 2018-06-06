@@ -12,6 +12,32 @@ $('#check1').on('change', function(e){
   }
 });
 
+
+$(document).ready(function(){
+  $("#editname").hide()
+  $("#editnamebutton").click(function(){
+      $("#editname").toggle();
+      $("#editemail").hide();
+      $("#editcp").hide()
+  });
+
+  $("#editemail").hide()
+  $("#editemailbutton").click(function(){
+      $("#editemail").toggle();
+      $("#editname").hide();
+      $("#editcp").hide()
+  });
+
+  $("#editcp").hide()
+  $("#editcpbutton").click(function(){
+      $("#editcp").toggle();
+      $("#editemail").hide();
+      $("#editname").hide()
+  });
+
+});
+
+
 function disable(){
   var id = $('#id').val();
   $.ajax({
@@ -166,6 +192,44 @@ $(function () {
   activeTab && activeTab.tab('show');
 });
 
+$('#form1').submit(function () {
+
+  // Get the Login Name value and trim it
+  var up = $.trim($('#upload_value').val());
+
+  // Check if empty of not
+  if (up === '') {
+      alert('choose file first');
+      return false;
+  }
+});
+
+// $('#formeditname').submit(function () {
+
+//   // Get the Login Name value and trim it
+//   var up = $.trim($('#name').val());
+
+//   // Check if empty of not
+//   if (up === '') {
+//       alert('choose file first');
+//       return false;
+//   }
+// });
+
+$(function () {
+  $("#formeditname").validate({ // initialize the plugin
+    rules: {
+        name: 'required'
+    },
+    messages: {
+      name: 'name'
+    },
+    submitHandler: function (form) { // for demo
+        alert('valid form submitted'); // for demo
+        return false; // for demo
+    }
+  });
+});
 
 // $(document).ready(function(){
 //   $('#message').on('DOMSubtreeModified',function(){

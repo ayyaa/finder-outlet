@@ -127,7 +127,7 @@ role.use(function (req, action) {
 })
 
 role.use('access BO page', function (req) {
-  if (req.user[0].role === 'BO') {
+  if (req.user[0].role === 'BUSINESS OWNER') {
     return true;
   }
 })

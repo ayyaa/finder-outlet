@@ -30,7 +30,7 @@ html(lang='en')
       a.navbar-brand.js-scroll-trigger.d-flex.justify-content-center.pt-4.mt-4.mb-5.rounded(href='#page-top')
         span
           img.img-profile.rounded-circle.mb-2.d-flex.align-content-center(src='../images/wonderlabs.png', alt='')
-          p Wonderlabs
+          p=data.business.name
       .collapse.navbar-collapse
         ul.navbar-nav.ml-auto
           li.nav-item
@@ -64,15 +64,24 @@ html(lang='en')
         .container.pt-4.pb-4(style='text-align: center;')
           span
             img.img-profile.rounded-circle.mb-2(src='../images/wonderlabs.png', alt='', height='150px', widht='150px')
-            p.h5.mt-3(style='color: white;') Wonderlabs
+            p.h5.mt-3(style='color: white;')=data.business.name
       section#info.resume-section.p-3.p-lg-5.d-flex.d-column
         .mx-auto
           h2.mb-0
-            | Wonderlabs 
-            p.text-primary Armstrong Campus
+            = data.business.name
+            p.text-primary=data.name
           .subheading.mb-5
-            | Jalan Laksda Adisucipto no 27, Kota Yogyakarta, Depok, 55238 · 0274 567 840 ·
-            a(href='https://wonderlabs.io') https://wonderlabs.io
+            =data.address.line1 
+            | , 
+            =data.address.line2
+            | , 
+            =data.address.administrative_area_1 
+            | , 
+            =data.address.postalcode
+            | , 
+            =data.contact_no
+            | ,  
+            a(href='https://wonderlabs.io')=data.website
           p.mb-3
             | Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
           table.table.table-striped.mb-5(style='width:30%')
@@ -82,24 +91,24 @@ html(lang='en')
               th Close
             tr
               td Monday
-              td 8.00
-              td 18.00
+              td=data.day.d1_open
+              td=data.day.d1_close
             tr
               td Tuesday
-              td 8.00
-              td 18.00
+              td=data.day.d2_open
+              td=data.day.d2_close
             tr
               td Wednesday
-              td 8.00
-              td 18.00
+              td=data.day.d3_open
+              td=data.day.d3_close
             tr
               td Thrusday
-              td 8.00
-              td 18.00
+              td=data.day.d4_open
+              td=data.day.d4_close
             tr
               td Friday
-              td 8.00
-              td 18.00
+              td=data.day.d5_open
+              td=data.day.d5_close
           ul.list-inline.list-social-icons.mb-0
             li.list-inline-item
               a(href='#')
@@ -136,37 +145,37 @@ html(lang='en')
           .resume-item.d-flex.flex-column.flex-md-row.mb-5
             .resume-content.mr-auto
               .mt-2
-                .pt-2.pb-2.mb-2
-                  .divider.mb-2
-                  h5 Anonim
-                  p(style='font-size: 12px; color:#808080')
-                    | 2 days Ago 
-                    a(data-toggle='modal', data-target='#exampleModal2')
-                      i.fas.fa-flag(data-toggle='tooltip', data-placement='right', title='Click to report review')
-                  p
-                    | Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
-                  div(style='color: orange')
-                    i.fa.fa-star
-                    i.fa.fa-star
-                    i.fa.fa-star
-                    i.fa.fa-star
-                    i.fa.fa-star
-                .pt-2.pb-2.mb-2
-                  .divider.mb-2
-                  h5 Anonim
-                  p(style='font-size: 12px; color:#808080')
-                    | 2 days Ago 
-                    a(data-toggle='modal', data-target='#exampleModal2')
-                      i.fas.fa-flag(data-toggle='tooltip', data-placement='right', title='Click to report review')
-                  p
-                    | Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
-                  i.fa.fa-star(style='color: orange')
-                  i.fa.fa-star(style='color: orange')
-                  i.fa.fa-star
-                  i.fa.fa-star
-                  i.fa.fa-star
+                for reviews in review
+                  .pt-2.pb-2.mb-2
+                    .divider.mb-2
+                    h5=reviews.name
+                    p(style='font-size: 12px; color:#808080')
+                      =reviews.created_at
+                      |  
+                      a(data-toggle='modal', data-target='#exampleModal2')
+                        i.fas.fa-flag(data-toggle='tooltip', data-placement='right', title='Click to report review')
+                    p
+                      =reviews.content
+
+                    script(src='https://use.fontawesome.com/f4e64b7c17.js')
+                    .star-rating
+                      .back-stars
+                        i.fa.fa-star(aria-hidden='true')
+                        i.fa.fa-star(aria-hidden='true')
+                        i.fa.fa-star(aria-hidden='true')
+                        i.fa.fa-star(aria-hidden='true')
+                        i.fa.fa-star(aria-hidden='true')
+                      .front-stars(style='width:'+reviews.rating+'%')
+                        i.fa.fa-star(aria-hidden='true')
+                        i.fa.fa-star(aria-hidden='true')
+                        i.fa.fa-star(aria-hidden='true')
+                        i.fa.fa-star(aria-hidden='true')
+                        i.fa.fa-star(aria-hidden='true')
+
+
+
                 p
-                  a(href='#') More Reviews>
+                  a(href='/reviews='+data.id) More Reviews>
                 // Button trigger modal
                 button.btn.btn-primary(type='button', data-toggle='modal', data-target='#exampleModal')
                   | WRITE REVIEWS
@@ -179,44 +188,45 @@ html(lang='en')
                         button.close(type='button', data-dismiss='modal', aria-label='Close')
                           span(aria-hidden='true') ×
                       .modal-body
-                        form
+                        form(action='/addreview='+data.id, method='POST')
                           .form-group
                             label Name
-                            input.form-control(type='text', placeholder='Enter name')
+                            input.form-control(type='text', placeholder='Enter name', name='name')
                           .form-group
                             label(for='exampleInputEmail1') Email address
-                            input#exampleInputEmail1.form-control(type='email', aria-describedby='emailHelp', placeholder='Enter email')
+                            input#exampleInputEmail1.form-control(type='email', aria-describedby='emailHelp', placeholder='Enter email' , name='email')
                             small#emailHelp.form-text.text-muted We'll never share your email with anyone else.
                           .form-group
                             label Review
-                            textarea.form-control(placeholder='Write Review Here')
-                          .form-group
+                            textarea.form-control(placeholder='Write Review Here', name='content')
+                          .form-group.mb-4
                             label Rating
                             br
-                            fieldset.rating
+                            fieldset.rating.mb-4
                               input#star5(type='radio', name='rating', value='5')
                               label.full(for='star5', title='Awesome - 5 stars')
-                              input#star4half(type='radio', name='rating', value='4 and a half')
+                              input#star4half(type='radio', name='rating', value='4.5')
                               label.half(for='star4half', title='Pretty good - 4.5 stars')
                               input#star4(type='radio', name='rating', value='4')
                               label.full(for='star4', title='Pretty good - 4 stars')
-                              input#star3half(type='radio', name='rating', value='3 and a half')
+                              input#star3half(type='radio', name='rating', value='3.5')
                               label.half(for='star3half', title='Meh - 3.5 stars')
                               input#star3(type='radio', name='rating', value='3')
                               label.full(for='star3', title='Meh - 3 stars')
-                              input#star2half(type='radio', name='rating', value='2 and a half')
+                              input#star2half(type='radio', name='rating', value='2.5')
                               label.half(for='star2half', title='Kinda bad - 2.5 stars')
                               input#star2(type='radio', name='rating', value='2')
                               label.full(for='star2', title='Kinda bad - 2 stars')
-                              input#star1half(type='radio', name='rating', value='1 and a half')
+                              input#star1half(type='radio', name='rating', value='1.5')
                               label.half(for='star1half', title='Meh - 1.5 stars')
                               input#star1(type='radio', name='rating', value='1')
                               label.full(for='star1', title='Sucks big time - 1 star')
-                              input#starhalf(type='radio', name='rating', value='half')
+                              input#starhalf(type='radio', name='rating', value='0.5')
                               label.half(for='starhalf', title='Sucks big time - 0.5 stars')
+                          br
                           .modal-footer
                             button.btn.btn-primary(type='button', data-dismiss='modal') Close
-                            button.btn.btn-primary(type='button') Send Review
+                            button.btn.btn-primary(type='submit') Send Review
                 #exampleModal2.modal.fade(tabindex='-1', role='dialog', aria-labelledby='exampleModalLabel', aria-hidden='true')
                   .modal-dialog(role='document')
                     .modal-content
