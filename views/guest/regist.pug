@@ -36,3 +36,20 @@ block content
               a.txt2(href='/')
                 |   Home
     //- script(src='../javascripts/main.js')
+    script.
+      $(function () {
+        $("form").validate({ // initialize the plugin
+          rules: {
+              name: 'required',
+              email: 'required'
+          },
+          messages: {
+            name: 'name',
+            email: 'required'
+          },
+          submitHandler: function (form) { // for demo
+              alert('valid form submitted'); // for demo
+              return false; // for demo
+          }
+        });
+      });

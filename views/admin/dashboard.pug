@@ -65,7 +65,7 @@ block content
           .row
             .col-md-12
               .table-responsive.mt-2
-                table#dataTable1.table.table-bordered(width='100%', cellspacing='0')
+                table#dataTable4.table.table-bordered(width='100%', cellspacing='0')
                   thead
                     tr.bg-2.text-white
                       th(scope='col') Name
@@ -73,22 +73,15 @@ block content
                       th(scope='col') Outlets
                       th.text-center(scope='col') Action
                   tbody
-                    tr
-                      th(scope='row') Wonderlabs
-                      td Wonderlabs
-                      td
-                        | 2 
-                        a(href='/admin/list-outlets') view outlets
-                      td
-                        a(href='/admin/list-business') view business
-                    tr
-                      th(scope='row') Wonderfood
-                      td Wonderlabs
-                      td
-                        | 1 
-                        a(href='/admin/list-outlets') view outlets
-                      td
-                        a(href='/admin/list-business') view business
+                    for business in data
+                      tr
+                        th(scope='row')= business.name
+                        td= business.dataValues.category
+                        td= business.dataValues.categories[0].dataValues.countoutlet
+                          | 
+                          a(href='/admin/list-outlets='+business.id) view outlets
+                        td
+                          a(href='/admin/list-business') view business
       .card.mb-3
         .card-header
           a(href='')
@@ -103,26 +96,17 @@ block content
                       th(scope='col') Name
                       th(scope='col') Business
                       th(scope='col') City
+                      th(scope='col') Page Views
                       th.text-center(scope='col') Action
                   tbody
-                    tr
-                      th(scope='row') Wonderlabs Amstrong
-                      td Wonderlabs
-                      td Yogyakarta
-                      td
-                        a(href='/admin/list-outlets') view outlets
-                    tr
-                      th(scope='row') Wonderlabs Exploler
-                      td Wonderlabs
-                      td Yogyakarta
-                      td
-                        a(href='/admin/list-outlets') view outlets
-                    tr
-                      th(scope='row') Wonderlabs Sputnik
-                      td Wonderlabs
-                      td Yogyakarta
-                      td
-                        a(href='/admin/list-outlets') view outlets
+                    for outlet in data2
+                      tr
+                        th(scope='row')= outlet.name
+                        td= outlet.dataValues.business.name
+                        td= outlet.dataValues.address.administrative_area_2
+                        td 30
+                        td
+                          a(href='/admin/list-outlets') view outlets
     a.scroll-to-top.rounded(href='#page-top')
       i.fa.fa-angle-up
 

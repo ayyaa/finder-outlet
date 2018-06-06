@@ -59,3 +59,17 @@ block content
           document.getElementById('message').innerHTML = 'not matching';
         }
       }
+
+      $('form').submit(function () {
+
+          // Get the Login Name value and trim it
+          var pw = $.trim($('#password').val());
+          var spw = $.trim($('#confirm_password').val());
+
+          // Check if empty of not
+          if (pw !== spw) {
+              alert('password must be match');
+              return false;
+          }
+      });
+

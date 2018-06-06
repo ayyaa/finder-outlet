@@ -10,11 +10,28 @@ const moment = require('moment');
 const models = require('../src/models');
 const twoFactor = require('node-2fa');
 const users = models.users
+const categories = models.categories;
+const business = models.business;
+const business_category = models.business_category;
+const outlets = models.outlets;
+const address = models.address;
+const days = models.days;
+const reviews = models.reviews;
 const Sequelize = require ('sequelize');
 const regValidate= require('../src/validation/joi-registration');
 const regcValidate = require('../src/validation/joi-cmplt-reg');
 const op = Sequelize.Op;
 
+business.belongsToMany(categories, {through: 'business_category', foreignKey: 'business_id', otherKey: 'category_id'})
+categories.belongsToMany(business, {through: 'business_category', foreignKey: 'category_id', otherKey: 'business_id'})
+outlets.belongsTo(business, {foreignKey: 'id_bussines'});
+business.hasOne(outlets, {foreignKey: 'id_bussines'});
+outlets.belongsTo(address, {foreignKey: 'id_address'});
+address.hasOne(outlets, {foreignKey: 'id_address'});
+days.belongsTo(outlets, {foreignKey: 'outlet_id'});
+outlets.hasOne(days, {foreignKey: 'outlet_id'});
+reviews.belongsTo(outlets, {foreignKey: 'outlet_id'});
+outlets.hasOne(reviews, {foreignKey: 'outlet_id'});
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -29,7 +46,7 @@ sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 router.get('/login', function(req, res){
   if (req.isAuthenticated()) {
-    if (req.user[0].role === 'BO') {
+    if (req.user[0].role === 'BUSINESS OWNER') {
       req.flash('message' ,'<div class="alert alert-danger"><div class="text-center">You have been logged in</div></div>')
       res.redirect('/business-owner/dashboard')
     } else {
@@ -55,7 +72,7 @@ router.get('/signin', function(req, res, next) {
         req.logIn(user, function(err) {
           if (err) { return next(err); }
           console.log(user.role)
-          if(user.role === 'BO') {
+          if(user.role === 'BUSINESS OWNER') {
             var role = 'Business Owner'
             req.flash('info', '<div class="alert alert-success"><div class="text-center">Welcome to Outlet Finder as '+role+' '+user.username+ '!</div></div>');
             return res.redirect('/business-owner/dashboard');
@@ -108,7 +125,7 @@ router.get('/two_fa/', function(req, res) {
         req.login(user, function (err) {
           if (err) { return next(err); }
           console.log(user.role)
-          if(user.role === 'BO') {
+          if(user.role === 'BUSINESS OWNER') {
             var role = 'Business Owner'
             req.flash('info', '<div class="alert alert-success"><div class="text-center">Welcome to Outlet Finder as '+role+' '+user.username+ '!</div></div>');
             return res.redirect('/business-owner/dashboard');
@@ -152,7 +169,7 @@ router.get('/two_fa/', function(req, res) {
 
 router.get('/regist', function(req, res){
   if (req.isAuthenticated()) {
-    if (req.user[0].role === 'BO') {
+    if (req.user[0].role === 'BUSINESS OWNER') {
       req.flash('message' ,'<div class="alert alert-danger"><div class="text-center">You have been logged in</div></div>')
       res.redirect('/business-owner/dashboard')
     } else {
@@ -293,7 +310,7 @@ router.post('/confirmreg/:token', function(req, res, next) {
           }
           console.log('Logged user in using Passport req.login()');
           console.log('username',req.user.username);
-          req.flash('info', '<div class="alert alert-success"><div class="text-center">Congratulations, you successfully registered</div></div>')
+          req.flash('info', '<div class="alert alert-success"><div class="text-center">Congratulations,'+req.user.username+' you successfully registered</div></div>')
           res.redirect('/business-owner/dashboard')
           // res.render('home',{'info' :req.flash('info'), username: req.user.username});
         })
@@ -463,8 +480,50 @@ router.get('/browse', function(req, res, next) {
   res.render('guest/browse', { title: 'Express' });
 });
 
-router.get('/outletinfo', function(req, res, next) {
-  res.render('guest/outletinfo', { title: 'Express' });
+router.get('/outletinfo=:id', function(req, res, next) {
+  outlets.findOne({
+    where: {
+      id: req.params.id
+    },
+    include: [
+      {
+      model: business,
+      attributes: [
+        'name'
+      ],
+      },
+      {
+        model: address
+      },
+      {
+        model: days
+      }
+    ]
+    }).then(rows => {
+      reviews.findAll({
+        where: {
+          outlet_id: req.params.id
+        },
+        limit: 2
+      }).then(rev => {
+        console.log(rev)
+        console.log(rows.business.name)
+        res.render('guest/outletinfo', { data: rows, review: rev});
+      })
+  })
+});
+
+router.post('/addreview=:id', function(req, res, next) {
+  var ratings = req.body.rating*(100/5)
+  reviews.create({
+    outlet_id: req.params.id,
+    name: req.body.name,
+    email: req.body.email,
+    content: req.body.content,
+    rating: ratings
+  }).then(rows => {
+    res.redirect('/outletinfo='+req.params.id);
+  })
 });
 
 router.get('/outletinfo2', function(req, res, next) {
@@ -475,7 +534,39 @@ router.get('/search', function(req, res, next) {
   res.render('guest/search', { title: 'Express' });
 });
 
-router.get('/reviews', function(req, res, next) {
-  res.render('guest/review', { title: 'Express' });
+function time(a) {
+  var sat = ['years','months','days','hours','minutes','seconds']
+  for(var i = 0; i < sat.length; i++) {
+    var k = moment().diff(a, sat[i]);
+    if(k !== 0) {
+       var arr = `${k} ${sat[i]} ago`;
+       break;
+    }
+
+  }
+  return arr
+}
+
+router.get('/reviews=:id', function(req, res, next) {
+  reviews.findAll({
+    where: {
+      outlet_id: req.params.id
+    },
+    include: {
+      model: outlets,
+      attributs : [
+        'name', 'id'
+      ]
+    }
+  }).then(rev => {
+    var tim = []
+    for(var i = 0 ; i <rev.length; i++) {
+      var m = time(rev[i].created_at)
+      tim.push(rev)
+      tim.push(m)
+    }
+    console.log(tim)
+    res.render('guest/review', { review: rev, time_info: tim});
+  })
 });
 module.exports = router;

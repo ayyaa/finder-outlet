@@ -32,9 +32,9 @@ module.exports = function(sequelize, DataTypes) {
       defaultValue: 'photo-1527578948144.png'
     },
     role: {
-      type: DataTypes.ENUM('ADMIN','BO'),
+      type: DataTypes.ENUM('ADMIN','BUSINESS OWNER'),
       allowNull: false,
-      defaultValue: 'BO'
+      defaultValue: 'BUSINESS OWNER'
     },
     password_token: {
       type: DataTypes.CHAR(50),
@@ -82,6 +82,10 @@ module.exports = function(sequelize, DataTypes) {
     },
     url_qr: {
       type: DataTypes.TEXT,
+      allowNull: true
+    },
+    temp_email: {
+      type: DataTypes.STRING(100),
       allowNull: true
     },
   }, {

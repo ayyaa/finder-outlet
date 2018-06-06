@@ -151,3 +151,13 @@ $(document).ready(function() {
       }]
   });
 });
+
+// $(document).ready(function(){
+//   $('#gridCheck1').on('click',function(){
+//     if ($('#gridCheck1').is(':checked')) {
+//       $('input(type="time")').attr('disabled' , true);
+//     } else {
+//       $('input(type="time")').attr('disabled' , false);
+//     }
+//   });
+// });  
