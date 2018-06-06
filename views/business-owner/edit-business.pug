@@ -58,7 +58,7 @@ block content
             .form-row
               .form-group.col-md-6
                 label(for='state') State
-                input#temp_state.form-control(type='text' name='temp_state', value=temp_state)
+                input#temp_state.form-control(type='hidden' name='temp_state', value=temp_state)
                 select#state.form-control.selectpicker(name='state')
                   each value in valState
                     option(value=value.code) #{value.name}

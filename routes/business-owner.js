@@ -179,18 +179,20 @@ router.post('/create-business', function(req, res, next) {
     line1: req.body.line1, 
     line2: req.body.line2,
     state: req.body.state, 
-    province: req.body.province, 
+    region: req.body.region, 
     city: req.body.city, 
     postal_code: req.body.postal_code, 
     lat: req.body.lat, 
     lng: req.body.lng}, function(errors, value) {
     console.log(errors);
     if (!errors) {
+      console.log(req.body.city)
+      console.log(req.body.region)
       address.create({
         line1: req.body.line1, 
         line2: req.body.line2,
         administrative_area_1: req.body.state, 
-        administrative_area_2: req.body.province, 
+        administrative_area_2: req.body.region, 
         administrative_area_3: req.body.city, 
         administrative_area_4: '', 
         postalcode: req.body.postal_code,
@@ -229,11 +231,39 @@ router.post('/create-business', function(req, res, next) {
     } else {
       categories.findAll()
       .then(rows => {
-        req.flash('error', errors);
-        res.render('business-owner/create-business', {active3: 'active', valCategories:rows, error: req.flash('error'), user: req.user[0]});
+        var BATTUTA_KEY=config.batuta_key.key;
+        var url = "https://battuta.medunes.net/api/country/all/?key="+BATTUTA_KEY;
 
+        Request.get(url, (error, response, body) => {
+          if(error) {
+              return console.dir(error);
+          }
+          var data = JSON.parse(body);
+          req.flash('error', errors);
+          res.render('business-owner/create-business', {
+            active3: 'active', 
+            valCategories:rows, 
+            valState: data, 
+            error: req.flash('error'), 
+            user: req.user[0],
+            name_business: req.body.name_business,
+            email: req.body.email,
+            website: req.body.website,
+            contact_no: req.body.contact_no,
+            description: req.body.description,
+            state: req.body.state,
+            region: req.body.region,
+            city: req.body.city,
+            postal_code: req.body.postal_code,
+            line1: req.body.line1,
+            line2: req.body.line2,
+            lat: req.body.lat,
+            lng: req.body.lng,
+            lat1: req.body.lat1,
+            lat2: req.body.lng
+          });
+        });    
       })
-      // res.render('admin/create-category', {error: req.flash('error')});
     } 
   })
 });

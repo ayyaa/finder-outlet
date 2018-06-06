@@ -32,16 +32,16 @@ block content
                     option(value=value.id) #{value.name}
               .form-group
                 label(for='name') Name of Business:
-                input#pwd.form-control(type='text', placeholder='Name', name='name_business')
+                input#name_business.form-control(type='text', placeholder='Name', name='name_business' value=name_business)
               .form-group
                 label(for='email') Email:
-                input#pwd.form-control(type='text', placeholder='somthing@something.com', name='email')
+                input#email.form-control(type='text', placeholder='somthing@something.com', name='email', value=email)
               .form-group
                 label(for='website') Website:
-                input#website.form-control(type='text', placeholder='http://www.something.com', name='website')
+                input#website.form-control(type='text', placeholder='http://www.something.com', name='website', value=website)
               .form-group
                 label(for='website') Contact Number:
-                input#website.form-control(type='text', placeholder='0812xxxxxx', name='contact_no')
+                input#contact_no.form-control(type='text', placeholder='0812xxxxxx', name='contact_no', value=contact_no)
               .form-group(style="align:center")
                 label(for='website') Logo:
                 .custom-file
@@ -49,35 +49,34 @@ block content
                   label.custom-file-label Choose file..
               .form-group
                 label(for='description') Description:
-                textarea.form-control(name='description', id='', cols='30', rows='5')  Description about is 
+                textarea.form-control(name='description', id='', cols='30', rows='5')=description 
               
           label.ml-3(for='address') Address :
           .form-group.col-md-11.border.ml-3.pt-2.mr-3
             .form-row
               .form-group.col-md-6
                 label(for='state') State
-                select#state.custom-select(name='state')
-                  option(value='' selected) - select -
+                select#state.custom-select(name='state', value=state)
                   each value in valState
                     option(value=value.code) #{value.name}
               .form-group.col-md-6
                 label(for='line2') Region
-                select#region.custom-select(name='province')
+                select#region.custom-select(name='region', value=region)
                   option(value='0') - select -
               .form-group.col-md-6
                 label(for='line2') City
-                select#city.custom-select(name='city')
+                select#city.custom-select(name='city', value=city)
                   option(value='0') - select -
               .form-group.col-md-6
                 label(for='zipcode') Postal code
-                input#inputPassword4.form-control(type='text', placeholder='Postal Code' name='postal_code')
+                input#postal_code.form-control(type='text', placeholder='Postal Code' name='postal_code', value=postal_code)
             .form-row
               .form-group.col
                 label(for='line1') Line 1
-                input#line1.form-control(type='text', placeholder='Line 1 address' name='line1')
+                input#line1.form-control(type='text', placeholder='Line 1 address' name='line1', value=line1)
               .form-group.col
                 label(for='line2') Line 2
-                input#line2.form-control(type='text', placeholder='Line 2 address' name='line2')
+                input#line2.form-control(type='text', placeholder='Line 2 address' name='line2', value=line2)
             .form-row
               .form-group.col-md-3
                 a#geolocate.btn.btn-secondary.btn-block(type='button') Geolocate
@@ -85,10 +84,10 @@ block content
             .form-row
               .form-group.col-md-3
                 label(for='zipcode') Latitude
-                input#lat.form-control(type='text', placeholder='Latitude',name='lat')
+                input#lat.form-control(type='text', placeholder='Latitude',name='lat', value=lat)
               .form-group.col-md-3
                 label(for='zipcode') Longitude
-                input#lng.form-control(type='text', placeholder='Longitude',name='lng')
+                input#lng.form-control(type='text', placeholder='Longitude',name='lng', value=lng)
             .form-row
               .form-group.col-md-3
                 a(data-toggle='modal', data-target='#mapsModal' pointer="cursor")  View in maps >
@@ -110,7 +109,7 @@ block content
             form
               .form-row
                 .form-group.col-md-12
-                  input#pac-input.form-control(type='text', placeholder='Enter a location' style='min-width:470px')
+                  input#pac-input.form-control(type='text', placeholder='Enter a location' style='min-width:470px', value=pac_input)
               .form-row
                 .form-group.col-md-12
                   #map(style='width:470px; height:400px')
@@ -122,10 +121,10 @@ block content
               .form-row
                 .form-group.col-md-6
                   label(for='zipcode') Latitude
-                  input#lat1.form-control(type='text', placeholder='Latitude',name='lat', style='100%')
+                  input#lat1.form-control(type='text', placeholder='Latitude',name='lat', style='100%', value=lat1)
                 .form-group.col-md-6
                   label(for='zipcode') Longitude
-                  input#lng1.form-control(type='text', placeholder='Longitude',name='lng',  style='100%')
+                  input#lng1.form-control(type='text', placeholder='Longitude',name='lng',  style='100%', value=lat2)
           .modal-footer
             button.btn.btn-secondary(type='button', data-dismiss='modal') Cancel
             button.btn.btn-primary(onclick='save()') Save 
@@ -165,7 +164,7 @@ block content
               for( var i = 0; i<len; i++){
                 var id = response[i]['region'];
                 var name = response[i]['city'];
-                $("#city").append("<option value='"+id+"'>"+name+"</option>");
+                $("#city").append("<option value='"+name+"'>"+name+"</option>");
               }
             }
           });
