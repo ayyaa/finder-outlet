@@ -216,20 +216,89 @@ $('#form1').submit(function () {
 //   }
 // });
 
-$(function () {
+jQuery.validator.addMethod("lettersonly", function(value, element) {
+  return this.optional(element) || /^[a-z .']+$/i.test(value);
+}, "Letters only please"); 
+
+$(document).ready(function(){
   $("#formeditname").validate({ // initialize the plugin
     rules: {
-        name: 'required'
+        name: {
+          required: true,
+          minlength: 3,
+          lettersonly: true
+        }
+
     },
     messages: {
-      name: 'name'
+      name: {
+        required: 'name must be required',
+        minlength: 'at least 3 character',
+        lettersonly: 'Letters only please'
+      }
     },
     submitHandler: function (form) { // for demo
-        alert('valid form submitted'); // for demo
-        return false; // for demo
+        $('#formeditname').get(0).submit();
     }
   });
 });
+
+
+$(document).ready(function(){
+
+  $("#formeditemail").validate({ // initialize the plugin
+    rules: {
+        email: {
+          required: true,
+          email: true
+        }
+
+    },
+    messages: {
+      email: {
+        required: 'name must be required',
+        email: 'input valid email'
+      }
+    },
+    submitHandler: function (form) {
+      $.ajax({
+        url: '/business-owner/checkemail',
+        type: 'POST',
+        data: $(form).serialize(),
+        success: function(response) {
+            if(response === true) {
+              $('#formeditemail').get(0).submit();
+            } else {
+              alert('email already exist')
+            }
+          }            
+      }); 
+    }
+  });
+});
+
+
+
+$(document).ready(function(){
+  $("#formeditcp").validate({ // initialize the plugin
+    rules: {
+        phone: {
+          digits: true
+        }
+
+    },
+    messages: {
+      phone: {
+        digits: 'input valid number'
+      }
+    },
+    submitHandler: function (form) { // for demo
+        $('#formeditcp').get(0).submit();
+    }
+  });
+});
+
+
 
 // $(document).ready(function(){
 //   $('#message').on('DOMSubtreeModified',function(){

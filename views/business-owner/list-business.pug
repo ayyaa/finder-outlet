@@ -36,8 +36,8 @@ block content
                   tr
                     th(scope='row')= business.name
                     td= business.dataValues.category
-                    td
-                      | 2 
+                    td= business.dataValues.categories[0].dataValues.countoutlet
+                      |   
                       a(href='/business-owner/list-outlets='+business.id) view outlets
                     td.text-center
                       .dropdown

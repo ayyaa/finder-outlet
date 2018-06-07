@@ -30,6 +30,7 @@ block content
                   .table-responsive
                     table.table.table-hover(style='font-size: 0.9em' cellpadding="19")
                       tbody
+                        script(src='https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.17.0/jquery.validate.min.js')
                         tr.m-4
                           th(for='name') Name
                           td
@@ -43,7 +44,9 @@ block content
                             form#formeditname(action='/business-owner/editname', method='POST', name='editname')
                               label(for='name', style='font-size: 0.9em') Name
                               input#name.form-control(type='text', placeholder='Your name', name='name', value = user.name)
-                              button.btn.btn-secondary.mt-2(type='submit')
+                              label.error.mt-2.alert-danger.mb-2(for='name', generated='true')
+                              br
+                              button.btn.btn-secondary
                                 | save change
                         tr
                           th(for='name') Username
@@ -62,9 +65,11 @@ block content
                         tr
                           td#editemail.bg-light.p-4(colspan="3" widht='100%')
                             form#formeditemail(action='/business-owner/editemail', method='POST')
-                              label(for='name', style='font-size: 0.9em') Email
+                              label(for='email', style='font-size: 0.9em') Email
                               input#email.form-control(type='text', placeholder='Your email', name='email', value = user.email)
-                              button.btn.btn-secondary.mt-2(type='submit')
+                              label.error.mt-2.alert-danger.mb-2(for='email', generated='true')
+                              br
+                              button.btn.btn-secondary
                                 | save change
 
                         tr
@@ -77,11 +82,13 @@ block content
                           
                         tr
                           td#editcp.bg-light.p-4(colspan="3" widht='100%')
-                            form#formeditcp(action='/business-owner/editcp', method='POST')
-                              label(for='name', style='font-size: 0.9em') Contact Number
+                            form#formeditname(action='/business-owner/editcp', method='POST')
+                              label(for='phone', style='font-size: 0.9em') Contact Number
                               input#cp.form-control(type='text', placeholder='Your Contact Number', name='phone', value = user.contact_no)
-                              button.btn.btn-secondary.mt-2(type='submit')
-                                | save change                              
+                              label.error.mt-2.alert-danger.mb-2(for='phone', generated='true')
+                              br
+                              button.btn.btn-secondary
+                                | save change                             
                 .col-md.ml-4
                   form#form1.form-group(style="align:center" , action='/business-owner/upload', enctype='multipart/form-data', method='POST')
                     img.img-responsive.rounded.mx-auto.d-block.pb-4.pt-3(src='../photo-storage/'+user.photo, alt='User', width='160', height='auto')

@@ -22,8 +22,8 @@ const regValidate= require('../src/validation/joi-registration');
 const regcValidate = require('../src/validation/joi-cmplt-reg');
 const op = Sequelize.Op;
 
-business.belongsToMany(categories, {through: 'business_category', foreignKey: 'business_id', otherKey: 'category_id'})
-categories.belongsToMany(business, {through: 'business_category', foreignKey: 'category_id', otherKey: 'business_id'})
+business.belongsToMany(categories, {through: 'business_categories', foreignKey: 'business_id', otherKey: 'category_id'})
+categories.belongsToMany(business, {through: 'business_categories', foreignKey: 'category_id', otherKey: 'business_id'})
 outlets.belongsTo(business, {foreignKey: 'id_bussines'});
 business.hasOne(outlets, {foreignKey: 'id_bussines'});
 outlets.belongsTo(address, {foreignKey: 'id_address'});

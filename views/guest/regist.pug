@@ -4,7 +4,7 @@ block content
     .limiter
       .container-login100
         .wrap-login100
-          form.login100-form.validate-form(method='POST' action='/regist')
+          form.login100-form(method='POST' action='/regist')
             span.login100-form-title.p-b-25
               | Sign up
             |
@@ -19,16 +19,18 @@ block content
             - }   
             span.login100-form-title.p-b-20
               i.zmdi.zmdi-font
-            .wrap-input100.validate-input
-              input.input100.has-val(type='text', name='username', value = susername)
+            .wrap-input100
+              input#name.input100.has-val(type='text', name='name', value = susername)
               span.focus-input100(data-placeholder='Username')
+            p#errordiv
             .wrap-input100.validate-input(data-validate='Valid email is: a@b.c')
               input.input100.has-val(type='text', name='email', value = semail)
               span.focus-input100(data-placeholder='Email')
+            p#errordiv2
             .container-login100-form-btn
               .wrap-login100-form-btn
                 .login100-form-bgbtn
-                button.login100-form-btn
+                button.login100-form-btn(type='submit')
                   | Sign up
             .text-center.p-t-115
               span.txt1
@@ -44,12 +46,15 @@ block content
               email: 'required'
           },
           messages: {
-            name: 'name',
-            email: 'required'
+            name: 'name must be required',
+            email: 'email must be required'
           },
           submitHandler: function (form) { // for demo
               alert('valid form submitted'); // for demo
               return false; // for demo
+          },
+          errorPlacement: function (error, element) {
+            error.appendTo('#errordiv')
           }
         });
       });

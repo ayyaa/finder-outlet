@@ -10,7 +10,7 @@ const sgMail = require('@sendgrid/mail');
 const multer = require('multer')
 const categories = models.categories;
 const business = models.business;
-const business_category = models.business_category;
+const business_categories = models.business_categories;
 const users = models.users;
 const outlets = models.outlets;
 const address = models.address;
@@ -18,12 +18,12 @@ const validateJoi = require('../src/validation/joi-create-business');
 const flash = require('connect-flash');
 const config = require('../src/config/config')
 const Request = require('request');
-business.belongsToMany(categories, {through: 'business_category', foreignKey: 'business_id', otherKey: 'category_id'})
-categories.belongsToMany(business, {through: 'business_category', foreignKey: 'category_id', otherKey: 'business_id'})
-business_category.belongsTo(business, {foreignKey: 'business_id'})
-business.hasOne(business_category, {foreignKey: 'business_id'})
-business_category.belongsTo(categories, {foreignKey: 'category_id'})
-categories.hasOne(business_category, {foreignKey: 'category_id'})
+business.belongsToMany(categories, {through: 'business_categories', foreignKey: 'business_id', otherKey: 'category_id'})
+categories.belongsToMany(business, {through: 'business_categories', foreignKey: 'category_id', otherKey: 'business_id'})
+business_categories.belongsTo(business, {foreignKey: 'business_id'})
+business.hasOne(business_categories, {foreignKey: 'business_id'})
+business_categories.belongsTo(categories, {foreignKey: 'category_id'})
+categories.hasOne(business_categories, {foreignKey: 'category_id'})
 address.hasOne(business, {foreignKey: 'address_id'})
 business.belongsTo(address, {foreignKey: 'address_id'})
 outlets.belongsTo(business, {foreignKey: 'id_bussines'});
@@ -227,7 +227,7 @@ router.post('/create-business', function(req, res, next) {
           var length_of_category = req.body.get_category;
           length_of_category = length_of_category.length;
           for( var x = 0 ; x < length_of_category ; x++ ) {
-            business_category.create({
+            business_categories.create({
               business_id: rowss.id,
               category_id: req.body.get_category[x]
             }).then(rows => {
@@ -327,10 +327,26 @@ router.post('/editname', function(req, res, next) {
       }
     }
   ).then(rows => {
-    res.redirect('/business-owner/account')
+    res.redirect('/business-owner/account#nav-basic-info')
   })
 })
 
+router.post('/checkemail', function(req, res, next) {
+  console.log(req.body.email)
+  users.findAll(
+    {
+      where: {
+        email: req.body.email
+      }
+    }
+  ).then(rows => {
+    if(rows.length>0) {
+      res.send(false)
+    } else {
+      res.send(true)
+    }
+  })
+})
 
 
 router.post('/editcp', function(req, res, next) {
@@ -344,14 +360,17 @@ router.post('/editcp', function(req, res, next) {
       }
     }
   ).then(rows => {
-    res.redirect('/business-owner/account')
+    res.redirect('/business-owner/account#nav-basic-info')
   })
 })
 
+
+
 router.post('/editemail', function(req, res, next) {
   if(req.body.email === req.user[0].email) {
-    res.redirect('/business-owner/account')
+    res.redirect('/business-owner/account#nav-basic-info')
   } else {
+
     async.waterfall([
       function(done) {
         crypto.randomBytes(20, function(err, buf) {
@@ -404,7 +423,7 @@ router.post('/editemail', function(req, res, next) {
     ], 
     function(err) {
       if (err) return next(err);
-      res.redirect('/business-owner/account')
+      res.redirect('/business-owner/account#nav-basic-info')
     });
   }
 })
@@ -418,7 +437,7 @@ router.get('/active/:token', function(req, res) {
   }).then(function(rows, err) {
     if (rows.length<=0) {
       req.flash('message','<div class="alert alert-danger"><div class="text-center">invalid token or link is broken</div></div>')
-      res.redirect('/business-owner/account')
+      res.redirect('/business-owner/account#nav-basic-info')
     } else {
       users.update(
         {
@@ -433,7 +452,7 @@ router.get('/active/:token', function(req, res) {
         }
       ).then(rows => {
         req.flash('info','<div class="alert alert-success"><div class="text-center">email has been updated</div></div>')
-        res.redirect('/business-owner/account')
+        res.redirect('/business-owner/account#nav-basic-info')
       }).catch(function(err) {
         console.log(err)
       })
@@ -521,7 +540,7 @@ router.get('/account', function(req, res, next) {
 });
 
 // router.get('/edit-business=:id', function(req, res, next) {
-//   business_category.findAll({
+//   business_categories.findAll({
 //     attributes: [
 //       'category_id'
 //     ],
@@ -529,9 +548,9 @@ router.get('/account', function(req, res, next) {
 //       business_id: req.params.id
 //     }
 //   })
-//   .then(business_category => {
-//     // console.log(business_category)
-//     var category = business_category.category_id;
+//   .then(business_categories => {
+//     // console.log(business_categories)
+//     var category = business_categories.category_id;
 //     business.findAll({
 //       where: {
 //         id: req.params.id
@@ -544,7 +563,7 @@ router.get('/account', function(req, res, next) {
 //         }
 //       })
 //       .then(address => {
-//         console.log(business_category);
+//         console.log(business_categories);
 //         console.log(business);
 //         console.log(address);
 
@@ -586,7 +605,7 @@ router.get('/edit-business=:id', function(req, res) {
   //     id: [req.params.id]
   //   },
   //   include: [ {
-  //     model: business_category,
+  //     model: business_categories,
   //     where: {
   //       business_id:req.params.id
   //     },
@@ -647,20 +666,27 @@ router.get('/list-business', function(req, res, next) {
     where: {
       owner_id: req.user[0].id
     },
-  attributes: [
-    'id',
-    'name', 
-    'email',
-    [Sequelize.fn('GROUP_CONCAT', Sequelize.literal("categories.name SEPARATOR ', '")), 'category']
-  ],
-  group: ['business.id'],
-  include: [{
-    model: categories,
-    // through: {
-    //   attributes: ['category_id','business_id' ],
-    // }
-    }]
-  }).then(rows => {
+    attributes: [
+      'id',
+      'name', 
+      'email',
+      [Sequelize.fn('GROUP_CONCAT', Sequelize.literal("DISTINCT(categories.name) SEPARATOR ', '")), 'category']
+    ],
+    group: ['business.id'],
+    include: [
+      {
+      model: categories,
+      attributes: [
+        [Sequelize.literal('COUNT(DISTINCT(outlet.id))'), 'countoutlet']
+      ],
+      },
+      {
+        model: outlets,
+        group: ['business.id']
+      }
+    ]
+  })
+  .then(rows => {
     res.render('business-owner/list-business', {  active2: 'active', data: rows, user: req.user[0]});
   }).catch(err => {
     console.error(err)
@@ -740,8 +766,8 @@ router.get('/list-outlets=:id', function(req, res, next) {
       }
     ]
     }).then(rows => {
-      console.log(rows[0].dataValues.business.name)
-      res.render('business-owner/list-outlets', {  active3: 'active', user: req.user[0], data: rows, business: rows[0].dataValues.business.name });
+      console.log(rows)
+      res.render('business-owner/list-outlets', {  active3: 'active', user: req.user[0], data: rows});
     }).catch(err => {
       console.error(err)
     })

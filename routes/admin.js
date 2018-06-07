@@ -7,7 +7,7 @@ const bcrypt = require('bcrypt-nodejs');
 const multer = require('multer');
 const categories = models.categories;
 const business = models.business;
-const business_category = models.business_category;
+const business_categories = models.business_categories;
 const users = models.users;
 const outlets = models.outlets;
 const address = models.address;
@@ -48,8 +48,8 @@ const multerConfig = {
       }
     };
 
-business.belongsToMany(categories, {through: 'business_category', foreignKey: 'business_id', otherKey: 'category_id'})
-categories.belongsToMany(business, {through: 'business_category', foreignKey: 'category_id', otherKey: 'business_id'})
+business.belongsToMany(categories, {through: 'business_categories', foreignKey: 'business_id', otherKey: 'category_id'})
+categories.belongsToMany(business, {through: 'business_categories', foreignKey: 'category_id', otherKey: 'business_id'})
 outlets.belongsTo(business, {foreignKey: 'id_bussines'});
 business.hasOne(outlets, {foreignKey: 'id_bussines'});
 outlets.belongsTo(address, {foreignKey: 'id_address'});
@@ -387,25 +387,25 @@ router.post('/refresh_sk/:id', function(req, res, next) {
 
 router.get('/list-business', function(req, res, next) {
   business.findAll({
-  attributes: [
-    'id',
-    'name', 
-    'email',
-    [Sequelize.fn('GROUP_CONCAT', Sequelize.literal("DISTINCT(categories.name) SEPARATOR ', '")), 'category']
-  ],
-  group: ['business.id'],
-  include: [
-    {
-    model: categories,
     attributes: [
-      [Sequelize.literal('COUNT(DISTINCT(outlet.id))'), 'countoutlet']
+      'id',
+      'name', 
+      'email',
+      [Sequelize.fn('GROUP_CONCAT', Sequelize.literal("DISTINCT(categories.name) SEPARATOR ', '")), 'category']
     ],
-    },
-    {
-      model: outlets,
-      group: ['business.id']
-    }
-  ]
+    group: ['business.id'],
+    include: [
+      {
+      model: categories,
+      attributes: [
+        [Sequelize.literal('COUNT(DISTINCT(outlet.id))'), 'countoutlet']
+      ],
+      },
+      {
+        model: outlets,
+        group: ['business.id']
+      }
+    ]
   })
   .then(rows => {
     console.log(rows.length)
@@ -517,8 +517,7 @@ router.get('/list-outlets=:id', function(req, res, next) {
       }
     ]
     }).then(rows => {
-      console.log(rows[0].dataValues.business.name)
-      res.render('admin/list-outlets', {  active5: 'active', user: req.user[0], data: rows, business: rows[0].dataValues.business.name });
+      res.render('admin/list-outlets', {  active5: 'active', user: req.user[0], data: rows});
     }).catch(err => {
       console.error(err)
     })
