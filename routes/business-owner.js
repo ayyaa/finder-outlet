@@ -11,6 +11,7 @@ const multer = require('multer')
 const categories = models.categories;
 const business = models.business;
 const business_categories = models.business_categories;
+const reviews = models.reviews;
 const users = models.users;
 const outlets = models.outlets;
 const address = models.address;
@@ -30,6 +31,8 @@ outlets.belongsTo(business, {foreignKey: 'id_bussines'});
 business.hasOne(outlets, {foreignKey: 'id_bussines'});
 outlets.belongsTo(address, {foreignKey: 'id_address'});
 address.hasOne(outlets, {foreignKey: 'id_address'});
+reviews.belongsTo(outlets, {foreignKey: 'outlet_id'});
+outlets.hasOne(reviews, {foreignKey: 'outlet_id'});
 const op = Sequelize.Op
 
 const multerConfig = {
@@ -129,7 +132,81 @@ const multerConfig = {
 
 /* GET home page. */
 router.get('/dashboard', function(req, res, next) {
-  res.render('business-owner/dashboard', { active1: 'active','message': req.flash('message'),'info': req.flash('info'), user: req.user[0]});
+  // business.count({
+  //   attributes: ['id'],
+  //   where : {
+  //     owner_id: req.user[0].id
+  //   }
+  // })
+  // .then(num => {
+  //   outlets.count({
+  //     attributes: ['id'],
+  //     include: [{
+  //       model: business,
+  //       where: {
+  //         owner_id: req.user[0].id
+  //       }
+  //     }]
+  //   })
+  //   .then(num_of_outlets => {
+  //     reviews.count({
+  //       attributes : ['outlet_id'],
+  //       group: 'outlet_id',
+  //       where: {
+  //         outlet_id: {[op.in]: [1, 2]},
+  //       },
+  //       include: [{
+  //         attributes: ['id'],
+  //         model: outlets,
+  //         include: [{
+  //           model: business,
+            
+  //           where: {
+  //             owner_id: req.user[0].id
+  //           }
+  //         }]
+  //       }],
+  //     })
+  //     .then(num_of_reviews => {
+  //       console.log(num)
+  //       console.log(num_of_reviews)
+  //       console.log(num_of_outlets);
+  //     })
+  //   })
+  // })
+  business.findAndCountAll({
+    where: {
+      owner_id: req.user[0].id
+    },
+    attributes: [
+      'id',
+      [Sequelize.fn('COUNT', Sequelize.fn('DISTINCT', Sequelize.col("outlet_id"))), 'count_outlet'],
+      [Sequelize.fn('COUNT', Sequelize.fn('DISTINCT', Sequelize.col("outlet->review.id"))), 'count_reviews']
+    ],
+    include: [{
+      model: outlets,
+      attributes: ['id'],
+      include: [{
+        model: reviews,
+        attributes: ['id']
+      }]
+    }],
+    distinct: true,
+    raw:true
+  })
+  .then(rows => {
+    console.log(rows)
+    res.render('business-owner/dashboard', { 
+      active1: 'active',
+      'message': req.flash('message'),
+      'info': req.flash('info'), 
+      user: req.user[0],
+      count_business: rows.count,
+      count_outlet: rows.rows[0].count_outlet,
+      count_reviews: rows.rows[0].count_reviews
+    });
+  });
+  
 });
 
 router.post('/upload',multer(multerConfig).single('photo'),function(req,res){
@@ -181,6 +258,7 @@ router.get('/create-business', function(req, res, next) {
 
 router.post('/create-business', function(req, res, next) {
   validateJoi.validate({
+    get_category: req.body.get_category,
     contact_no: req.body.contact_no, 
     name_business: req.body.name_business, 
     email: req.body.email, 

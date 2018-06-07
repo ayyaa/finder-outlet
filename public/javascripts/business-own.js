@@ -105,6 +105,16 @@ $(document).ready(function() {
       }]
   });
 
+  $('#dataTable8').DataTable({
+    responsive: true,
+    "searching": false,
+    "paging" : false,
+    "columnDefs": [{
+      "targets": 3,
+      "orderable": false
+      }]
+  });
+
   $('#dataTable3').DataTable({
     responsive: true,
     "searching": false,

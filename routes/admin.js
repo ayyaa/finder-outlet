@@ -64,12 +64,14 @@ router.get('/dashboard', function(req, res, next) {
       [Sequelize.fn('GROUP_CONCAT', Sequelize.literal("DISTINCT(categories.name) SEPARATOR ', '")), 'category']
     ],
     group: ['business.id'],
+    limit: 5,
+    subQuery: false,
     include: [
       {
         model: categories,
         attributes: [
           [Sequelize.literal('COUNT(DISTINCT(outlet.id))'), 'countoutlet']
-        ],
+        ]
       },
       {
         model: outlets,
@@ -83,6 +85,7 @@ router.get('/dashboard', function(req, res, next) {
         'id',
         'name', 
       ],
+      limit: 5,
       include: [
         {
           model: business,
