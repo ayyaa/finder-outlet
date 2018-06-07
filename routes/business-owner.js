@@ -7,6 +7,7 @@ const bcrypt = require('bcrypt-nodejs');
 const crypto = require('crypto');
 const async = require('async');
 const sgMail = require('@sendgrid/mail');
+const fs = require('fs');
 const multer = require('multer')
 const categories = models.categories;
 const business = models.business;
@@ -15,6 +16,8 @@ const reviews = models.reviews;
 const users = models.users;
 const outlets = models.outlets;
 const address = models.address;
+const days = models.days;
+const reviews = models.reviews;
 const validateJoi = require('../src/validation/joi-create-business');
 const flash = require('connect-flash');
 const config = require('../src/config/config')
@@ -31,6 +34,8 @@ outlets.belongsTo(business, {foreignKey: 'id_bussines'});
 business.hasOne(outlets, {foreignKey: 'id_bussines'});
 outlets.belongsTo(address, {foreignKey: 'id_address'});
 address.hasOne(outlets, {foreignKey: 'id_address'});
+days.belongsTo(outlets, {foreignKey: 'outlet_id'});
+outlets.hasOne(days, {foreignKey: 'outlet_id'});
 reviews.belongsTo(outlets, {foreignKey: 'outlet_id'});
 outlets.hasOne(reviews, {foreignKey: 'outlet_id'});
 const op = Sequelize.Op
@@ -212,12 +217,21 @@ router.get('/dashboard', function(req, res, next) {
 router.post('/upload',multer(multerConfig).single('photo'),function(req,res){
   console.log(req.file.path)
   users.update(
-    {photo: req.file.filename}
-  , {where: {
-    id: [req.user[0].id]
-  }}).then(rows => {
-    console.log(rows)
-    res.redirect('/business-owner/account');
+    {
+      photo: req.file.filename
+    }
+  , {
+      where: {
+        id: [req.user[0].id]
+      }
+    }
+  )
+  .then(rows => {
+    console.log(req.user[0].photo)
+    fs.unlink('./public/photo-storage/'+req.user[0].photo, (err) => {
+        if (err) throw err;
+        res.redirect('/business-owner/account');
+    }) 
   }).catch(err => {
     console.error(err)
     res.send('error')
@@ -604,6 +618,27 @@ router.post('/disable/:id', function(req, res, next) {
   }).catch(err => {
     console.error(err)
     res.send('error')
+  })
+});
+
+router.post('/refresh_sk/:id', function(req, res, next) {
+  users.findOne({
+    where: {
+      id: [req.params.id]
+    }
+  }).then(rows => {
+    var nsecret = twoFactor.generateSecret({name: 'Outlet Finder', account: rows.username});
+    users.update({
+      fa_key: nsecret.secret,
+      url_qr: nsecret.qr
+    }, {where: {
+      id: [req.params.id]
+    }}).then(rows => {
+      res.send('success')
+    }).catch(err => {
+      console.error(err)
+      res.send('error')
+    })
   })
 });
 

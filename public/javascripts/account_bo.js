@@ -135,19 +135,20 @@ function updatepw(){
 }  
 
 $(document).ready(function(){
-    $('button[name="close1"]').click(function(){
-        $( "#check1" ).prop( "checked", false ); 
-        $("#p").replaceWith("<p id='p'> </p>")
-        $("#token").val('')
-    });
+  $('button[name="close1"], button[name="close2"]').click(function(){
+    $( "#check1" ).prop( "checked", false ); 
+    $("#p").replaceWith("<p id='p'> </p>")
+    $("#token").val('')
+    var id = $('#id').val();
+    $.ajax({
+      url:'/business-owner/refresh_sk/'+id,
+      type:'POST',
+      success : function (respon) {
+        window.location.reload(true)
+      }
+    })
+  });
 });    
-
-
-$(document).ready(function(){
-    $('button[name="close2"]').click(function(){
-        $( "#check1" ).prop( "checked", true ); 
-    });
-});  
 
 $('#nav-basic-info input').on('input',function(e){
   $('#save1').attr('disabled' , false);
@@ -192,6 +193,18 @@ $(function () {
   activeTab && activeTab.tab('show');
 });
 
+$(function(){
+  var hash = window.location.hash;
+  hash && $('ul.nav a[href="' + hash + '"]').tab('show');
+
+  $('#nav-tab a').click(function (e) {
+    $(this).tab('show');
+    var scrollmem = $('body').scrollTop() || $('html').scrollTop();
+    window.location.hash = this.hash;
+    $('html,body').scrollTop(scrollmem);
+  });
+});
+
 $('#form1').submit(function () {
 
   // Get the Login Name value and trim it
@@ -217,7 +230,7 @@ $('#form1').submit(function () {
 // });
 
 jQuery.validator.addMethod("lettersonly", function(value, element) {
-  return this.optional(element) || /^[a-z .']+$/i.test(value);
+  return this.optional(element) || /^[a-z .'-]+$/i.test(value);
 }, "Letters only please"); 
 
 $(document).ready(function(){

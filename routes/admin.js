@@ -4,7 +4,11 @@ const Sequelize = require('sequelize');
 const models = require('../src/models');
 const twoFactor = require('node-2fa');
 const bcrypt = require('bcrypt-nodejs');
+const crypto = require('crypto');
+const async = require('async');
+const sgMail = require('@sendgrid/mail');
 const multer = require('multer');
+const fs = require('fs');
 const categories = models.categories;
 const business = models.business;
 const business_categories = models.business_categories;
@@ -119,27 +123,23 @@ router.get('/dashboard', function(req, res, next) {
 });
 
 router.post('/upload',multer(multerConfig).single('photo'),function(req,res){
-  console.log(req.file)
+  console.log(req.file.path)
   users.update(
-    {photo: req.file.filename}
-  , {where: {
-    id: [req.user[0].id]
-  }}).then(rows => {
-    res.redirect('/admin/account');
-  }).catch(err => {
-    console.error(err)
-    res.send('error')
-  })
-});
-
-router.post('/deactive', function(req, res, next) {
-  users.update(
-    {status: 0}
-  , {where: {
-    id: [req.user[0].id]
-  }}).then(rows => {
-    req.logout();
-    res.redirect('/');
+    {
+      photo: req.file.filename
+    }
+  , {
+      where: {
+        id: [req.user[0].id]
+      }
+    }
+  )
+  .then(rows => {
+    console.log(req.user[0].photo)
+    fs.unlink('./public/photo-storage/'+req.user[0].photo, (err) => {
+        if (err) throw err;
+        res.redirect('/admin/account');
+    }) 
   }).catch(err => {
     console.error(err)
     res.send('error')
@@ -297,6 +297,152 @@ router.post('/update', function(req, res, next) {
   }).catch(err => {
     console.error(err)
     res.send('error')
+  })
+})
+
+router.post('/editname', function(req, res, next) {
+  users.update(
+    {
+      name: req.body.name
+    },
+    {
+      where: {
+        id: [req.user[0].id]
+      }
+    }
+  ).then(rows => {
+    res.redirect('/admin/account#nav-basic-info')
+  })
+})
+
+router.post('/checkemail', function(req, res, next) {
+  console.log(req.body.email)
+  users.findAll(
+    {
+      where: {
+        email: req.body.email
+      }
+    }
+  ).then(rows => {
+    if(rows.length>0) {
+      res.send(false)
+    } else {
+      res.send(true)
+    }
+  })
+})
+
+
+router.post('/editcp', function(req, res, next) {
+  users.update(
+    {
+      contact_no: req.body.phone
+    },
+    {
+      where: {
+        id: [req.user[0].id]
+      }
+    }
+  ).then(rows => {
+    res.redirect('/admin/account#nav-basic-info')
+  })
+})
+
+
+
+router.post('/editemail', function(req, res, next) {
+  if(req.body.email === req.user[0].email) {
+    res.redirect('/admin/account#nav-basic-info')
+  } else {
+
+    async.waterfall([
+      function(done) {
+        crypto.randomBytes(20, function(err, buf) {
+          var token = buf.toString('hex');
+          done(err, token);
+        });
+      },
+
+      function(token, done) {
+        var user = {username: req.body.username, email: req.body.email, reg_token: token, status: 0}
+        users.update(
+          {
+            temp_email: req.body.email,
+            reg_token: token
+          },
+          {
+            where: {
+              id: [req.user[0].id]
+            }
+          }
+        ).then(function(rows, err) {
+          users.findAll({
+            where: {
+              id: [req.user[0].id]
+            }
+          }).then(function(rows, err) {
+            done(err, token, rows)
+          })
+        })
+      },
+      
+      function(token, rows, done) {
+        console.log('email',req.body.email)
+        var msge = {
+          to: req.body.email,
+          from: 'outlet_finder@example.com',
+          subject: 'Confirm your email',
+          text: 'Hello.\n\n' + req.user[0].name + ' !' +
+          'You have updated your email address to:' + req.body.email + '\n\n' +
+          'Confirm your email address to get started and discover your moments with the world' + '\n\n' +
+          ' http://' + req.headers.host + '/admin/active/' + token + '\n\n' +
+          'If you did not request this, please ig-nore this email.\n',
+        };
+        sgMail.send(msge, function(err) {
+          console.log('success')
+          req.flash('info', '<div class="alert alert-success"><div class="text-center">We have sent a confirmation to ' + req.body.email + ' to make sure its valid email address. Your ad account contact info will be updated once you have confirmed your email address. If you dont receive this email, check your spam folder.</div></div>')
+          done(err, 'done');
+        });
+      }
+    ], 
+    function(err) {
+      if (err) return next(err);
+      res.redirect('/admin/account#nav-basic-info')
+    });
+  }
+})
+
+router.get('/active/:token', function(req, res) {
+  users.findAll({
+    where: {
+      reg_token: [req.params.token],
+      [op.and]: {id: req.user[0].id}
+    }
+  }).then(function(rows, err) {
+    if (rows.length<=0) {
+      req.flash('message','<div class="alert alert-danger"><div class="text-center">invalid token or link is broken</div></div>')
+      res.redirect('/admin/account#nav-basic-info')
+    } else {
+      users.update(
+        {
+          email: req.user[0].temp_email,
+          reg_token: ''
+        },
+        {
+          where: {
+            reg_token: [req.params.token],
+            [op.and]: {id: req.user[0].id}
+          }
+        }
+      ).then(rows => {
+        req.flash('info','<div class="alert alert-success"><div class="text-center">email has been updated</div></div>')
+        res.redirect('/admin/account#nav-basic-info')
+      }).catch(function(err) {
+        console.log(err)
+      })
+    }
+  }).catch(function(err) {
+    console.log(err)
   })
 })
 

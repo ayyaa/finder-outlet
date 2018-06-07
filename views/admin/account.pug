@@ -6,38 +6,97 @@ block content
       ol.breadcrumb
         li.breadcrumb-item
           h4 My Account
-      #tabs.container-fluid.col-sm-12
-        #nav-tab.nav.nav-pills.nav-fill.mt-4(role='tablist' data-tab data-options="deep_linking: true")
+      .container-fluid.col-sm-12
+        #nav-tab.nav.nav-pills.nav-fill.mt-4(role='tablist')
           a#nav-basic-info-tab.nav-item.nav-link.pull-right.border(data-toggle='tab', href='#nav-basic-info', role='tab', aria-controls='nav-basic-info', aria-selected='true', style='color: #2a93d5') Basic info
           a#nav-change-pass-tab.nav-item.pull-right.border.nav-link(data-toggle='tab', href='#nav-change-pass', role='tab', aria-controls='nav-change-pass', aria-selected='false', style='color: #2a93d5') Change password
           a#nav-security-tab.nav-item.pull-right.border.nav-link(data-toggle='tab', href='#nav-security', role='tab', aria-controls='nav-security', aria-selected='false', style='color: #2a93d5') Security
           a#nav-deactivated-tab.nav-item.pull-right.border.nav-link(data-toggle='tab', href='#nav-deactivated', role='tab', aria-controls='nav-deactivated', aria-selected='false', style='color: #2a93d5') Deactivated
         #nav-tabContent.tab-content
           #nav-basic-info.tab-pane.fade.show.border(role='tabpanel', aria-labelledby='nav-basic-info-tab', style='background-color: white', name='nav-basic-info')
-            .pt-4
+            |
+            - if(message){
+            div 
+              | !{message}
+            - }
+            |
+            - if(info){
+            div 
+              | !{info}
+            - }
+            .pt-4 
               .form-row.container
-                .col-md-6
-                  .form-group
-                    label(for='name') Name:
-                    input#name.form-control(type='text', placeholder='Your name', name='name', value = user.name)
-                  .form-group
-                    label(for='username') Username:
-                    input#username.form-control(type='text', placeholder='Your Username', name='username', value = user.username readonly)
-                  .form-group
-                    label(for='email') Email:
-                    input#email.form-control(type='text', placeholder='Your email', name='email', value = user.email)
-                  .form-group
-                    label(for='phone') Phone Number:
-                    input#phone.form-control(type='text', placeholder='Your Phone Number', name='phone', value =user.contact_no)
-                  .form-group
-                    button#save1.btn.btn-primary.btn-block(onclick='update()' disabled) Save
-                .col-md-6
-                  form.form-group(style="align:center" , action='/admin/upload', enctype='multipart/form-data', method='POST')
+                .col-md-6.mr-4
+                  .table-responsive
+                    table.table.table-hover(style='font-size: 0.9em' cellpadding="19")
+                      tbody
+                        script(src='https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.17.0/jquery.validate.min.js')
+                        tr.m-4
+                          th(for='name') Name
+                          td
+                            =user.name
+                          td
+                            button#editnamebutton(type='button' style='border: none; background-color:transparent')
+                              i.fas.fa-pencil-alt
+
+                        tr
+                          td#editname.bg-light.p-4(colspan="3" widht='100%')
+                            form#formeditname(action='/admin/editname', method='POST', name='editname')
+                              label(for='name', style='font-size: 0.9em') Name
+                              input#name.form-control(type='text', placeholder='Your name', name='name', value = user.name)
+                              label.error.mt-2.alert-danger.mb-2(for='name', generated='true')
+                              br
+                              button.btn.btn-secondary
+                                | save change
+                        tr
+                          th(for='name') Username
+                          td
+                            =user.username
+                          td
+
+                        tr
+                          th(for='name') Email
+                          td
+                            =user.email
+                          td
+                            button#editemailbutton(type='button' style='border: none; background-color:transparent')
+                              i.fas.fa-pencil-alt
+                          
+                        tr
+                          td#editemail.bg-light.p-4(colspan="3" widht='100%')
+                            form#formeditemail(action='/admin/editemail', method='POST')
+                              label(for='email', style='font-size: 0.9em') Email
+                              input#email.form-control(type='text', placeholder='Your email', name='email', value = user.email)
+                              label.error.mt-2.alert-danger.mb-2(for='email', generated='true')
+                              br
+                              button.btn.btn-secondary
+                                | save change
+
+                        tr
+                          th(for='name') Contact Number
+                          td
+                            =user.contact_no
+                          td
+                            button#editcpbutton(type='button' style='border: none; background-color:transparent')
+                              i.fas.fa-pencil-alt
+                          
+                        tr
+                          td#editcp.bg-light.p-4(colspan="3" widht='100%')
+                            form#formeditname(action='/admin/editcp', method='POST')
+                              label(for='phone', style='font-size: 0.9em') Contact Number
+                              input#cp.form-control(type='text', placeholder='Your Contact Number', name='phone', value = user.contact_no)
+                              label.error.mt-2.alert-danger.mb-2(for='phone', generated='true')
+                              br
+                              button.btn.btn-secondary
+                                | save change                             
+                .col-md.ml-4
+                  form#form1.form-group(style="align:center" , action='/admin/upload', enctype='multipart/form-data', method='POST')
                     img.img-responsive.rounded.mx-auto.d-block.pb-4.pt-3(src='../photo-storage/'+user.photo, alt='User', width='160', height='auto')
-                    .custom-file
-                      input.custom-file-input.border.rounded(type='file', width='100%', name = 'photo')
-                      label.custom-file-label Choose file..
-                      button#upload.mt-2.btn.btn-primary.btn-block(type="submit" value="Upload Photo") UPLOAD
+                    .form-row
+                      .col-md-8.custom-file.mr-2
+                        input#upload_value.custom-file-input.border.rounded(type='file', width='80%', name = 'photo')
+                        label.custom-file-label Choose file..
+                      button#upload.col-md.btn.btn-primary(type='submit' value="Upload Photo") UPLOAD
           #nav-change-pass.tab-pane.fade.border(role='tabpanel', aria-labelledby='nav-change-pass-tab', style='background-color: white', name='nav-change-pass')
             .pt-4
               .form-group
@@ -113,6 +172,7 @@ block content
                     button#cancel2.btn.btn-secondary(type='button', data-dismiss='modal', name = 'close2') Cancel
                     //- form(action='/admin/logout', method='POST')
                     button.btn.btn-primary(type='button', onclick='disable()') Yes  
+
           #nav-deactivated.tab-pane.fade.border(role='tabpanel', aria-labelledby='nav-deactivated-tab', style='background-color: white', name='nav-deactivated')
             form(action='/admin/deactive', style='padding:5%', method='POST')
               .form-row

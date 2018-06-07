@@ -88,6 +88,10 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.STRING(100),
       allowNull: true
     },
+    temp_photo: {
+      type: DataTypes.STRING(100),
+      allowNull: true
+    },
   }, {
     tableName: 'users'
   });
