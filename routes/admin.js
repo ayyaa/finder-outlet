@@ -15,6 +15,7 @@ const business_categories = models.business_categories;
 const users = models.users;
 const outlets = models.outlets;
 const address = models.address;
+const reviews = models.reviews;
 const validateJoi = require('../src/validation/joi-create-category');
 const flash = require('connect-flash');
 
@@ -58,6 +59,8 @@ outlets.belongsTo(business, {foreignKey: 'id_bussines'});
 business.hasOne(outlets, {foreignKey: 'id_bussines'});
 outlets.belongsTo(address, {foreignKey: 'id_address'});
 address.hasOne(outlets, {foreignKey: 'id_address'});
+reviews.belongsTo(outlets, {foreignKey: 'outlet_id'});
+outlets.hasOne(reviews, {foreignKey: 'outlet_id'});
 
 router.get('/dashboard', function(req, res, next) {
   business.findAll({
@@ -105,15 +108,41 @@ router.get('/dashboard', function(req, res, next) {
         }
       ]
     }).then(rows2 => {
-      res.render('admin/dashboard', { 
-        title: 'Express' , 
-        active1: 'active',
-        'message': req.flash('message'),
-        'info': req.flash('info'), 
-        user: req.user[0],
-        data: rows1,
-        data2: rows2
-      });
+      business.findAndCountAll({
+        attributes: [
+          'id',
+          [Sequelize.fn('COUNT', Sequelize.fn('DISTINCT', Sequelize.col("outlet_id"))), 'count_outlet'],
+          [Sequelize.fn('COUNT', Sequelize.fn('DISTINCT', Sequelize.col("outlet->review.id"))), 'count_reviews']
+        ],
+        include: [{
+          model: outlets,
+          attributes: ['id'],
+          include: [{
+            model: reviews,
+            attributes: ['id']
+          }]
+        }],
+        distinct: true,
+        raw:true
+      })
+      .then(rows3 => {
+        categories.count()
+        .then(rows4 => {
+          res.render('admin/dashboard', { 
+            title: 'Express' , 
+            active1: 'active',
+            'message': req.flash('message'),
+            'info': req.flash('info'), 
+            user: req.user[0],
+            data: rows1,
+            data2: rows2,
+            count_categories: rows4,
+            count_business: rows3.count,
+            count_outlets:rows3.rows[0].count_outlet,
+            count_reviews:rows3.rows[0].count_reviews
+          });
+        })
+      })
     }).catch(err => {
       console.error(err)
     })
@@ -138,7 +167,7 @@ router.post('/upload',multer(multerConfig).single('photo'),function(req,res){
     console.log(req.user[0].photo)
     fs.unlink('./public/photo-storage/'+req.user[0].photo, (err) => {
         if (err) throw err;
-        res.redirect('/admin/account');
+        res.redirect('/admin/account#nav-basic-info');
     }) 
   }).catch(err => {
     console.error(err)
@@ -159,7 +188,7 @@ router.get('/list-categories', function(req, res, next) {
 });
 
 router.get('/create-category', function(req, res, next) {
-  res.render('admin/create-category', {user: req.user[0]});
+  res.render('admin/create-category', {user: req.user[0], error: req.flash('error')});
 });
 
 router.post('/create-category', function(req, res, next) {
@@ -173,9 +202,10 @@ router.post('/create-category', function(req, res, next) {
         }
       })
       .then(rows => {
-        if (rows.length > 0) {
-          concole.log(rows)
-          req.flash('error', 'Duplicate entry name category !');
+        if (rows) {
+          console.log(rows)
+          req.flash('error', '<div class="alert alert-danger"><div class="text-center">Duplicate entry namen</div></div>');
+          res.redirect('/admin/create-category')
           // alert("Duplicate entry name category !");          
         } else {
           categories.create({ 
@@ -189,12 +219,13 @@ router.post('/create-category', function(req, res, next) {
           })
         }
       })
-      .catch(() => {
-        res.status(500).json({"status_code": 500,"status_message": "internal server error"});
+      .catch(err => {
+        console.log(err)
       })
+      
     } else {
-      req.flash('error', errors);
-      res.render('admin/create-category', {error: req.flash('error')});
+      req.flash('error', '<div class="alert alert-danger"><div class="text-center">'+errors+'</div></div>');
+      res.redirect('/admin/create-category')
     } 
   })
 });
@@ -272,6 +303,12 @@ router.post('/delete-category/:id', function(req, res, next) {
   .then(() => {
     req.flash('success', 'Selected categories has been removed.')
     res.redirect('/admin/list-categories');
+  })
+  .catch(err => {
+    if (err) {
+      req.flash('error', 'Selected categories has been removed.')
+      res.redirect('/admin/list-categories');
+    }
   })
 });
 

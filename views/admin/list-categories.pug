@@ -6,6 +6,21 @@ block content
       ol.breadcrumb
         li.breadcrumb-item
           h4 Categories
+      |
+      - if(error){
+      div
+        | !{error}
+      - }
+      |
+      - if(info){
+      div
+        | !{info}
+      - }
+      |
+      - if(success){
+      .alert.alert-success 
+        .text-center #{success}
+      - }
       .card.mb-3
         .card-header
           i.fa.fa-table
@@ -18,23 +33,6 @@ block content
               button.btn.btn-success.form-control(type='submit')
                 span.fa.fa-filter
                 |  Filter
-          
-          .col-md-12
-          |
-          - if(error){
-          .alert.alert-danger 
-          .text-center #{error}
-          - }
-          |
-          - if(info){
-          .alert.alert-info 
-            .text-center #{info}
-          - }
-          |
-          - if(success){
-          .alert.alert-success 
-            .text-center #{success}
-          - }
           .table-responsive.mt-4.pl-0
             table#dataTable3.table.table-bordered(width='100%', cellspacing='0')
               thead

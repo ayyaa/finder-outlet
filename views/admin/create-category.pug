@@ -8,13 +8,13 @@ block content
           h4 Create Category
       |
       - if(error){
-      .alert.alert-danger 
-       .text-center #{error}
+      div
+        | !{error}
       - }
       |
       - if(info){
-      .alert.alert-info 
-        .text-center #{info}
+      div
+        | !{info}
       - }
       |
       - if(success){

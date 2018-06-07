@@ -17,7 +17,6 @@ const users = models.users;
 const outlets = models.outlets;
 const address = models.address;
 const days = models.days;
-const reviews = models.reviews;
 const validateJoi = require('../src/validation/joi-create-business');
 const flash = require('connect-flash');
 const config = require('../src/config/config')
@@ -230,7 +229,7 @@ router.post('/upload',multer(multerConfig).single('photo'),function(req,res){
     console.log(req.user[0].photo)
     fs.unlink('./public/photo-storage/'+req.user[0].photo, (err) => {
         if (err) throw err;
-        res.redirect('/business-owner/account');
+        res.redirect('/business-owner/account#nav-basic-info');
     }) 
   }).catch(err => {
     console.error(err)
