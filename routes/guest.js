@@ -504,11 +504,23 @@ router.get('/outletinfo=:id', function(req, res, next) {
         where: {
           outlet_id: req.params.id
         },
-        limit: 2
+        limit: 2,
+        include: {
+          model: outlets,
+          attributs : [
+            'name', 'id'
+          ]
+        }
       }).then(rev => {
-        console.log(rev)
-        console.log(rows.business.name)
-        res.render('guest/outletinfo', { data: rows, review: rev});
+        var tim2 =[]
+        for(var i = 0 ; i <rev.length; i++) {
+          var m = time(rev[i].created_at)
+          var tim = {}
+          tim.rev = rev[i];
+          tim.date = m;
+          tim2.push(tim)
+        }
+        res.render('guest/outletinfo', { data: rows, review: tim2});
       })
   })
 });
@@ -559,14 +571,15 @@ router.get('/reviews=:id', function(req, res, next) {
       ]
     }
   }).then(rev => {
-    var tim = []
+    var tim2 =[]
     for(var i = 0 ; i <rev.length; i++) {
       var m = time(rev[i].created_at)
-      tim.push(rev)
-      tim.push(m)
+      var tim = {}
+      tim.rev = rev[i];
+      tim.date = m;
+      tim2.push(tim)
     }
-    console.log(tim)
-    res.render('guest/review', { review: rev, time_info: tim});
+    res.render('guest/review', { review: tim2, time_info: tim});
   })
 });
 module.exports = router;

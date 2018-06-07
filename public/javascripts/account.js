@@ -13,6 +13,31 @@ $('#check1').on('change', function(e){
 });
 
 
+$(document).ready(function(){
+  $("#editname").hide()
+  $("#editnamebutton").click(function(){
+      $("#editname").toggle();
+      $("#editemail").hide();
+      $("#editcp").hide()
+  });
+
+  $("#editemail").hide()
+  $("#editemailbutton").click(function(){
+      $("#editemail").toggle();
+      $("#editname").hide();
+      $("#editcp").hide()
+  });
+
+  $("#editcp").hide()
+  $("#editcpbutton").click(function(){
+      $("#editcp").toggle();
+      $("#editemail").hide();
+      $("#editname").hide()
+  });
+
+});
+
+
 function disable(){
   var id = $('#id').val();
   $.ajax({
@@ -125,18 +150,20 @@ $(document).ready(function(){
   });
 });    
 
-
-// $(document).ready(function(){
-//     $('button[name="close2"]').click(function(){
-//         $( "#check1" ).prop( "checked", true ); 
-//         $("#p").replaceWith("<p id='p'> </p>")
-//         $("#token").val('')
-//     });
-// });  
-
 $('#nav-basic-info input').on('input',function(e){
   $('#save1').attr('disabled' , false);
 });
+
+
+$(document).ready(function(){
+  $('#gridCheck').on('click',function(){
+    if ($('#gridCheck').is(':checked')) {
+      $('#deactive').attr('disabled' , false);
+    } else {
+      $('#deactive').attr('disabled' , true);
+    }
+  });
+});  
 
 // $(document).ready(function(){
 //   $('#nav-tab a').click(function(e){
@@ -156,17 +183,6 @@ var check1 = function() {
     document.getElementById('message').innerHTML = 'not matching';
   }
 }
-
-$(document).ready(function(){
-  $('#gridCheck').on('click',function(){
-    if ($('#gridCheck').is(':checked')) {
-      $('#deactive').attr('disabled' , false);
-    } else {
-      $('#deactive').attr('disabled' , true);
-    }
-  });
-});  
-
 
 // $(document).ready(function(){
 //   activeTab('nav-basic-info');
@@ -189,22 +205,122 @@ $(function(){
   });
 });
 
-// $( "#tabs" ).tabs({
-//   create: function(event, ui) {
-//       window.location.hash = ui.panel.attr('id');
-//   },
-//   activate: function(event, ui) {
-//       window.location.hash = ui.newPanel.attr('id');
+$('#form1').submit(function () {
+
+  // Get the Login Name value and trim it
+  var up = $.trim($('#upload_value').val());
+
+  // Check if empty of not
+  if (up === '') {
+      alert('choose file first');
+      return false;
+  }
+});
+
+// $('#formeditname').submit(function () {
+
+//   // Get the Login Name value and trim it
+//   var up = $.trim($('#name').val());
+
+//   // Check if empty of not
+//   if (up === '') {
+//       alert('choose file first');
+//       return false;
 //   }
 // });
 
-// $(function() {
-//   $("#nav-tab").tabs({
-//     activate: function(event, ui) {
-//       window.location.hash = ui.newPanel.attr('id');
+jQuery.validator.addMethod("lettersonly", function(value, element) {
+  return this.optional(element) || /^[a-z .'-]+$/i.test(value);
+}, "Letters only please"); 
+
+$(document).ready(function(){
+  $("#formeditname").validate({ // initialize the plugin
+    rules: {
+        name: {
+          required: true,
+          minlength: 3,
+          lettersonly: true
+        }
+
+    },
+    messages: {
+      name: {
+        required: 'name must be required',
+        minlength: 'at least 3 character',
+        lettersonly: 'Letters only please'
+      }
+    },
+    submitHandler: function (form) { // for demo
+        $('#formeditname').get(0).submit();
+    }
+  });
+});
+
+
+$(document).ready(function(){
+
+  $("#formeditemail").validate({ // initialize the plugin
+    rules: {
+        email: {
+          required: true,
+          email: true
+        }
+
+    },
+    messages: {
+      email: {
+        required: 'name must be required',
+        email: 'input valid email'
+      }
+    },
+    submitHandler: function (form) {
+      $.ajax({
+        url: '/admin/checkemail',
+        type: 'POST',
+        data: $(form).serialize(),
+        success: function(response) {
+            if(response === true) {
+              $('#formeditemail').get(0).submit();
+            } else {
+              alert('email already exist')
+            }
+          }            
+      }); 
+    }
+  });
+});
+
+
+
+$(document).ready(function(){
+  $("#formeditcp").validate({ // initialize the plugin
+    rules: {
+        phone: {
+          digits: true
+        }
+
+    },
+    messages: {
+      phone: {
+        digits: 'input valid number'
+      }
+    },
+    submitHandler: function (form) { // for demo
+        $('#formeditcp').get(0).submit();
+    }
+  });
+});
+
+
+
+// $(document).ready(function(){
+//   $('#message').on('DOMSubtreeModified',function(){
+//     var msg = $(this).html();
+//     if(msg ==='matching') {
+//       $('#save2').attr('disabled' , false);
 //     }
 //   });
-// });
+// });  
 
 // $("#conpass").blur(function() {
 //   var user_pass = $("#newpass").val();
@@ -225,4 +341,3 @@ $(function(){
 // if($('#message').html().is('matching')) {
 //   $('#save2').attr('disabled' , false);
 // }
-

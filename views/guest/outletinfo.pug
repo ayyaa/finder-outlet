@@ -148,14 +148,18 @@ html(lang='en')
                 for reviews in review
                   .pt-2.pb-2.mb-2
                     .divider.mb-2
-                    h5=reviews.name
+                    h5=reviews.rev.name
                     p(style='font-size: 12px; color:#808080')
-                      =reviews.created_at
+                      =reviews.date
                       |  
                       a(data-toggle='modal', data-target='#exampleModal2')
-                        i.fas.fa-flag(data-toggle='tooltip', data-placement='right', title='Click to report review')
+                        |  
+                        i.fas.fa-flag(data-toggle="tooltip" data-placement="right" title="Cick to report review")
+                        |   
+                        a(href='/outletinfo='+reviews.rev.outlet.id)=reviews.rev.outlet.name
+                    
                     p
-                      =reviews.content
+                      =reviews.rev.content
 
                     script(src='https://use.fontawesome.com/f4e64b7c17.js')
                     .star-rating
@@ -165,7 +169,7 @@ html(lang='en')
                         i.fa.fa-star(aria-hidden='true')
                         i.fa.fa-star(aria-hidden='true')
                         i.fa.fa-star(aria-hidden='true')
-                      .front-stars(style='width:'+reviews.rating+'%')
+                      .front-stars(style='width:'+reviews.rev.rating+'%')
                         i.fa.fa-star(aria-hidden='true')
                         i.fa.fa-star(aria-hidden='true')
                         i.fa.fa-star(aria-hidden='true')
