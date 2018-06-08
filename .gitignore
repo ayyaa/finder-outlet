@@ -3,3 +3,4 @@
 src/models/index.js
 sendgrid.env
 src/config/config.js
+/public/photo-storage

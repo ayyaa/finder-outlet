@@ -136,10 +136,14 @@ router.post('/upload',multer(multerConfig).single('photo'),function(req,res){
   )
   .then(rows => {
     console.log(req.user[0].photo)
-    fs.unlink('./public/photo-storage/'+req.user[0].photo, (err) => {
+    if(req.user[0].photo !== 'photo-1527578948144.png') {
+      fs.unlink('./public/photo-storage/'+req.user[0].photo, (err) => {
         if (err) throw err;
-        res.redirect('/admin/account');
-    }) 
+        res.redirect('/admin/account#nav-basic-info');
+      }) 
+    } else {
+      res.redirect('/admin/account#nav-basic-info');
+    }
   }).catch(err => {
     console.error(err)
     res.send('error')

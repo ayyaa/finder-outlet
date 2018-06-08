@@ -137,7 +137,7 @@ block content
         $("#state").change(function() {
           var state = $(this).val();
           $.ajax({
-            url: "http://battuta.medunes.net/api/region/"+state+"/search/?region=&callback=?&key=4a4098af6b93a68e90f7438a91d2a516",
+            url: "http://battuta.medunes.net/api/region/"+state+"/search/?region=&callback=?&key=eece3999b174ddb2ece72e58660a9ddb",
             dataType: 'json',
             success:function(response){
               var len = response.length;
@@ -155,7 +155,7 @@ block content
           var state1 = $('#state').val();
           console.log(region);
           $.ajax({
-            url: "http://battuta.medunes.net/api/city/"+state1+"/search/?region="+region+"&city=&callback=?&key=4a4098af6b93a68e90f7438a91d2a516",
+            url: "http://battuta.medunes.net/api/city/"+state1+"/search/?region="+region+"&city=&callback=?&key=eece3999b174ddb2ece72e58660a9ddb",
             dataType: 'json',
             success:function(response){
               console.log(response);

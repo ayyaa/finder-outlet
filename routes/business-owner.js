@@ -12,7 +12,6 @@ const multer = require('multer')
 const categories = models.categories;
 const business = models.business;
 const business_categories = models.business_categories;
-const reviews = models.reviews;
 const users = models.users;
 const outlets = models.outlets;
 const address = models.address;
@@ -228,10 +227,15 @@ router.post('/upload',multer(multerConfig).single('photo'),function(req,res){
   )
   .then(rows => {
     console.log(req.user[0].photo)
-    fs.unlink('./public/photo-storage/'+req.user[0].photo, (err) => {
+    console.log(req.body.name)
+    if(req.user[0].photo !== 'photo-1527578948144.png') {
+      fs.unlink('./public/photo-storage/'+req.user[0].photo, (err) => {
         if (err) throw err;
-        res.redirect('/business-owner/account');
-    }) 
+        res.redirect('/business-owner/account#nav-basic-info');
+      }) 
+    } else {
+      res.redirect('/business-owner/account#nav-basic-info');
+    }
   }).catch(err => {
     console.error(err)
     res.send('error')
@@ -688,7 +692,8 @@ router.get('/account', function(req, res, next) {
 router.get('/edit-business=:id', function(req, res) {
   business.findAll({
     where: {
-      id: [req.params.id]
+      id: [req.params.id],
+      [op.and]: {owner_id: req.user[0].id}
     },
     attributes: [
       'id',
@@ -735,8 +740,11 @@ router.get('/edit-business=:id', function(req, res) {
   //   raw:true
   // })
   .then(rows => {
-    categories.findAll({
-    })
+    if(rows.length <= 0) {
+      res.render('access-denied');
+      return false;
+    }
+    categories.findAll()
     .then(row => {
       console.log(rows)
       var BATTUTA_KEY=config.batuta_key.key;
@@ -765,8 +773,12 @@ router.get('/edit-business=:id', function(req, res) {
           })
       });
     })
-  }).catch(err => {
-    console.error(err);
+    .catch(err => {
+    res.render('error')
+    });
+  })
+  .catch(err => {
+  res.render('error')
   });
 });
 
@@ -809,11 +821,19 @@ router.get('/list-business', function(req, res, next) {
 router.post('/delete-business/:id', function(req, res, next) {
   business.destroy({ 
     where: {
-      id: req.params.id
+      id: req.params.id,
+      [op.and]: {id: req.user[0].id}
     },
     force: true })
   .then(() => {
+    if(rows.length <= 0) {
+      res.render('access-denied');
+      return false;
+    }
     req.flash('success', 'Selected Business has been removed.')
+    res.redirect('/business-owner/list-business');
+  }).catch(err => {
+    req.flash('error', 'cant delete this business')
     res.redirect('/business-owner/list-business');
   })
 });
