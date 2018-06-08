@@ -65,6 +65,20 @@ block content
           .modal-footer
             button.btn.btn-secondary(type='button', data-dismiss='modal') Cancel
             button.btn.btn-primary(onclick='deleteBusiness()') Delete
+    #viewModal.modal.fade(tabindex='-1', role='dialog', aria-labelledby='deleteModalLabel', aria-hidden='true')
+      .modal-dialog(role='document')
+        .modal-content
+          .modal-header
+            h5#deleteModalLabel.modal-title View selected category
+            button.close(type='button', data-dismiss='modal', aria-label='Close')
+              span(aria-hidden='true') ×
+          .modal-body
+            label(for='name') Name : 
+            h6#name_category 
+            label(for='name') Description : 
+            h6#desc_category
+          .modal-footer
+            button.btn.btn-secondary(type='button', data-dismiss='modal') Cancel
     script(type='text/javascript').
       function delBusiness(e) {
         console.log(e);

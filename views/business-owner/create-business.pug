@@ -79,15 +79,15 @@ block content
                 input#line2.form-control(type='text', placeholder='Line 2 address' name='line2', value=line2)
             .form-row
               .form-group.col-md-3
-                a#geolocate.btn.btn-secondary.btn-block(type='button') Geolocate
+                a#geolocate.btn.btn-secondary.btn-block.disabled(type='button') Geolocate
                 //- button.btn.btn-secondary.btn-block 
             .form-row
               .form-group.col-md-3
                 label(for='zipcode') Latitude
-                input#lat.form-control(type='text', placeholder='Latitude',name='lat', value=lat)
+                input#lat.form-control(type='text', placeholder='Latitude',name='lat', value=lat readonly)
               .form-group.col-md-3
                 label(for='zipcode') Longitude
-                input#lng.form-control(type='text', placeholder='Longitude',name='lng', value=lng)
+                input#lng.form-control(type='text', placeholder='Longitude',name='lng', value=lng readonly)
             .form-row
               .form-group.col-md-3
                 a(data-toggle='modal', data-target='#mapsModal' pointer="cursor")  View in maps >

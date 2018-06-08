@@ -61,6 +61,8 @@ outlets.belongsTo(address, {foreignKey: 'id_address'});
 address.hasOne(outlets, {foreignKey: 'id_address'});
 reviews.belongsTo(outlets, {foreignKey: 'outlet_id'});
 outlets.hasOne(reviews, {foreignKey: 'outlet_id'});
+// address.hasOne(business, {foreignKey: 'address_id'})
+// business.belongsTo(address, {foreignKey: 'address_id'})
 
 router.get('/dashboard', function(req, res, next) {
   business.findAll({
@@ -128,6 +130,8 @@ router.get('/dashboard', function(req, res, next) {
       .then(rows3 => {
         categories.count()
         .then(rows4 => {
+          console.log('xxxxxxxxxxxxxxx'+rows4)
+          console.log(rows1[0].dataValues.categories[0].countoutlet)
           res.render('admin/dashboard', { 
             title: 'Express' , 
             active1: 'active',
@@ -180,7 +184,7 @@ router.get('/list-categories', function(req, res, next) {
   .then(rows => {
     console.log(rows);
     // res.render('admin_list', {title: 'User List', data: rows, nameTag: req.user.user});
-    res.render('admin/list-categories', { active2: 'active', data: rows, user: req.user[0]});
+    res.render('admin/list-categories', { active2: 'active', data: rows, user: req.user[0], 'success': req.flash('success'), 'error': req.flash('error')});
   })
   .catch(() => {
     res.status(500).json({"status_code": 500,"status_message": "internal server error"});
@@ -294,21 +298,17 @@ router.post('/update-category', function(req, res, next) {
   })
 });
 
-router.post('/delete-category/:id', function(req, res, next) {
+router.post('/delete-category=:id', function(req, res, next) {
   categories.destroy({ 
     where: {
       id: req.params.id
     },
     force: true })
   .then(() => {
-    req.flash('success', 'Selected categories has been removed.')
-    res.redirect('/admin/list-categories');
+    res.send(true)
   })
   .catch(err => {
-    if (err) {
-      req.flash('error', 'Selected categories has been removed.')
-      res.redirect('/admin/list-categories');
-    }
+    res.send(false)
   })
 });
 
@@ -577,6 +577,9 @@ router.get('/list-business', function(req, res, next) {
       'id',
       'name', 
       'email',
+      // 'website',
+      // 'contact_no',
+      // 'description',
       [Sequelize.fn('GROUP_CONCAT', Sequelize.literal("DISTINCT(categories.name) SEPARATOR ', '")), 'category']
     ],
     group: ['business.id'],
@@ -584,17 +587,24 @@ router.get('/list-business', function(req, res, next) {
       {
       model: categories,
       attributes: [
+        'name',
         [Sequelize.literal('COUNT(DISTINCT(outlet.id))'), 'countoutlet']
-      ],
+        ],
       },
       {
         model: outlets,
         group: ['business.id']
-      }
+      },
+      // {
+      //   model: address,
+      //   attributes: [
+      //     [Sequelize.fn('CONCAT', Sequelize.col("line1"),', ', Sequelize.col("line2"), ', ',Sequelize.col("administrative_area_1"),', ', Sequelize.col("administrative_area_1"), ', ',Sequelize.col("administrative_area_3"),', ', Sequelize.col("administrative_area_4"), ', ', Sequelize.col("postalcode")), 'address']
+      //   ]
+      // }
     ]
   })
   .then(rows => {
-    console.log(rows.length)
+    console.log(rows)
     for(var i = 0; i< rows.length; i++) {
       console.log(rows[i].dataValues.categories[0].dataValues.countoutlet)
     }
@@ -710,4 +720,3 @@ router.get('/list-outlets=:id', function(req, res, next) {
 });
 
 module.exports = router;
-

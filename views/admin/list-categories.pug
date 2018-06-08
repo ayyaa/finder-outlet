@@ -6,26 +6,26 @@ block content
       ol.breadcrumb
         li.breadcrumb-item
           h4 Categories
-      |
-      - if(error){
-      div
-        | !{error}
-      - }
-      |
-      - if(info){
-      div
-        | !{info}
-      - }
-      |
-      - if(success){
-      .alert.alert-success 
-        .text-center #{success}
-      - }
       .card.mb-3
         .card-header
           i.fa.fa-table
           |  Data List Categories
         .card-body
+          |
+          - if(error){
+          div
+            | !{error}
+          - }
+          |
+          - if(info){
+          div
+            | !{info}
+          - }
+          |
+          - if(success){
+          div
+            | !{success}
+          - }
           form.form-inline(method='GET', style='overflow-x:auto;')
             .form-group.col-md-3.col-lg-3
               input#pwd.form-control(type='text', placeholder='Keyword', name='search', style='width:100%')
@@ -50,7 +50,7 @@ block content
                         button.btn.bg-5.dropdown-toggle.btn-sm.border(type='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
                           | Action
                         .dropdown-menu.dropdown-menu-right
-                          a.dropdown-item(href='/admin/list-business')
+                          button.dropdown-item(onclick='viewCategory('+categories.id+',"'+categories.name+'","'+categories.description+'")')
                             i.fa.fa-user
                             |  View
                           .dropdown-divider
@@ -80,21 +80,54 @@ block content
           .modal-footer
             button.btn.btn-secondary(type='button', data-dismiss='modal') Cancel
             button.btn.btn-primary(onclick='deleteCategory()') Delete
+    #viewModal.modal.fade(tabindex='-1', role='dialog', aria-labelledby='deleteModalLabel', aria-hidden='true')
+      .modal-dialog(role='document')
+        .modal-content
+          .modal-header
+            h5#deleteModalLabel.modal-title View selected category
+            button.close(type='button', data-dismiss='modal', aria-label='Close')
+              span(aria-hidden='true') ×
+          .modal-body
+            label(for='name') Name : 
+            h6#name_category 
+            label(for='name') Description : 
+            h6#desc_category
+          .modal-footer
+            button.btn.btn-secondary(type='button', data-dismiss='modal') Cancel
+
     script(type='text/javascript').
       function delCategory(e) {
         window.idCategory = e;
         $("#deleteModal").modal('show');
       }
+
+      function viewCategory(a,b,c) {
+        window.idCategory = a;
+        window.nameCategory = b;
+        window.descriptionCategory = c;
+        $("#viewModal").modal('show');
+        document.getElementById("name_category").innerHTML = b;
+        document.getElementById("desc_category").innerHTML = c;
+      }
+
       function deleteCategory(){
         var id = window.idCategory;
         console.log(idCategory);
         $.ajax({
-          url:'/admin/delete-category/'+id,
+          url:'/admin/delete-category='+id,
           type:'POST',
           success : function (respon) {
-          setTimeout(function() {$("#deleteModal").modal('hide');}, 1000);
-          location.reload();
+          if(respon === true) {
+            setTimeout(function() {$("#deleteModal").modal('hide');}, 1000);
+            alert('Success delete new category')
+            location.reload();
+          } else {
+            setTimeout(function() {$("#deleteModal").modal('hide');}, 100);
+            alert('Failed to remove categoryr')
+          }
+          
           }
         })
       }
+
 
