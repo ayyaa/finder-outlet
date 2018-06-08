@@ -131,7 +131,7 @@ block content
             button.btn.btn-primary(onclick='save()') Save 
     script.
       var values = $("#cat_id").val();
-      console.log(values);
+      //- console.log(values);
       $.each(values.split(","), function(i,e){
         $("select[name='get_category'] option[value='" + e + "']").prop("selected", true);
       });
@@ -139,11 +139,15 @@ block content
       $('.selectpicker').selectpicker({
         size: 4
       });
-      $(document).ready(function() {
-        var temp = $("#temp_state").val();
-        console.log(temp_state)
-        $("select[name=state]").val('id');
+      
+      var temp = $("#temp_state").val();
+      console.log(temp)
+      $.each(values.split(","), function(i,e){
+        $("select[name='state'] option[value='" + temp + "']").prop("selected", true);
       });
+     
+        //- $("select[name='state']").val(temp);
+    
       
 
       $(document).ready(function() {

@@ -16,7 +16,6 @@ const users = models.users;
 const outlets = models.outlets;
 const address = models.address;
 const days = models.days;
-const reviews = models.reviews;
 const validateJoi = require('../src/validation/joi-create-business');
 const flash = require('connect-flash');
 const config = require('../src/config/config')
@@ -275,8 +274,17 @@ router.get('/create-business', function(req, res, next) {
 });
 
 router.post('/create-business', function(req, res, next) {
+  
+  if (Array.isArray(req.body.get_category) === false) {
+    var category = [];
+    category.push(req.body.get_category)
+  } else {
+    var category = req.body.get_category;
+  }
+  console.log(category);
+  console.log(Array.isArray(req.body.get_category));
   validateJoi.validate({
-    get_category: req.body.get_category,
+    get_category: category,
     contact_no: req.body.contact_no, 
     name_business: req.body.name_business, 
     email: req.body.email, 

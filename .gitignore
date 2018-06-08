@@ -3,4 +3,8 @@
 src/models/index.js
 sendgrid.env
 src/config/config.js
+<<<<<<< HEAD
 /public/photo-storage
+=======
+public/photo-storage
+>>>>>>> ea28002bfcbaf2a668f5081d68ce0f5f647e070c
