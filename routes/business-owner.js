@@ -395,8 +395,7 @@ router.post('/create-business', function(req, res, next) {
           email: req.body.email,
           website: req.body.website,
           contact_no: req.body.contact_no,
-          description: req.body.description,
-          image: 'req.body.image'
+          description: req.body.description
         })
         .then(rowss => {
           var length_of_category = req.body.get_category;
@@ -941,7 +940,7 @@ router.post('/delete-business/:id', function(req, res, next) {
   business.destroy({ 
     where: {
       id: req.params.id,
-      [op.and]: {id: req.user[0].id}
+      [op.and]: {owner_id: req.user[0].id}
     },
     force: true })
     .then(() => {
