@@ -44,6 +44,14 @@ module.exports = function(sequelize, DataTypes) {
     ip_address: {
       type: DataTypes.STRING(30),
       allowNull: true
+    },
+    createdAt: {
+      type: DataTypes.DATE,
+      allowNull: true
+    },
+    updatedAt: {
+      type: DataTypes.DATE,
+      allowNull: true
     }
   }, {
     tableName: 'reviews'

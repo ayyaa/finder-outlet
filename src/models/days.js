@@ -67,6 +67,14 @@ module.exports = function(sequelize, DataTypes) {
     d7_close: {
       type: DataTypes.TIME,
       allowNull: true
+    },
+    createdAt: {
+      type: DataTypes.DATE,
+      allowNull: true
+    },
+    updatedAt: {
+      type: DataTypes.DATE,
+      allowNull: true
     }
   }, {
     tableName: 'days'

@@ -42,7 +42,7 @@ block content
                         p(style='font-size: 12px; color:#808080')
                           = reviews.date
                           a(data-toggle='modal', data-target='#exampleModal2')
-                            |  
+                            |  - Outlet : 
                             i.fas.fa-flag(data-toggle="tooltip" data-placement="right" title="Cick to report review")
                             |   
                             a(href='/outletinfo='+reviews.rev.outlet.id)=reviews.rev.outlet.name

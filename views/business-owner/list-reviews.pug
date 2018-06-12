@@ -30,90 +30,35 @@ block content
                   span.fa.fa-filter
                   |  Filter
           .col-md-10
-            .media.p-3.rounded
-              .media-body
-                .divider.mb-2
-                h5 Media heading
-                p(style="font-size:12px")
-                  | 2 days Ago - Outlet : 
-                  a(href='') Wonderlabs Exploler Campus
-                p
-                  | Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
-                i.fa.fa-star
-                i.fa.fa-star
-                i.fa.fa-star
-                i.fa.fa-star
-                i.fa.fa-star
-            .media.p-3.rounded
-              .media-body
-                .divider.mb-2
-                h5 Media heading
-                p(style="font-size:12px")
-                  | 2 days Ago - Outlet : 
-                  a(href='') Wonderlabs Exploler Campus
-                p
-                  | Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
-                i.fa.fa-star
-                i.fa.fa-star
-                i.fa.fa-star
-                i.fa.fa-star
-                i.fa.fa-star
-            .media.p-3.rounded
-              .media-body
-                .divider.mb-2
-                h5 Media heading
-                p(style="font-size:12px")
-                  | 2 days Ago - Outlet : 
-                  a(href='') Wonderlabs Exploler Campus
-                p
-                  | Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
-                i.fa.fa-star
-                i.fa.fa-star
-                i.fa.fa-star
-                i.fa.fa-star
-                i.fa.fa-star
-            .media.p-3.rounded
-              .media-body
-                .divider.mb-2
-                h5 Media heading
-                p(style="font-size:12px")
-                  | 2 days Ago - Outlet : 
-                  a(href='') Wonderlabs Exploler Campus
-                p
-                  | Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
-                i.fa.fa-star
-                i.fa.fa-star
-                i.fa.fa-star
-                i.fa.fa-star
-                i.fa.fa-star
-            .media.p-3.rounded
-              .media-body
-                .divider.mb-2
-                h5 Media heading
-                p(style="font-size:12px")
-                  | 2 days Ago - Outlet : 
-                  a(href='') Wonderlabs Exploler Campus
-                p
-                  | Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
-                i.fa.fa-star
-                i.fa.fa-star
-                i.fa.fa-star
-                i.fa.fa-star
-                i.fa.fa-star
-            .media.p-3.rounded
-              .media-body
-                .divider.mb-2
-                h5 Media heading
-                p(style="font-size:12px")
-                  | 2 days Ago - Outlet : 
-                  a(href='') Wonderlabs Exploler Campus
-                p
-                  | Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
-                i.fa.fa-star
-                i.fa.fa-star
-                i.fa.fa-star
-                i.fa.fa-star
-                i.fa.fa-star
+            script(src='https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/locale/af.js')
+            for reviews in review
+              .media.p-3.rounded
+                .media-body
+                  .divider.mb-2
+                  h5=reviews.rev.name
+                  p(style='font-size: 12px; color:#808080')
+                    = reviews.date
+                    a(data-toggle='modal', data-target='#exampleModal2')
+                      |  - Outlet : 
+                      i.fas.fa-flag(data-toggle="tooltip" data-placement="right" title="Cick to report review")
+                      |   
+                      a(href='/outletinfo='+reviews.rev.outlet.id)=reviews.rev.outlet.name
+                  p
+                    =reviews.rev.content
+                  script(src='https://use.fontawesome.com/f4e64b7c17.js')
+                  .star-rating
+                    .back-stars
+                      i.fa.fa-star(aria-hidden='true')
+                      i.fa.fa-star(aria-hidden='true')
+                      i.fa.fa-star(aria-hidden='true')
+                      i.fa.fa-star(aria-hidden='true')
+                      i.fa.fa-star(aria-hidden='true')
+                    .front-stars(style='width:'+reviews.rev.rating+'%')
+                      i.fa.fa-star(aria-hidden='true')
+                      i.fa.fa-star(aria-hidden='true')
+                      i.fa.fa-star(aria-hidden='true')
+                      i.fa.fa-star(aria-hidden='true')
+                      i.fa.fa-star(aria-hidden='true')
             nav.float-right.mt-4(aria-label='Page navigation example')
               ul.pagination
                 li.page-item

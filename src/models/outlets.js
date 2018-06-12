@@ -52,6 +52,14 @@ module.exports = function(sequelize, DataTypes) {
     days_id: {
       type: DataTypes.INTEGER(11),
       allowNull: true
+    },
+    createdAt: {
+      type: DataTypes.DATE,
+      allowNull: true
+    },
+    updatedAt: {
+      type: DataTypes.DATE,
+      allowNull: true
     }
   }, {
     tableName: 'outlets'

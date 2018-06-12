@@ -346,7 +346,8 @@ router.post('/forgot', function(req, res, next) {
       console.log(email);
       users.findAll({
         where: {
-          email: [email]
+          email: [email],
+          [op.and]: {status: 1}
         }
       }).then(function(rows, err) {
         if (rows.length <= 0) {
@@ -559,11 +560,41 @@ function time(a) {
   return arr
 }
 
+router.get('/reviews', function(req, res, next) {
+  reviews.findAll(
+    {
+      order: [
+        ['id','DESC']
+      ],
+      include: {
+        model: outlets,
+        attributs : [
+          'name', 'id'
+        ]
+      }
+    }
+  )
+  .then(rev => {
+    var tim2 =[]
+    for(var i = 0 ; i <rev.length; i++) {
+      var m = time(rev[i].created_at)
+      var tim = {}
+      tim.rev = rev[i];
+      tim.date = m;
+      tim2.push(tim)
+    }
+    res.render('guest/review', { review: tim2, time_info: tim});
+  })
+});
+
 router.get('/reviews=:id', function(req, res, next) {
   reviews.findAll({
     where: {
       outlet_id: req.params.id
     },
+    order: [
+      ['id','DESC']
+    ],
     include: {
       model: outlets,
       attributs : [
