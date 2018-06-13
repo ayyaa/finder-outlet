@@ -7,6 +7,21 @@ block content
         ol.breadcrumb
           li.breadcrumb-item
             h4 Reviews
+        |
+        - if(message){
+        div 
+          | !{message}
+        - }
+        |
+        - if(info){
+        div 
+          | !{info}
+        - }
+        |
+        - if(error){
+        div 
+          | !{error}
+        - }
         .card.mb-3
           .card-header
             i.fa.fa-table
@@ -41,7 +56,7 @@ block content
                         span.pb-1(style='font-size: 16px')=reviews.rev.name
                         p(style='font-size: 12px; color:#808080')
                           = reviews.date
-                          a(data-toggle='modal', data-target='#exampleModal2')
+                          a(onclick='report('+reviews.rev.id+')')
                             |  - Outlet : 
                             i.fas.fa-flag(data-toggle="tooltip" data-placement="right" title="Cick to report review")
                             |   
@@ -62,6 +77,30 @@ block content
                             i.fa.fa-star(aria-hidden='true')
                             i.fa.fa-star(aria-hidden='true')
                             i.fa.fa-star(aria-hidden='true')
+                  #exampleModal2.modal.fade(tabindex='-1', role='dialog', aria-labelledby='exampleModalLabel', aria-hidden='true')
+                    .modal-dialog(role='document')
+                      .modal-content
+                        .modal-header
+                          h5#exampleModalLabel.modal-title Report review
+                          button.close(type='button', data-dismiss='modal', aria-label='Close')
+                            span(aria-hidden='true') ×
+                        .modal-body
+                          .form-group
+                            input#idreview(type='text',name='idreview' hidden)
+                            label(for='exampleInputEmail1') Email address
+                            input#exampleInputEmail1.form-control(type='email', aria-describedby='emailHelp', placeholder='Enter email')
+                            small#emailHelp.form-text.text-muted We'll never share your email with anyone else.
+                          .form-group
+                            label choose a reason for reporting this review
+                            .radio.p-1
+                              input(type='radio', name='reasonReport', value='SPAM')
+                              |  it's spam
+                            .radio.p-1
+                              input(type='radio', name='reasonReport', value='INAPPROPRIATE')
+                              |  it’s inappropriate
+                          .modal-footer
+                            button.btn.btn-primary(type='button', data-dismiss='modal') Close
+                            button.btn.btn-primary(onclick ='reportRev()') Send Report
               nav.float-right.mt-4(aria-label='Page navigation example')
                 ul.pagination
                   li.page-item
@@ -87,4 +126,45 @@ block content
             .float-right(style='font-size:12px')
               a.block.mr-8.ml-4.text-light(href='#') Term of Use
               a.block.mr-8.ml-4.text-light(href='#') Privacy Policy
+    
+    script(type='text/javascript').
+      function report(e) {
+        console.log(e);
+        window.idReview = e;
+        $("#exampleModal2").modal('show');
+        $("#idreview").val(e);
+      }
 
+      function reportRev(){
+        var idreview = $('#idreview').val();
+        var email =  $('#exampleInputEmail1').val();
+        var reasonReport = $("input[name='reasonReport']:checked").val();
+        $.ajax({
+          url:'/report',
+          type:'POST',
+          data: {
+            idreview: $('#idreview').val(),
+            email:  $('#exampleInputEmail1').val(),
+            reasonReport: $("input[name=reasonReport]:checked").val()
+          },
+          success : function (respon) {
+            if(respon === '1') {
+              alert('INVALID EMAIL')
+            }
+
+            if(respon === '2') {
+              alert('Choose a reason')
+            }
+
+            if(respon === '3') {
+              alert('Email already report this review')
+            }           
+
+            if(respon === '4') {
+              alert('Success report this review')
+              setTimeout(function() {$("#exampleModal2").modal('hide');}, 1000);
+              location.reload();
+            }  
+          }
+        })
+      }

@@ -8,6 +8,7 @@ const crypto = require('crypto');
 const async = require('async');
 const sgMail = require('@sendgrid/mail');
 const multer = require('multer');
+const moment = require('moment');
 const fs = require('fs');
 const categories = models.categories;
 const business = models.business;
@@ -581,6 +582,7 @@ router.get('/list-business', function(req, res, next) {
       'id',
       'name', 
       'email',
+      'image',
       // 'website',
       // 'contact_no',
       // 'description',
@@ -678,9 +680,46 @@ router.get('/list-outlets', function(req, res, next) {
   })
 });
 
+function time(a) {
+  var sat = ['years','months','days','hours','minutes','seconds']
+  for(var i = 0; i < sat.length; i++) {
+    var k = moment().diff(a, sat[i]);
+    if(k !== 0) {
+       var arr = `${k} ${sat[i]} ago`;
+       break;
+    }
+
+  }
+  return arr
+}
 
 router.get('/list-reviews', function(req, res, next) {
-  res.render('admin/list-reviews', {  active6: 'active', user: req.user[0]});
+  reviews.findAll({
+    order: [
+      ['id','DESC']
+    ],
+    include: {
+      required: false,
+      model: outlets,
+      attributs : [
+        'name', 'id'
+      ],
+      include: {
+        required: false,
+        model: business,
+      }
+    }
+  }).then(rev => {
+    var tim2 =[]
+    for(var i = 0 ; i <rev.length; i++) {
+      var m = time(rev[i].created_at)
+      var tim = {}
+      tim.rev = rev[i];
+      tim.date = m;
+      tim2.push(tim)
+    }
+    res.render('admin/list-reviews', {  active6: 'active', user: req.user[0],review: tim2, time_info: tim});
+  })
 });
 
 

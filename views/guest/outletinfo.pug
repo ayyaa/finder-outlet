@@ -7,20 +7,25 @@ html(lang='en')
     meta(name='author', content='')
     // Bootstrap core CSS
     link(href='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.1/css/bootstrap.min.css', rel='stylesheet')
+    link(rel='stylesheet', href='https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/css/bootstrap-select.min.css')
     // Custom fonts for this template
     link(rel='stylesheet', href='https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css', integrity='sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4', crossorigin='anonymous')
     link(rel='stylesheet', href='https://use.fontawesome.com/releases/v5.0.12/css/all.css', integrity='sha384-G0fIWCsCzJIMAVNQPfjH08cyYaUtMwjJwqiRKxxE/rx96Uroj1BtIQ6MLJuheaO9', crossorigin='anonymous')
     script(src='https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js', integrity='sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ', crossorigin='anonymous')
+    script(src='https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js')  
+    script(src='https://code.jquery.com/jquery-3.1.1.min.js')
+    script(type='text/javascript', src='//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js')  
     // <link href="http://fonts.googleapis.com/css?family=Lato:400,700" rel="stylesheet">
     link(href='https://fonts.googleapis.com/css?family=Saira+Extra+Condensed:100,200,300,400,500,600,700,800,900', rel='stylesheet')
-    link(href='https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i,800,800i', rel='stylesheet')
     link(href='https://cdnjs.cloudflare.com/ajax/libs/devicons/1.8.0/css/devicons.min.css', rel='stylesheet')
     link(href='https://cdnjs.cloudflare.com/ajax/libs/simple-line-icons/2.4.1/css/simple-line-icons.css', rel='stylesheet')
+    link(href='https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i,800,800i', rel='stylesheet')
     // Custom styles for this template
     link(href='../stylesheets/resume.css', rel='stylesheet')
     link(href='../stylesheets/temp.css', rel='stylesheet')
     // Bootstrap core JavaScript
-    script(src='https://code.jquery.com/jquery-3.3.1.slim.min.js', integrity='sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo', crossorigin='anonymous')
+    script(src='https://code.jquery.com/jquery-3.2.1.min.js')
+    //- script(src='https://code.jquery.com/jquery-3.3.1.slim.min.js')
     script(src='https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js', integrity='sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm', crossorigin='anonymous')
     // Plugin JavaScript
     script(src='https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.compatibility.min.js.map')
@@ -29,7 +34,7 @@ html(lang='en')
     nav#sideNav.navbar.navbar-expand-lg.navbar-dark.bg-dark.fixed-bottom.position-fixed.d-none.d-lg-block
       a.navbar-brand.js-scroll-trigger.d-flex.justify-content-center.pt-4.mt-4.mb-5.rounded(href='#page-top')
         span
-          img.img-profile.rounded-circle.mb-2.d-flex.align-content-center(src='../images/wonderlabs.png', alt='')
+          img.img-profile.rounded-circle.mb-2.d-flex.align-content-center(src='../photo-storage/'+data.business.image , alt='')
           p=data.business.name
       .collapse.navbar-collapse
         ul.navbar-nav.ml-auto
@@ -63,7 +68,7 @@ html(lang='en')
       div.d-block.d-lg-none.bg-dark
         .container.pt-4.pb-4(style='text-align: center;')
           span
-            img.img-profile.rounded-circle.mb-2(src='../images/wonderlabs.png', alt='', height='150px', widht='150px')
+            img.img-profile.rounded-circle.mb-2(src='../photo-storage/'+data.business.image , alt='', height='150px', widht='150px')
             p.h5.mt-3(style='color: white;')=data.business.name
       section#info.resume-section.p-3.p-lg-5.d-flex.d-column
         .mx-auto
@@ -152,11 +157,11 @@ html(lang='en')
                     p(style='font-size: 12px; color:#808080')
                       =reviews.date
                       |  
-                      a(data-toggle='modal', data-target='#exampleModal2')
+                      a(onclick='report('+reviews.rev.id+')')
                         |  
                         i.fas.fa-flag(data-toggle="tooltip" data-placement="right" title="Cick to report review")
                         |   
-                        a(href='/outletinfo='+reviews.rev.outlet.id)=reviews.rev.outlet.name
+                      a(href='/outletinfo='+reviews.rev.outlet.id)=reviews.rev.outlet.name
                     
                     p
                       =reviews.rev.content
@@ -176,6 +181,31 @@ html(lang='en')
                         i.fa.fa-star(aria-hidden='true')
                         i.fa.fa-star(aria-hidden='true')
 
+                  #exampleModal2.modal.fade(tabindex='-1', role='dialog', aria-labelledby='exampleModalLabel', aria-hidden='true')
+                    .modal-dialog(role='document')
+                      .modal-content
+                        .modal-header
+                          h5#exampleModalLabel.modal-title Report review
+                          button.close(type='button', data-dismiss='modal', aria-label='Close')
+                            span(aria-hidden='true') ×
+                        .modal-body
+                          .form-group
+                            input#idreview(type='text',name='idreview' hidden)
+                            label(for='exampleInputEmail1') Email address
+                            input#exampleInputEmail1.form-control(type='email', aria-describedby='emailHelp', placeholder='Enter email')
+                            small#emailHelp.form-text.text-muted We'll never share your email with anyone else.
+                          .form-group
+                            label choose a reason for reporting this review
+                            .radio.p-1
+                              input(type='radio', name='reasonReport', value='SPAM')
+                              |  it's spam
+                            .radio.p-1
+                              input(type='radio', name='reasonReport', value='INAPPROPRIATE')
+                              |  it’s inappropriate
+                          .modal-footer
+                            button.btn.btn-primary(type='button', data-dismiss='modal') Close
+                            button.btn.btn-primary(onclick ='reportRev()') Send Report
+
 
 
                 p
@@ -192,7 +222,7 @@ html(lang='en')
                         button.close(type='button', data-dismiss='modal', aria-label='Close')
                           span(aria-hidden='true') ×
                       .modal-body
-                        form(action='/addreview='+data.id, method='POST')
+                        form#addreview(action='/addreview='+data.id, method='POST')
                           .form-group
                             label Name
                             input.form-control(type='text', placeholder='Enter name', name='name')
@@ -231,30 +261,6 @@ html(lang='en')
                           .modal-footer
                             button.btn.btn-primary(type='button', data-dismiss='modal') Close
                             button.btn.btn-primary(type='submit') Send Review
-                #exampleModal2.modal.fade(tabindex='-1', role='dialog', aria-labelledby='exampleModalLabel', aria-hidden='true')
-                  .modal-dialog(role='document')
-                    .modal-content
-                      .modal-header
-                        h5#exampleModalLabel.modal-title Report review
-                        button.close(type='button', data-dismiss='modal', aria-label='Close')
-                          span(aria-hidden='true') ×
-                      .modal-body
-                        form
-                          .form-group
-                            label(for='exampleInputEmail1') Email address
-                            input#exampleInputEmail1.form-control(type='email', aria-describedby='emailHelp', placeholder='Enter email')
-                            small#emailHelp.form-text.text-muted We'll never share your email with anyone else.
-                          .form-group
-                            label choose a reason for reporting this review
-                            .radio.p-1
-                              input(type='radio', name='gender', value='1')
-                              |  it's spam
-                            .radio.p-1
-                              input(type='radio', name='gender', value='2')
-                              |  it’s inappropriate
-                          .modal-footer
-                            button.btn.btn-primary(type='button', data-dismiss='modal') Close
-                            button.btn.btn-primary(type='button') Send Report
       section#other.resume-section.p-3.p-lg-5.d-flex.flex-column
         .my-auto
           h2.mb-3 Other Outlet
@@ -283,4 +289,73 @@ html(lang='en')
                 td
                   a(href='#') View Outlet
     // Custom scripts for this template
+    script(src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js')
+    script(src='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.1/js/bootstrap.bundle.js')
+    // Plugin JavaScript
+    script(src='https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js')
     script(src='../javascripts/resume.js')
+    script(type='text/javascript').
+      function report(e) {
+        console.log(e);
+        window.idReview = e;
+        $("#exampleModal2").modal('show');
+        $("#idreview").val(e);
+      }
+
+      function reportRev(){
+        var idreview = $('#idreview').val();
+        var email =  $('#exampleInputEmail1').val();
+        var reasonReport = $("input[name='reasonReport']:checked").val();
+        $.ajax({
+          url:'/report',
+          type:'POST',
+          data: {
+            idreview: $('#idreview').val(),
+            email:  $('#exampleInputEmail1').val(),
+            reasonReport: $("input[name=reasonReport]:checked").val()
+          },
+          success : function (respon) {
+            if(respon === '1') {
+              alert('INVALID EMAIL')
+            }
+
+            if(respon === '2') {
+              alert('Choose a reason')
+            }
+
+            if(respon === '3') {
+              alert('Email already report this review')
+            }           
+
+            if(respon === '4') {
+              alert('Success report this review')
+              setTimeout(function() {$("#exampleModal2").modal('hide');}, 1000);
+              location.reload();
+            }  
+          }
+        })
+      }
+
+      $('#addreview').submit(function() { // catch the form's submit event
+          $.ajax({ // create an AJAX call...
+              data: $(this).serialize(), // get the form data
+              type: $(this).attr('method'), // GET or POST
+              url: $(this).attr('action'), // the file to call
+              success: function(response) { // on success..
+                  if(response === '1') {
+                    alert('INVALID EMAIL')
+                  }
+
+                  if(response === '3') {
+                    alert('Email has been used to review this outlet')
+                  }
+
+                  if(response === '2') {
+                    alert('we have sent an email to confirm your review. please check your email so your review can be displayed')
+                    setTimeout(function() {$("#exampleModal2").modal('hide');}, 1000);
+                    location.reload();
+                  }
+              }
+          });
+          return false; // cancel original event to prevent form submitting
+      });
