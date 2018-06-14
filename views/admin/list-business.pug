@@ -34,7 +34,9 @@ block content
               tbody
                 for business in data
                   tr
-                    th(scope='row')= business.name
+                    th(scope='row',style='text-align: center;')= business.name
+                      br
+                      img.img-responsive(src='../photo-storage/'+business.image, alt='User', width='100', height='auto')
                     td= business.dataValues.category
                     td= business.dataValues.categories[0].dataValues.countoutlet
                       | 

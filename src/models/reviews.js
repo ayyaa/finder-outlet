@@ -38,11 +38,24 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true
     },
     ver_token: {
-      type: DataTypes.CHAR(30),
+      type: DataTypes.CHAR(100),
       allowNull: true
     },
+    status: {
+      type: DataTypes.INTEGER(1),
+      allowNull: false,
+      defaultValue: 0
+    }, 
     ip_address: {
       type: DataTypes.STRING(30),
+      allowNull: true
+    },
+    createdAt: {
+      type: DataTypes.DATE,
+      allowNull: true
+    },
+    updatedAt: {
+      type: DataTypes.DATE,
       allowNull: true
     }
   }, {

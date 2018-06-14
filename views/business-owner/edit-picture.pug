@@ -1,0 +1,18 @@
+extends layout
+
+block content
+  .content-wrapper
+    .container-fluid
+      .card.mb-3
+        .card-header
+          h4=data.name
+        .card-body
+          form#form1.form-group(style="align:center" , action='/business-owner/upload-picture='+data.id, enctype='multipart/form-data', method='POST')
+            .form-row
+              .col-md-6
+                img.img-responsive.rounded.mx-auto.d-block.pb-4.pt-3(src='../photo-storage/'+data.image, width='160', height='auto')
+                .form-row
+                  .col-md-8.form-group
+                    input#upload_value.border.rounded.form-control(type='file', width='80%', name = 'photo', accept="image/*")
+                  .col-md.form-group
+                    button#upload.col-md.btn.btn-primary.form-control(type='submit' value="Upload Photo") CHANGE PICTURE

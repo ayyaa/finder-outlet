@@ -117,14 +117,14 @@ block content
           url:'/admin/delete-category='+id,
           type:'POST',
           success : function (respon) {
-          if(respon === true) {
-            setTimeout(function() {$("#deleteModal").modal('hide');}, 1000);
-            alert('Success delete new category')
-            location.reload();
-          } else {
-            setTimeout(function() {$("#deleteModal").modal('hide');}, 100);
-            alert('Failed to remove categoryr')
-          }
+            if(respon === true) {
+              setTimeout(function() {$("#deleteModal").modal('hide');}, 1000);
+              alert('Success delete new category')
+              location.reload();
+            } else {
+              setTimeout(function() {$("#deleteModal").modal('hide');}, 100);
+              alert('Failed to remove categoryr')
+            }
           
           }
         })

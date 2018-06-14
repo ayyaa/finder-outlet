@@ -8,16 +8,20 @@ const crypto = require('crypto');
 const async = require('async');
 const sgMail = require('@sendgrid/mail');
 const fs = require('fs');
+const moment = require('moment');
 const multer = require('multer')
 const categories = models.categories;
 const business = models.business;
 const business_categories = models.business_categories;
-const reviews = models.reviews;
 const users = models.users;
 const outlets = models.outlets;
 const address = models.address;
 const days = models.days;
+const reviews = models.reviews;
 const validateJoi = require('../src/validation/joi-create-business');
+const validateEditCp = require('../src/validation/joi-edit-cp');
+const validateEditName = require('../src/validation/joi-edit-name');
+const validateEditEmail = require('../src/validation/joi-edit-email');
 const flash = require('connect-flash');
 const config = require('../src/config/config')
 const Request = require('request');
@@ -56,7 +60,8 @@ const multerConfig = {
       }),   
       
       //A means of ensuring only images are uploaded. 
-      fileFilter: function(req, file, next){
+    //A means of ensuring only images are uploaded. 
+          fileFilter: function(req, file, next){
             if(!file){
               next();
             }
@@ -68,7 +73,7 @@ const multerConfig = {
             console.log("file not supported");
             
             //TODO:  A better message response to user on failure.
-            return next();
+            return next(new Error('file not supported'));
           }
       }
     };
@@ -213,27 +218,97 @@ router.get('/dashboard', function(req, res, next) {
   
 });
 
-router.post('/upload',multer(multerConfig).single('photo'),function(req,res){
-  console.log(req.file.path)
-  users.update(
-    {
-      photo: req.file.filename
+var upload = multer(multerConfig).single('photo')
+
+router.post('/upload',function(req,res,next){
+  console.log('photooo =', req.file)
+  upload(req, res, function (err) {
+    if (err) {
+      req.flash('error',err)
+      res.redirect('/business-owner/account#nav-basic-info');
     }
-  , {
-      where: {
-        id: [req.user[0].id]
+    console.log(req.file.path)
+    users.update(
+      {
+        temp_photo: req.user[0].photo,
+        photo: req.file.filename
       }
-    }
-  )
-  .then(rows => {
-    console.log(req.user[0].photo)
-    fs.unlink('./public/photo-storage/'+req.user[0].photo, (err) => {
-        if (err) throw err;
+    , {
+        where: {
+          id: [req.user[0].id]
+        }
+      }
+    )
+    .then(rows => {
+      console.log(req.user[0].temp_photo)
+      console.log(req.body.name)
+      if(req.user[0].photo != 'photo-1527578948144.png') {
+        fs.unlink('./public/photo-storage/'+req.user[0].photo, (err) => {
+          if (err) throw err;
+          console.log(req.user[0].photo, ' deleted')
+          res.redirect('/business-owner/account#nav-basic-info');
+        }) 
+      } else {
         res.redirect('/business-owner/account#nav-basic-info');
-    }) 
-  }).catch(err => {
-    console.error(err)
-    res.send('error')
+      }
+    }).catch(err => {
+      console.error(err)
+      res.send('error')
+    })
+  })
+});
+
+router.post('/upload-picture=:id',function(req,res,next){
+  console.log('photooo =', req.file)
+  upload(req, res, function (err) {
+    if (err) {
+      req.flash('error',err)
+      res.redirect('/business-owner/edit-picture');
+    }
+    console.log(req.file.path)
+    business.findAll(
+      {
+        where: {
+          id: [req.params.id],
+          [op.and]: {owner_id: req.user[0].id}
+        }
+      }
+  ).then(bs => {
+      business.update(
+        {
+          image: req.file.filename,
+          temp_image: bs[0].image
+        },
+        {
+          where: {
+            id: [req.params.id],
+            [op.and]: {owner_id: req.user[0].id}
+          }
+        }
+      )
+      .then(rows => {
+        business.findAll({
+          where: {
+            id: [req.params.id],
+            [op.and]: {owner_id: req.user[0].id}
+          }
+        }).then(rows2 => {
+          console.log(rows2[0].temp_image)
+          if(rows2[0].temp_image != 'photo-1528731585876.png') {
+            fs.unlink('./public/photo-storage/'+rows2[0].temp_image, (err) => {
+              if (err) throw err;
+              console.log(rows2[0].temp_image, ' deleted')
+              res.redirect('/business-owner/edit-picture='+rows2[0].id);
+            }) 
+          } else {
+            res.redirect('/business-owner/edit-picture='+rows2[0].id);
+          }
+        })
+      }).catch(err => {
+        console.error(err)
+        res.send('error')
+      })
+    })
   })
 });
 
@@ -320,8 +395,7 @@ router.post('/create-business', function(req, res, next) {
           email: req.body.email,
           website: req.body.website,
           contact_no: req.body.contact_no,
-          description: req.body.description,
-          image: 'req.body.image'
+          description: req.body.description
         })
         .then(rowss => {
           var length_of_category = req.body.get_category;
@@ -417,17 +491,26 @@ router.post('/update', function(req, res, next) {
 })
 
 router.post('/editname', function(req, res, next) {
-  users.update(
-    {
-      name: req.body.name
-    },
-    {
-      where: {
-        id: [req.user[0].id]
-      }
+  validateEditName.validate({
+    name: req.body.name
+  }, function(errors, value) {
+    if(!errors) {
+      users.update(
+        {
+          name: req.body.name
+        },
+        {
+          where: {
+            id: [req.user[0].id]
+          }
+        }
+      ).then(rows => {
+        res.redirect('/business-owner/account#nav-basic-info')
+      })
+    } else {
+      req.flash('error','<div class="alert alert-danger"><div class="text-center">'+errors+'</div></div>')
+      res.redirect('/business-owner/account#nav-basic-info')
     }
-  ).then(rows => {
-    res.redirect('/business-owner/account#nav-basic-info')
   })
 })
 
@@ -448,85 +531,101 @@ router.post('/checkemail', function(req, res, next) {
   })
 })
 
-
 router.post('/editcp', function(req, res, next) {
-  users.update(
-    {
-      contact_no: req.body.phone
-    },
-    {
-      where: {
-        id: [req.user[0].id]
-      }
+  validateEditCp.validate({
+    cp: req.body.phone
+  }, function(errors, value) {
+    if(!errors) {
+      users.update(
+        {
+          contact_no: req.body.phone
+        },
+        {
+          where: {
+            id: [req.user[0].id]
+          }
+        }
+      ).then(rows => {
+        res.redirect('/business-owner/account#nav-basic-info')
+      })
+    } else {
+      console.log(errors)
+      req.flash('error','<div class="alert alert-danger"><div class="text-center">'+errors+'</div></div>')
+      res.redirect('/business-owner/account#nav-basic-info')
     }
-  ).then(rows => {
-    res.redirect('/business-owner/account#nav-basic-info')
   })
 })
 
-
-
 router.post('/editemail', function(req, res, next) {
-  if(req.body.email === req.user[0].email) {
-    res.redirect('/business-owner/account#nav-basic-info')
-  } else {
-
-    async.waterfall([
-      function(done) {
-        crypto.randomBytes(20, function(err, buf) {
-          var token = buf.toString('hex');
-          done(err, token);
-        });
-      },
-
-      function(token, done) {
-        var user = {username: req.body.username, email: req.body.email, reg_token: token, status: 0}
-        users.update(
-          {
-            temp_email: req.body.email,
-            reg_token: token
+  validateEditEmail.validate({
+    cp: req.body.email
+  }, function(errors, value) {
+    if(!errors) {
+      if(req.body.email === req.user[0].email) {
+        res.redirect('/business-owner/account#nav-basic-info')
+      } else {
+        async.waterfall([
+          function(done) {
+            crypto.randomBytes(20, function(err, buf) {
+              var token = buf.toString('hex');
+              done(err, token);
+            });
           },
-          {
-            where: {
-              id: [req.user[0].id]
-            }
+    
+          function(token, done) {
+            var user = {username: req.body.username, email: req.body.email, reg_token: token, status: 0}
+            users.update(
+              {
+                temp_email: req.body.email,
+                reg_token: token
+              },
+              {
+                where: {
+                  id: [req.user[0].id]
+                }
+              }
+            ).then(function(rows, err) {
+              users.findAll({
+                where: {
+                  id: [req.user[0].id]
+                }
+              }).then(function(rows, err) {
+                done(err, token, rows)
+              })
+            })
+          },
+          
+          function(token, rows, done) {
+            console.log('email',req.body.email)
+            var msge = {
+              to: req.body.email,
+              from: 'outlet_finder@example.com',
+              subject: 'Confirm your email',
+              text: 'Hello.\n\n' + req.user[0].name + ' !' +
+              'You have updated your email address to:' + req.body.email + '\n\n' +
+              'Confirm your email address to get started and discover your moments with the world' + '\n\n' +
+              ' http://' + req.headers.host + '/business-owner/active/' + token + '\n\n' +
+              'If you did not request this, please ig-nore this email.\n',
+            };
+            sgMail.send(msge, function(err) {
+              console.log('success')
+              req.flash('info', '<div class="alert alert-success"><div class="text-center">We have sent a confirmation to ' + req.body.email + ' to make sure its valid email address. Your ad account contact info will be updated once you have confirmed your email address. If you dont receive this email, check your spam folder.</div></div>')
+              done(err, 'done');
+            });
           }
-        ).then(function(rows, err) {
-          users.findAll({
-            where: {
-              id: [req.user[0].id]
-            }
-          }).then(function(rows, err) {
-            done(err, token, rows)
-          })
-        })
-      },
-      
-      function(token, rows, done) {
-        console.log('email',req.body.email)
-        var msge = {
-          to: req.body.email,
-          from: 'outlet_finder@example.com',
-          subject: 'Confirm your email',
-          text: 'Hello.\n\n' + req.user[0].name + ' !' +
-          'You have updated your email address to:' + req.body.email + '\n\n' +
-          'Confirm your email address to get started and discover your moments with the world' + '\n\n' +
-          ' http://' + req.headers.host + '/business-owner/active/' + token + '\n\n' +
-          'If you did not request this, please ig-nore this email.\n',
-        };
-        sgMail.send(msge, function(err) {
-          console.log('success')
-          req.flash('info', '<div class="alert alert-success"><div class="text-center">We have sent a confirmation to ' + req.body.email + ' to make sure its valid email address. Your ad account contact info will be updated once you have confirmed your email address. If you dont receive this email, check your spam folder.</div></div>')
-          done(err, 'done');
+        ], 
+        function(err) {
+          if (err) return next(err);
+          res.redirect('/business-owner/account#nav-basic-info')
         });
       }
-    ], 
-    function(err) {
-      if (err) return next(err);
+    } else {
+      req.flash('error','<div class="alert alert-danger"><div class="text-center">'+errors+'</div></div>')
       res.redirect('/business-owner/account#nav-basic-info')
-    });
-  }
+    }
+  })
 })
+
 
 router.get('/active/:token', function(req, res) {
   users.findAll({
@@ -657,7 +756,7 @@ router.get('/account', function(req, res, next) {
     var auth = false
   }
   // console.log(auth)
-  res.render('business-owner/account', {user: req.user[0], vauth: auth, 'info' : req.flash('info'), 'message' : req.flash('message')});
+  res.render('business-owner/account', {user: req.user[0], vauth: auth, 'info' : req.flash('info'), 'message' : req.flash('message'), error : req.flash('error')});
 });
 
 // router.get('/edit-business=:id', function(req, res, next) {
@@ -696,7 +795,8 @@ router.get('/account', function(req, res, next) {
 router.get('/edit-business=:id', function(req, res) {
   business.findAll({
     where: {
-      id: [req.params.id]
+      id: [req.params.id],
+      [op.and]: {owner_id: req.user[0].id}
     },
     attributes: [
       'id',
@@ -743,8 +843,11 @@ router.get('/edit-business=:id', function(req, res) {
   //   raw:true
   // })
   .then(rows => {
-    categories.findAll({
-    })
+    if(rows.length <= 0) {
+      res.render('access-denied');
+      return false;
+    }
+    categories.findAll()
     .then(row => {
       console.log(rows)
       var BATTUTA_KEY=config.batuta_key.key;
@@ -773,9 +876,24 @@ router.get('/edit-business=:id', function(req, res) {
           })
       });
     })
-  }).catch(err => {
-    console.error(err);
+    .catch(err => {
+    res.render('error')
+    });
+  })
+  .catch(err => {
+  res.render('error')
   });
+});
+
+router.get('/edit-picture=:id', function(req, res, next) {
+  business.findOne({
+    where: {
+      id: [req.params.id],
+      [op.and]: {owner_id: req.user[0].id}
+    }
+  }).then(rows => {
+    res.render('business-owner/edit-picture',{user: req.user[0], data: rows});
+  })
 });
 
 router.get('/edit-outlet', function(req, res, next) {
@@ -791,9 +909,13 @@ router.get('/list-business', function(req, res, next) {
       'id',
       'name', 
       'email',
+      'image',
       [Sequelize.fn('GROUP_CONCAT', Sequelize.literal("DISTINCT(categories.name) SEPARATOR ', '")), 'category']
     ],
     group: ['business.id'],
+    order: [
+      ['id','DESC']
+    ],
     include: [
       {
       model: categories,
@@ -817,13 +939,16 @@ router.get('/list-business', function(req, res, next) {
 router.post('/delete-business/:id', function(req, res, next) {
   business.destroy({ 
     where: {
-      id: req.params.id
+      id: req.params.id,
+      [op.and]: {owner_id: req.user[0].id}
     },
     force: true })
-  .then(() => {
-    req.flash('success', 'Selected Business has been removed.')
-    res.redirect('/business-owner/list-business');
-  })
+    .then(() => {
+      res.send(true)
+    })
+    .catch(err => {
+      res.send(false)
+    })
 });
 
 router.get('/list-outlets', function(req, res, next) {
@@ -835,6 +960,9 @@ router.get('/list-outlets', function(req, res, next) {
     attributes: [
       'id',
       'name', 
+    ],
+    order: [
+      ['id','DESC']
     ],
     include: [
       {
@@ -894,8 +1022,50 @@ router.get('/list-outlets=:id', function(req, res, next) {
     })
 });
 
+
+function time(a) {
+  var sat = ['years','months','days','hours','minutes','seconds']
+  for(var i = 0; i < sat.length; i++) {
+    var k = moment().diff(a, sat[i]);
+    if(k !== 0) {
+       var arr = `${k} ${sat[i]} ago`;
+       break;
+    }
+
+  }
+  return arr
+}
+
 router.get('/list-reviews', function(req, res, next) {
-  res.render('business-owner/list-reviews', { active4: 'active',user: req.user[0]});
+  reviews.findAll({
+    order: [
+      ['id','DESC']
+    ],
+    include: {
+      required: false,
+      model: outlets,
+      attributs : [
+        'name', 'id'
+      ],
+      include: {
+        required: false,
+        model: business,
+      }
+    },
+    where: {
+      '$outlet->business.owner_id$': req.user[0].id,
+    }
+  }).then(rev => {
+    var tim2 =[]
+    for(var i = 0 ; i <rev.length; i++) {
+      var m = time(rev[i].created_at)
+      var tim = {}
+      tim.rev = rev[i];
+      tim.date = m;
+      tim2.push(tim)
+    }
+    res.render('business-owner/list-reviews', { active4: 'active',user: req.user[0], review: tim2, time_info: tim});
+  })
 });
 
 router.post('/logout', function (req, res) {

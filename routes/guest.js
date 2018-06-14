@@ -17,6 +17,8 @@ const outlets = models.outlets;
 const address = models.address;
 const days = models.days;
 const reviews = models.reviews;
+const review_reports = models.review_reports;
+const validateEditEmail = require('../src/validation/joi-edit-email');
 const Sequelize = require ('sequelize');
 const regValidate= require('../src/validation/joi-registration');
 const regcValidate = require('../src/validation/joi-cmplt-reg');
@@ -32,6 +34,8 @@ days.belongsTo(outlets, {foreignKey: 'outlet_id'});
 outlets.hasOne(days, {foreignKey: 'outlet_id'});
 reviews.belongsTo(outlets, {foreignKey: 'outlet_id'});
 outlets.hasOne(reviews, {foreignKey: 'outlet_id'});
+review_reports.belongsTo(reviews, {foreignKey: 'review_id'});
+reviews.hasOne(review_reports, {foreignKey: 'review_id'});
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -346,7 +350,8 @@ router.post('/forgot', function(req, res, next) {
       console.log(email);
       users.findAll({
         where: {
-          email: [email]
+          email: [email],
+          [op.and]: {status: 1}
         }
       }).then(function(rows, err) {
         if (rows.length <= 0) {
@@ -480,6 +485,49 @@ router.get('/browse', function(req, res, next) {
   res.render('guest/browse', { title: 'Express' });
 });
 
+router.post('/report', function(req, res, next) {
+  validateEditEmail.validate({
+    email: req.body.email
+  }, function(errors, value) {
+    if(errors) {
+      return res.send('1')
+    }
+
+    if(req.body.reasonReport === undefined) {
+      return res.send('2')
+    }
+
+    review_reports.findAll({
+      where: {
+        review_id: req.body.idreview,
+        [op.and]: {email: req.body.email}
+      }
+    })
+    .then(rows => {
+      console.log(rows.length)
+      if(rows.length>=1) {
+        console.log('Email Exist')
+        return res.send('3')
+      } else {
+        review_reports.create(
+          {
+            review_id: req.body.idreview,
+            email: req.body.email,
+            report_type: req.body.reasonReport
+          }
+        ).then(() => {
+          console.log('Succcess')
+          return res.send('4')
+        }).catch(err => {
+          console.error(err)
+        })
+      }
+    }).catch(err => {
+      console.error(err)
+    })
+  })
+});
+
 router.get('/outletinfo=:id', function(req, res, next) {
   outlets.findOne({
     where: {
@@ -489,7 +537,8 @@ router.get('/outletinfo=:id', function(req, res, next) {
       {
       model: business,
       attributes: [
-        'name'
+        'name',
+        'image'
       ],
       },
       {
@@ -502,9 +551,13 @@ router.get('/outletinfo=:id', function(req, res, next) {
     }).then(rows => {
       reviews.findAll({
         where: {
-          outlet_id: req.params.id
+          outlet_id: req.params.id,
+          [op.and]: {status: 1}
         },
         limit: 2,
+        order: [
+          ['id','DESC']
+        ],
         include: {
           model: outlets,
           attributs : [
@@ -526,17 +579,126 @@ router.get('/outletinfo=:id', function(req, res, next) {
 });
 
 router.post('/addreview=:id', function(req, res, next) {
-  var ratings = req.body.rating*(100/5)
-  reviews.create({
-    outlet_id: req.params.id,
-    name: req.body.name,
-    email: req.body.email,
-    content: req.body.content,
-    rating: ratings
-  }).then(rows => {
-    res.redirect('/outletinfo='+req.params.id);
+  validateEditEmail.validate({
+    email:req.body.email
+  }, function(errors, value) {
+    if(errors) {
+      return res.send('1')
+    }
+
+    reviews.findAll({
+      where: {
+        email: req.body.email
+      }
+    }).then(rows => {
+      if(rows.length > 0) {
+        return res.send('3')
+      } else {
+        if(req.body.rating === undefined) {
+          var ratings = 0
+        } else {
+          var ratings = req.body.rating*(100/5)
+        }
+      
+        if(req.body.name === '') {
+          var revname = 'Anonim'
+        } else {
+          var revname = req.body.name
+        }
+        async.waterfall([
+          function(done) {
+            crypto.randomBytes(20, function(err, buf) {
+              var token = buf.toString('hex');
+              done(err, token);
+            });
+          },
+    
+          function(token, done) {
+            reviews.create(
+              {
+                outlet_id: req.params.id,
+                name: revname,
+                email: req.body.email,
+                content: req.body.content,
+                rating: ratings,
+                ver_token: token
+              }
+            ).then(function(rows, err) {
+              reviews.findAll({
+                where: {
+                  ver_token: token
+                },
+                include: {
+                  model: outlets,
+                  attributs : [
+                    'name', 'id'
+                  ]
+                }
+              }).then(function(rows, err) {
+                done(err, token, rows)
+              })
+            })
+          },
+          
+          function(token, rows, done) {
+            console.log('email',rows[0].outlet.name)
+            var msge = {
+              to: rows[0].email,
+              from: 'outlet_finder@example.com',
+              subject: 'Confirm your email',
+              text: 'Hello.\n\n' + rows[0].name + ' !' +
+              'You have given a review on the outlet: ' + rows[0].outlet.name + '\n\n' +
+              'confirm your email so your review can be displayed' + '\n\n' +
+              ' http://' + req.headers.host + '/confirm_rev/' + token + '\n\n' +
+              'If you did not request this, please ig-nore this email.\n',
+            };
+            sgMail.send(msge, function(err) {
+              console.log('success')
+              done(err, 'done');
+            });
+          }
+        ], 
+        function(err) {
+          if (err) return next(err);
+          return res.send('2')
+        });
+      }
+
+    })
   })
 });
+
+router.get('/confirm_rev/:token', function(req, res) {
+  reviews.findAll({
+    where: {
+      ver_token: [req.params.token]
+    }
+  }).then(function(rows, err) {
+    if (rows.length<=0) {
+      req.flash('message','<div class="alert alert-danger"><div class="text-center">invalid token or link is broken</div></div>')
+      res.redirect('/reviews')
+    } else {
+      reviews.update(
+        {
+          status: 1,
+          ver_token: ''
+        },
+        {
+          where: {
+            ver_token: [req.params.token]
+          }
+        }
+      ).then(rows2 => {
+        req.flash('info','<div class="alert alert-success"><div class="text-center">Your review has been successfully confirmed</div></div>')
+        res.redirect('/reviews='+rows[0].outlet_id)
+      }).catch(function(err) {
+        console.log(err)
+      })
+    }
+  }).catch(function(err) {
+    console.log(err)
+  })
+})
 
 router.get('/outletinfo2', function(req, res, next) {
   res.render('guest/outlet-info', { title: 'Express' });
@@ -559,11 +721,45 @@ function time(a) {
   return arr
 }
 
+router.get('/reviews', function(req, res, next) {
+  reviews.findAll(
+    {
+      where: {
+        status: 1
+      },
+      order: [
+        ['id','DESC']
+      ],
+      include: {
+        model: outlets,
+        attributs : [
+          'name', 'id'
+        ]
+      }
+    }
+  )
+  .then(rev => {
+    var tim2 =[]
+    for(var i = 0 ; i <rev.length; i++) {
+      var m = time(rev[i].created_at)
+      var tim = {}
+      tim.rev = rev[i];
+      tim.date = m;
+      tim2.push(tim)
+    }
+    res.render('guest/review', { review: tim2, time_info: tim, 'info': req.flash('info'), 'message' : req.flash('message')});
+  })
+});
+
 router.get('/reviews=:id', function(req, res, next) {
   reviews.findAll({
     where: {
-      outlet_id: req.params.id
+      outlet_id: req.params.id,
+      [op.and]: {status: 1}
     },
+    order: [
+      ['id','DESC']
+    ],
     include: {
       model: outlets,
       attributs : [
@@ -579,7 +775,7 @@ router.get('/reviews=:id', function(req, res, next) {
       tim.date = m;
       tim2.push(tim)
     }
-    res.render('guest/review', { review: tim2, time_info: tim});
+    res.render('guest/review', { review: tim2, time_info: tim, 'info': req.flash('info'), 'message' : req.flash('message')});
   })
 });
 module.exports = router;

@@ -47,9 +47,22 @@ module.exports = function(sequelize, DataTypes) {
     },
     image: {
       type: DataTypes.STRING(100),
+      allowNull: false,
+      defaultValue: 'photo-1528731585876.png'
+    },
+    temp_image: {
+      type: DataTypes.STRING(100),
       allowNull: true
     },
     created_at: {
+      type: DataTypes.DATE,
+      allowNull: true
+    },
+    createdAt: {
+      type: DataTypes.DATE,
+      allowNull: true
+    },
+    updatedAt: {
       type: DataTypes.DATE,
       allowNull: true
     }
