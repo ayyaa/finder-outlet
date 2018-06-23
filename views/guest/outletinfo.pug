@@ -139,11 +139,11 @@ html(lang='en')
         .my-auto
           h2.mb-2 Get direction
           .resume-content.mr-auto
-            div
-              iframe(width='100%', height='500px', frameborder='0', scrolling='no', marginheight='0', marginwidth='0', src='https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d63245.983635672164!2d110.33982538316076!3d-7.80316397292277!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e7a5787bd5b6bc5%3A0x21723fd4d3684f71!2sYogyakarta%2C+Kota+Yogyakarta%2C+Daerah+Istimewa+Yogyakarta!5e0!3m2!1sid!2sid!4v1525590578541')
+            header.business-header
+              #map
             .mt-4.mb-4
-              button.btn.btn-primary.mb-2.mr-2(type='button') Get Direction
-              button.btn.btn-primary.mb-2(type='button') Find Similar Bussines
+              button#getdir.btn.btn-primary.mb-2.mr-2(type='button') Get Direction
+              button#similar.btn.btn-primary.mb-2(type='button') Find Similar Bussines
       section#reviews.resume-section.p-3.p-lg-5.d-flex.flex-column
         .my-auto
           h2.mb-5 Reviews
@@ -294,6 +294,58 @@ html(lang='en')
     // Plugin JavaScript
     script(src='https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js')
     script(src='../javascripts/resume.js')
+    script.
+      function initMap() {
+        var locations = !{data2}
+        var pointA = new google.maps.LatLng(locations[1], locations[2]),
+              myOptions = {
+                  zoom: 15,
+                  center: pointA
+              },
+              map = new google.maps.Map(document.getElementById('map'), myOptions),
+              // Instantiate a directions service.
+              directionsService = new google.maps.DirectionsService,
+              directionsDisplay = new google.maps.DirectionsRenderer({
+                  map: map
+              }),
+              markerA = new google.maps.Marker({
+                  position: pointA,
+                  title: "point A",
+                  label: "A",
+                  map: map
+              })
+
+        document.getElementById('getdir').onclick = function(){
+          if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function(position) {
+              var pointB = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+              calculateAndDisplayRoute(directionsService, directionsDisplay, pointA, pointB);
+              function calculateAndDisplayRoute(directionsService, directionsDisplay, pointA, pointB) {
+                  directionsService.route({
+                      origin: pointA,
+                      destination: pointB,
+                      avoidTolls: true,
+                      avoidHighways: false,
+                      travelMode: google.maps.TravelMode.DRIVING
+                  }, function (response, status) {
+                      if (status == google.maps.DirectionsStatus.OK) {
+                          directionsDisplay.setDirections(response);
+                      } else {
+                          window.alert('Directions request failed due to ' + status);
+                      }
+                  });
+              }
+            })
+          } else {
+            window.alert('Please')
+          }
+        }
+
+      }
+
+      initMap();
+
+    script(src='https://maps.googleapis.com/maps/api/js?key=AIzaSyBsascAYsGfhejF7XQmquGdLKlEAbfaL9o&libraries=places&callback=initMap', async='', defer='')
     script(type='text/javascript').
       function report(e) {
         console.log(e);

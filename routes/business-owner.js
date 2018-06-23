@@ -469,10 +469,21 @@ router.get('/create-outlet', function(req, res, next) {
   business.findAll({
   })
   .then(rows => {
-    console.log(rows)
-    res.render('business-owner/create-outlet',{user: req.user[0], valBusiness: rows});
-  })
+    var BATTUTA_KEY=config.batuta_key.key;
+    var url = "https://battuta.medunes.net/api/country/all/?key="+BATTUTA_KEY;
+
+    Request.get(url, (error, response, body) => {
+        if(error) {
+            return console.dir(error);
+        }
+        var data = JSON.parse(body);
+        // console.dir(JSON.parse(body));
+        // console.log(data[1].name)
+      console.log(rows)
+      res.render('business-owner/create-outlet',{active3: 'active',user: req.user[0], valBusiness: rows, valState: data, api_key: BATTUTA_KEY });
   
+    })
+  })
 });
 
 router.post('/update', function(req, res, next) {
@@ -625,7 +636,6 @@ router.post('/editemail', function(req, res, next) {
     }
   })
 })
-
 
 router.get('/active/:token', function(req, res) {
   users.findAll({

@@ -36,10 +36,35 @@ reviews.belongsTo(outlets, {foreignKey: 'outlet_id'});
 outlets.hasOne(reviews, {foreignKey: 'outlet_id'});
 review_reports.belongsTo(reviews, {foreignKey: 'review_id'});
 reviews.hasOne(review_reports, {foreignKey: 'review_id'});
+address.hasOne(business, {foreignKey: 'address_id'})
+business.belongsTo(address, {foreignKey: 'address_id'})
+outlets.belongsTo(address, {foreignKey: 'id_address'});
+address.hasOne(outlets, {foreignKey: 'id_address'});
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('guest/home', { title: 'Express' });
+  var location = [];
+  outlets.findAll({
+    attributes: [
+      'id',
+      'name'
+    ],
+    include: {
+      model: address,
+      attributes: [
+        [Sequelize.fn('X', Sequelize.col('point')), 'lat'], [Sequelize.fn('Y', Sequelize.col('point')), 'long']
+      ]
+    }
+  })
+  .then(rows => {
+    for(var i = 0 ; i < rows.length; i++) {
+      var as = []
+      as.push(rows[i].name, rows[i].address.dataValues.lat, rows[i].address.dataValues.long, i, 'http://localhost:3000/outletinfo='+rows[i].id)
+      location.push(as)
+    }
+    console.log(location)
+    res.render('guest/home', { title: 'Express', data: JSON.stringify(location)});
+  })
 });
 
 users.findAll().then(rows => {
@@ -542,13 +567,20 @@ router.get('/outletinfo=:id', function(req, res, next) {
       ],
       },
       {
-        model: address
+        model: address,
+        attributes: [
+          [Sequelize.fn('X', Sequelize.col('point')), 'lat'], [Sequelize.fn('Y', Sequelize.col('point')), 'long'], 'line1', 'line2', 'administrative_area_1', 'postalcode'
+        ]
       },
       {
         model: days
       }
     ]
     }).then(rows => {
+      var location = []
+      console.log(rows)
+      location.push(rows.name, rows.address.dataValues.lat, rows.address.dataValues.long, 0, 'http://localhost:3000/outletinfo='+rows.id, rows.image)
+      console.log(location)
       reviews.findAll({
         where: {
           outlet_id: req.params.id,
@@ -573,7 +605,7 @@ router.get('/outletinfo=:id', function(req, res, next) {
           tim.date = m;
           tim2.push(tim)
         }
-        res.render('guest/outletinfo', { data: rows, review: tim2});
+        res.render('guest/outletinfo', { data: rows, review: tim2, data2: JSON.stringify(location)});
       })
   })
 });
@@ -705,7 +737,28 @@ router.get('/outletinfo2', function(req, res, next) {
 });
 
 router.get('/search', function(req, res, next) {
-  res.render('guest/search', { title: 'Express' });
+  var location = [];
+  outlets.findAll({
+    attributes: [
+      'id',
+      'name'
+    ],
+    include: {
+      model: address,
+      attributes: [
+        [Sequelize.fn('X', Sequelize.col('point')), 'lat'], [Sequelize.fn('Y', Sequelize.col('point')), 'long']
+      ]
+    }
+  })
+  .then(rows => {
+    for(var i = 0 ; i < rows.length; i++) {
+      var as = []
+      as.push(rows[i].name, rows[i].address.dataValues.lat, rows[i].address.dataValues.long, i, 'http://localhost:3000/outletinfo='+rows[i].id)
+      location.push(as)
+    }
+    console.log(location)
+    res.render('guest/search', { title: 'Search', data: JSON.stringify(location)});
+  })
 });
 
 function time(a) {
