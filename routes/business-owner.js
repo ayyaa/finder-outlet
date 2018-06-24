@@ -452,6 +452,121 @@ router.post('/create-business', function(req, res, next) {
   })
 });
 
+router.post('/edit-business', function(req, res, next) { 
+  if (Array.isArray(req.body.get_category) === false) {
+    var category = [];
+    category.push(req.body.get_category)
+  } else {
+    var category = req.body.get_category;
+  }
+  console.log(category);
+  console.log(Array.isArray(req.body.get_category));
+  validateJoi.validate({
+    get_category: category,
+    contact_no: req.body.contact_no, 
+    name_business: req.body.name_business, 
+    email: req.body.email, 
+    website: req.body.website, 
+    description: req.body.description, 
+    line1: req.body.line1, 
+    line2: req.body.line2,
+    state: req.body.state, 
+    region: req.body.region, 
+    city: req.body.city, 
+    postal_code: req.body.postal_code, 
+    lat: req.body.lat, 
+    lng: req.body.lng}, function(errors, value) {
+    console.log(errors);
+    if (!errors) {
+      console.log(req.body.city)
+      console.log(req.body.region)
+      address.update({
+        line1: req.body.line1, 
+        line2: req.body.line2,
+        administrative_area_1: req.body.state, 
+        administrative_area_2: req.body.region, 
+        administrative_area_3: req.body.city, 
+        administrative_area_4: '', 
+        postalcode: req.body.postal_code,
+        point: Sequelize.fn(`ST_GEOMFROMTEXT`, `POINT(`+req.body.lat+` `+req.body.lng+`)`)
+      }, {
+        include: [{
+          model: business,
+        }],
+        where: {
+          id : req.body.address_id
+        }
+      }).then(row => {
+        console.log('ini kategory '+req.body.get_category)
+        business.update({
+          name: req.body.name_business,
+          address_id: row.id,
+          owner_id: req.user[0].id,
+          email: req.body.email,
+          website: req.body.website,
+          contact_no: req.body.contact_no,
+          description: req.body.description
+        }, {
+          where : req.body.bsns_id
+        })
+        .then(rowss => {
+          var length_of_category = req.body.get_category;
+          length_of_category = length_of_category.length;
+          for( var x = 0 ; x < length_of_category ; x++ ) {
+            business_categories.update({
+              business_id: rowss.id,
+              category_id: req.body.get_category[x]
+            }, {
+              where: req.body.cat_id
+
+            }).then(rows => {
+              req.flash('success', 'Successful added Business.');
+              res.redirect('/business-owner/list-business');
+              console.log(rowss);
+            })
+          }
+        })
+      }) 
+    } else {
+      categories.findAll()
+      .then(rows => {
+        var BATTUTA_KEY=config.batuta_key.key;
+        var url = "https://battuta.medunes.net/api/country/all/?key="+BATTUTA_KEY;
+
+        Request.get(url, (error, response, body) => {
+          if(error) {
+              return console.dir(error);
+          }
+          var data = JSON.parse(body);
+          req.flash('error', errors);
+          res.render('business-owner/create-business', {
+            active3: 'active', 
+            valCategories:rows, 
+            valState: data, 
+            error: req.flash('error'), 
+            user: req.user[0],
+            name_business: req.body.name_business,
+            email: req.body.email,
+            website: req.body.website,
+            contact_no: req.body.contact_no,
+            description: req.body.description,
+            state: req.body.state,
+            region: req.body.region,
+            city: req.body.city,
+            postal_code: req.body.postal_code,
+            line1: req.body.line1,
+            line2: req.body.line2,
+            lat: req.body.lat,
+            lng: req.body.lng,
+            lat1: req.body.lat1,
+            lat2: req.body.lng
+          });
+        });    
+      })
+    } 
+  })
+});
+
 // router.post('/create-business', function(req, res, next) {
 //     validateJoi.validate({
 //       get_category: req.body.get_category, 
@@ -806,18 +921,32 @@ router.get('/edit-business=:id', function(req, res) {
       'contact_no',
       'description',
 
-      [Sequelize.fn('GROUP_CONCAT', Sequelize.literal("categories.id SEPARATOR ','")), 'category']
+      [Sequelize.fn('GROUP_CONCAT', Sequelize.literal("categories.id SEPARATOR ','")), 'category'],
+      // [Sequelize.fn('GROUP_CONCAT', Sequelize.literal("business_categories.id SEPARATOR ','")), 'business_cat']
     ],
     group: ['business.id'],
     include: [{
       model: categories,
+      include : [
+        {
+          model: business_categories,
+          // attributes : [
+          //   [Sequelize.fn('GROUP_CONCAT', Sequelize.literal("business_categories.id SEPARATOR ','")), 'business_cat']
+          // ],
+          // group: ['business_id'],
+          // where: {
+          //   id : req.params.id
+          // }
+        }
+      ]
       // through: {
       //   attributes: ['category_id','business_id' ],
       // }
       },
       {
         model: address
-        }],
+        }
+    ],
       distinct: true,
       raw:true
       })
@@ -872,15 +1001,18 @@ router.get('/edit-business=:id', function(req, res) {
             user: req.user[0], 
             valState: data,
             cat_id: rows[0].category,
-            valCategories: row 
+            valCategories: row ,
+            // cat_bus_id: rows[0].business_cat
           })
       });
     })
     .catch(err => {
+      console.log(err)
     res.render('error')
     });
   })
   .catch(err => {
+    console.log(err)
   res.render('error')
   });
 });

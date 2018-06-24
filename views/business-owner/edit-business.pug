@@ -27,13 +27,14 @@ block content
             .col-md-6
               .form-group
                 label(for='line') Line of Business:
-                input#cat_id.form-control(type='hidden' name='cat_id', value=cat_id)
+                //- input#cat_bus_id.form-control(type='text' name='cat_bus_id', value=cat_bus_id)
+                input#cat_id.form-control(type='text' name='cat_id', value=cat_id)
                 select#get_category.form-control.selectpicker(name='get_category' multiple='multilpe')
                   each value in valCategories
                     option(value=value.id) #{value.name}     
               .form-group
                 label(for='name') Name of Business:
-                input#id.form-control(type='hidden', placeholder='Name', name='id', value=id)
+                input#id.form-control(type='hidden', placeholder='Name', name='bsns_id', value=id)
                 input#name_business.form-control(type='text', placeholder='Name', name='name_business', value=name_business)
               .form-group
                 label(for='email') Email:
@@ -44,11 +45,6 @@ block content
               .form-group
                 label(for='website') Contact Number:
                 input#contact_no.form-control(type='text', placeholder='0812xxxxxx', name='contact_no', value=contact_no)
-              .form-group(style="align:center")
-                label(for='website') Logo:
-                .custom-file
-                  input.custom-file-input.border.rounded(type='file', width='4em')
-                  label.custom-file-label Choose file..
               .form-group
                 label(for='description') Description:
                 textarea.form-control(name='description', id='', cols='30', rows='5')=description
@@ -57,7 +53,7 @@ block content
           .form-group.col-md-11.border.ml-3.pt-2.mr-3
             .form-row
               .form-group.col-md-6
-                label(for='state') State
+                label(for='state') Country
                 input#temp_state.form-control(type='hidden' name='temp_state', value=temp_state)
                 select#state.form-control.selectpicker(name='state')
                   each value in valState
