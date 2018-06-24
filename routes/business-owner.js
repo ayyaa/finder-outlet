@@ -19,6 +19,7 @@ const address = models.address;
 const days = models.days;
 const reviews = models.reviews;
 const validateJoi = require('../src/validation/joi-create-business');
+const validateJoiOutlet = require('../src/validation/joi-create-outlet');
 const validateEditCp = require('../src/validation/joi-edit-cp');
 const validateEditName = require('../src/validation/joi-edit-name');
 const validateEditEmail = require('../src/validation/joi-edit-email');
@@ -344,6 +345,133 @@ router.get('/create-business', function(req, res, next) {
   })
 });
 
+router.post('/create-outlet', function(req, res, next) {
+  if(req.body.checkholiday === 'on') {
+    var holiday = 1
+  } else {
+    var holiday = 0
+  }
+  validateJoiOutlet.validate({
+    get_business: req.body.get_business,
+    contact_no: req.body.contact_no, 
+    name_outlet: req.body.name_outlet, 
+    email: req.body.email, 
+    website: req.body.website, 
+    description: req.body.description, 
+    line1: req.body.line1, 
+    line2: req.body.line2,
+    state: req.body.state, 
+    region: req.body.region, 
+    city: req.body.city, 
+    postal_code: req.body.postal_code, 
+    lat: req.body.lat, 
+    lng: req.body.lng}, function(errors, value) {
+      console.log(errors);
+      if (!errors) {
+        console.log(req.body.city)
+        console.log(req.body.region)
+        address.create({
+          line1: req.body.line1, 
+          line2: req.body.line2,
+          administrative_area_1: req.body.state, 
+          administrative_area_2: req.body.region, 
+          administrative_area_3: req.body.city, 
+          administrative_area_4: '', 
+          postalcode: req.body.postal_code,
+          point: Sequelize.fn(`ST_GEOMFROMTEXT`, `POINT(`+req.body.lat+` `+req.body.lng+`)`)
+        }, {
+          include: [{
+            model: outlets,
+          }]
+        }).then(row => {
+          outlets.create({
+            name: req.body.name_outlet,
+            id_address: row.id,
+            email: req.body.email,
+            website: req.body.website,
+            contact_no: req.body.contact_no,
+            description: req.body.description,
+            id_bussines: req.body.get_business,
+            role_public_holiday: holiday
+          })
+          .then(rowss => {
+            days.create({
+              d1_open: req.body.opend1,
+              d1_close: req.body.closed1,
+              d2_open: req.body.opend2,
+              d2_close: req.body.closed2,
+              d3_open: req.body.opend3,
+              d3_close: req.body.closed3,
+              d4_open: req.body.opend4,
+              d4_close: req.body.closed4,
+              d5_open: req.body.opend5,
+              d5_close: req.body.closed5,
+              d6_open: req.body.opend6,
+              d6_close: req.body.closed6,
+              d7_open: req.body.opend7,
+              d7_close: req.body.closed7,
+              outlet_id: rowss.id
+            }).then(rowsss => {
+              req.flash('success', 'Successful added Business.');
+              res.redirect('/business-owner/list-business');
+            })
+          })
+        }) 
+      } else {
+        var BATTUTA_KEY=config.batuta_key.key;
+        var url = "https://battuta.medunes.net/api/country/all/?key="+BATTUTA_KEY;
+
+        Request.get(url, (error, response, body) => {
+          if(error) {
+              return console.dir(error);
+          }
+          var data = JSON.parse(body);
+          req.flash('error','<div class="alert alert-danger"><div class="text-center">'+errors+'</div></div>')
+          res.redirect('/business-owner/create-outlet')
+          // res.render('business-owner/create-business', {
+          //   active3: 'active', 
+          //   valState: data, 
+          //   error: req.flash('error'), 
+          //   user: req.user[0],
+          //   name_outlet: req.body.name_outlet,
+          //   email: req.body.email,
+          //   website: req.body.website,
+          //   contact_no: req.body.contact_no,
+          //   description: req.body.description,
+          //   state: req.body.state,
+          //   region: req.body.region,
+          //   city: req.body.city,
+          //   postal_code: req.body.postal_code,
+          //   line1: req.body.line1,
+          //   line2: req.body.line2,
+          //   lat: req.body.lat,
+          //   lng: req.body.lng,
+          //   lat1: req.body.lat1,
+          //   lat2: req.body.lng
+          // });    
+        })
+      } 
+    })
+});
+
+router.post('/checkday', function(req, res, next) {
+  var check = [
+    [req.body.checkcloseday1, req.body.opend1, req.body.closed1],
+    [req.body.checkcloseday2, req.body.opend2, req.body.closed2],
+    [req.body.checkcloseday3, req.body.opend3, req.body.closed3],
+    [req.body.checkcloseday4, req.body.opend4, req.body.closed4],
+    [req.body.checkcloseday5, req.body.opend5, req.body.closed5],
+    [req.body.checkcloseday6, req.body.opend6, req.body.closed6],
+    [req.body.checkcloseday7, req.body.opend7, req.body.closed7],
+  ]
+  for(var i = 0; i < check.length; i++) {
+    if(check[i][0]===undefined && check[i][1] === '' || check[i][2] === '') {
+      return res.send('false')
+    }
+  }
+  return res.send('true')
+});
+
 router.post('/create-business', function(req, res, next) {
   
   if (Array.isArray(req.body.get_category) === false) {
@@ -467,6 +595,9 @@ router.get('/get-geolocate', function(req, res, next) {
 
 router.get('/create-outlet', function(req, res, next) {
   business.findAll({
+    where: {
+      owner_id: req.user[0].id
+    }
   })
   .then(rows => {
     var BATTUTA_KEY=config.batuta_key.key;
@@ -479,8 +610,8 @@ router.get('/create-outlet', function(req, res, next) {
         var data = JSON.parse(body);
         // console.dir(JSON.parse(body));
         // console.log(data[1].name)
-      console.log(rows)
-      res.render('business-owner/create-outlet',{active3: 'active',user: req.user[0], valBusiness: rows, valState: data, api_key: BATTUTA_KEY });
+      // console.log(rows)
+      res.render('business-owner/create-outlet',{active3: 'active',user: req.user[0], valBusiness: rows, valState: data, api_key: BATTUTA_KEY, 'error' : req.flash('error') });
   
     })
   })
