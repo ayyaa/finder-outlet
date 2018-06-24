@@ -8,8 +8,8 @@ block content
           h4 Create Outlet
       |
       - if(error){
-      .alert.alert-danger 
-       .text-center #{error}
+      div 
+        | !{error}
       - }
       |
       - if(info){
@@ -22,7 +22,7 @@ block content
         .text-center #{success}
       - }
       div
-        form.mt-4(action='/action_page.php')
+        form#createoutlet.mt-4(action='/business-owner/create-outlet' method='POST')
           .form-group.col-md-6
             label(for='line') Business:
             select#get_business.form-control.selectpicker(name='get_business')
@@ -30,53 +30,56 @@ block content
                     option(value=buss.id) #{buss.name}
           .form-group.col-md-6
             label(for='name') Name of Outlet:
-            input#name.form-control(type='text', placeholder='Name', name='name')
+            input#name.form-control(type='text', placeholder='Name', name='name_outlet')
           .form-group.col-md-6
             label(for='email') Email:
             input#email.form-control(type='text', placeholder='somthing@something.com', name='email')
+          .form-group.col-md-6
+            label(for='contact') Contact:
+            input#contact.form-control(type='text', placeholder='08xxxxxxx', name='contact_no')
           .form-group.col-md-6
             label(for='website') Website:
             input#website.form-control(type='text', placeholder='http://www.something.com', name='website')
           .form-group.col-md-9
             label(for='description') Description:
-            textarea.form-control(name='', id='', cols='30', rows='5')  Description about is 
+            textarea.form-control(name='description', id='', cols='30', rows='5')  Description about is 
           label.ml-3(for='description') Address :
-          .form-group.col-md-9.border.ml-3.pt-2
+          .form-group.col-md-11.border.ml-3.pt-2.mr-3
             .form-row
               .form-group.col-md-6
                 label(for='state') State
-                select#state.custom-select(name='state')
-                  option(value='' selected) - select -
-                  //- each value in valState
+                select#state.custom-select(name='state', value=state)
+                  each value in valState
                     option(value=value.code) #{value.name}
               .form-group.col-md-6
                 label(for='line2') Region
-                select#region.custom-select(name='province')
+                select#region.custom-select(name='region', value=region)
                   option(value='0') - select -
               .form-group.col-md-6
                 label(for='line2') City
-                select#city.custom-select(name='city')
+                select#city.custom-select(name='city', value=city)
                   option(value='0') - select -
               .form-group.col-md-6
                 label(for='zipcode') Postal code
-                input#inputPassword4.form-control(type='text', placeholder='Postal Code' name='postal_code')
+                input#postal_code.form-control(type='text', placeholder='Postal Code' name='postal_code', value=postal_code)
             .form-row
               .form-group.col
                 label(for='line1') Line 1
-                input#line1.form-control(type='text', placeholder='Line 1 address' name='line1')
+                input#line1.form-control(type='text', placeholder='Line 1 address' name='line1', value=line1)
               .form-group.col
                 label(for='line2') Line 2
-                input#line2.form-control(type='text', placeholder='Line 2 address' name='line2')
+                input#line2.form-control(type='text', placeholder='Line 2 address' name='line2', value=line2)
             .form-row
               .form-group.col-md-3
-                a#geolocate.btn.btn-secondary.btn-block(type='button') Geolocate
+                a#geolocate.btn.btn-secondary.btn-block.disabled(type='button') Geolocate
+                //- button.btn.btn-secondary.btn-block 
             .form-row
               .form-group.col-md-3
                 label(for='zipcode') Latitude
-                input#lat.form-control(type='text', placeholder='Latitude',name='lat')
+                input#lat.form-control(type='text', placeholder='Latitude',name='lat', value=lat readonly)
               .form-group.col-md-3
                 label(for='zipcode') Longitude
-                input#lng.form-control(type='text', placeholder='Longitude',name='lng')
+                input#lng.form-control(type='text', placeholder='Longitude',name='lng', value=lng readonly)
             .form-row
               .form-group.col-md-3
                 a(data-toggle='modal', data-target='#mapsModal' pointer="cursor")  View in maps >
@@ -87,88 +90,88 @@ block content
                 h6 Monday
               .form-group.col
                 .form-check
-                  input#gridCheck1.form-check-input(type='checkbox')
+                  input#gridCheck1.form-check-input(type='checkbox' name='checkcloseday1')
                   label.form-check-label(for='gridCheck1')
                     | Closed
               .form-group.col
-                input(type='time' value='08:00' style='width: 100%')
+                input.d1(type='time' value='08:00' style='width: 100%' name='opend1')
               .form-group.col
-                input(type='time' value='18:00' style='width: 100%')
+                input.d1(type='time' value='18:00' style='width: 100%' name='closed1')
             .form-row
               .form-group.col
                 h6 Tuesday
               .form-group.col
                 .form-check
-                  input#gridCheck1.form-check-input(type='checkbox')
+                  input#gridCheck2.form-check-input(type='checkbox' name='checkcloseday2')
                   label.form-check-label(for='gridCheck1')
                     | Closed
               .form-group.col
-                input(type='time' value='08:00' style='width: 100%')
+                input.d2(type='time' value='08:00' style='width: 100%' name='opend2')
               .form-group.col
-                input(type='time' value='18:00' style='width: 100%')
+                input.d2(type='time' value='18:00' style='width: 100%' name='closed2')
             .form-row
               .form-group.col
                 h6 Wednesday
               .form-group.col
                 .form-check
-                  input#gridCheck1.form-check-input(type='checkbox')
+                  input#gridCheck3.form-check-input(type='checkbox' name='checkcloseday3')
                   label.form-check-label(for='gridCheck1')
                     | Closed
               .form-group.col
-                input(type='time' value='08:00' style='width: 100%')
+                input.d3(type='time' value='08:00' style='width: 100%' name='opend3')
               .form-group.col
-                input(type='time' value='18:00' style='width: 100%')
+                input.d3(type='time' value='18:00' style='width: 100%' name='closed3')
             .form-row
               .form-group.col
                 h6 Thursday
               .form-group.col
                 .form-check
-                  input#gridCheck1.form-check-input(type='checkbox')
+                  input#gridCheck4.form-check-input(type='checkbox' name='checkcloseday4')
                   label.form-check-label(for='gridCheck1')
                     | Closed
               .form-group.col
-                input(type='time' value='08:00' style='width: 100%')
+                input.d4(type='time' value='08:00' style='width: 100%' name='opend4')
               .form-group.col
-                input(type='time' value='18:00' style='width: 100%')
+                input.d4(type='time' value='18:00' style='width: 100%' name='closed4')
             .form-row
               .form-group.col
                 h6 Friday
               .form-group.col
                 .form-check
-                  input#gridCheck1.form-check-input(type='checkbox')
+                  input#gridCheck5.form-check-input(type='checkbox' name='checkcloseday5')
                   label.form-check-label(for='gridCheck1')
                     | Closed
               .form-group.col
-                input(type='time' value='08:00' style='width: 100%')
+                input.d5(type='time' value='08:00' style='width: 100%' name='opend5')
               .form-group.col
-                input(type='time' value='18:00' style='width: 100%')
+                input.d5(type='time' value='18:00' style='width: 100%' name='closed5')
             .form-row
               .form-group.col
                 h6 Saturday
               .form-group.col
                 .form-check
-                  input#gridCheck1.form-check-input(type='checkbox', checked='')
+                  input#gridCheck6.form-check-input(type='checkbox' name='checkcloseday6')
                   label.form-check-label(for='gridCheck1')
                     | Closed
               .form-group.col
-                input(type='time' value='08:00' style='width: 100%' disabled)
+                input.d6(type='time' value='08:00' style='width: 100%' name='opend6')
               .form-group.col
-                input(type='time' value='18:00' style='width: 100%' disabled)
+                input.d6(type='time' value='18:00' style='width: 100%' name='closed6')
             .form-row
               .form-group.col
                 h6 Sunday
               .form-group.col
                 .form-check
-                  input#gridCheck1.form-check-input(type='checkbox', checked='')
+                  input#gridCheck7.form-check-input(type='checkbox' name='checkcloseday7')
                   label.form-check-label(for='gridCheck')
                     | Closed
               .form-group.col
-                input(type='time' value='08:00' style='width: 100%' disabled)
+                input.d7(type='time' value='08:00' style='width: 100%' name='opend7')
               .form-group.col
-                input(type='time' value='18:00' style='width: 100%' disabled)
+                input.d7(type='time' value='18:00' style='width: 100%' name='closed7')
             .form-group
               .form-check
-                input#gridCheck.form-check-input(type='checkbox', checked='')
+                input#gridholiday.form-check-input(type='checkbox', name='checkholiday', checked)
                 label.form-check-label(for='gridCheck')
                   | Set as closed on public holiday
           .form-row
@@ -178,3 +181,202 @@ block content
               button.btn.btn-primary.btn-block(type='submit') Submit and Add Outlets
     a.scroll-to-top.rounded(href='#page-top')
       i.fa.fa-angle-up
+    #mapsModal.modal.modal-wide.fade(tabindex='-1', role='dialog', aria-labelledby='deleteModalLabel', aria-hidden='true' )
+      .modal-dialog
+        .modal-content
+          .modal-header
+            h5#deleteModalLabel.modal-title Search address by maps 
+            button.close(type='button', data-dismiss='modal', aria-label='Close')
+              span(aria-hidden='true') ×
+          .modal-body 
+            form
+              .form-row
+                .form-group.col-md-12
+                  input#pac-input.form-control(type='text', placeholder='Enter a location' style='min-width:470px', value=pac_input)
+              .form-row
+                .form-group.col-md-12
+                  #map(style='width:470px; height:400px')
+                  #infowindow-content
+                    img#place-icon(src='', width='16', height='16')
+                    span#place-name.title
+                    br
+                    span#place-address
+              .form-row
+                .form-group.col-md-6
+                  label(for='zipcode') Latitude
+                  input#lat1.form-control(type='text', placeholder='Latitude',name='lat', style='100%', value=lat1)
+                .form-group.col-md-6
+                  label(for='zipcode') Longitude
+                  input#lng1.form-control(type='text', placeholder='Longitude',name='lng',  style='100%', value=lat2)
+          .modal-footer
+            button.btn.btn-secondary(type='button', data-dismiss='modal') Cancel
+            button.btn.btn-primary(onclick='save()') Save 
+    script.
+      $(document).ready(function(){
+        $('#gridCheck1').on('click',function(){
+          if ($('#gridCheck1').is(':checked')) {
+            $('.d1').attr('disabled', true);
+            $('[name="opend1"]').val('')
+            $('[name="closed1"]').val('')
+          } else {
+            $('.d1').attr('disabled', false);
+            $('[name="opend1"]').val('08:00')
+            $('[name="closed1"]').val('18:00')
+          }
+        });
+      });  
+      $(document).ready(function(){
+        $('#gridCheck2').on('click',function(){
+          if ($('#gridCheck2').is(':checked')) {
+            $('.d2').attr('disabled', true);
+            $('[name="opend2"]').val('')
+            $('[name="closed2"]').val('')
+          } else {
+            $('.d2').attr('disabled', false);
+            $('[name="opend2"]').val('08:00')
+            $('[name="closed2"]').val('18:00')
+          }
+        });
+      }); 
+      $(document).ready(function(){
+        $('#gridCheck3').on('click',function(){
+          if ($('#gridCheck3').is(':checked')) {
+            $('.d3').attr('disabled', true);
+            $('[name="opend3"]').val('')
+            $('[name="closed3"]').val('')
+          } else {
+            $('.d3').attr('disabled', false);
+            $('[name="opend3"]').val('08:00')
+            $('[name="closed3"]').val('18:00')
+          }
+        });
+      }); 
+      $(document).ready(function(){
+        $('#gridCheck4').on('click',function(){
+          if ($('#gridCheck4').is(':checked')) {
+            $('.d4').attr('disabled', true);
+            $('[name="opend4"]').val('')
+            $('[name="closed4"]').val('')
+          } else {
+            $('.d4').attr('disabled', false);
+            $('[name="opend4"]').val('08:00')
+            $('[name="closed4"]').val('18:00')
+          }
+        });
+      }); 
+      $(document).ready(function(){
+        $('#gridCheck5').on('click',function(){
+          if ($('#gridCheck5').is(':checked')) {
+            $('.d5').attr('disabled', true);
+            $('[name="opend5"]').val('')
+            $('[name="closed5"]').val('')
+          } else {
+            $('.d5').attr('disabled', false);
+            $('[name="opend5"]').val('08:00')
+            $('[name="closed5"]').val('18:00')
+          }
+        });
+      });      
+      $(document).ready(function(){
+        $('#gridCheck6').on('click',function(){
+          if ($('#gridCheck6').is(':checked')) {
+            $('.d6').attr('disabled', true);
+            $('[name="opend6"]').val('')
+            $('[name="closed6"]').val('')
+          } else {
+            $('.d6').attr('disabled', false);
+            $('[name="opend6"]').val('08:00')
+            $('[name="closed6"]').val('18:00')
+          }
+        });
+      });  
+
+      $(document).ready(function(){
+        $('#gridCheck7').on('click',function(){
+          if ($('#gridCheck7').is(':checked')) {
+            $('.d7').attr('disabled', true);
+            $('[name="opend7"]').val('')
+            $('[name="closed7"]').val('')
+          } else {
+            $('.d7').attr('disabled', false);
+            $('[name="opend7"]').val('08:00')
+            $('[name="closed7"]').val('18:00')
+          }
+        });
+      }); 
+      $(document).ready(function(){
+        $("#createoutlet").validate({ // initialize the plugin
+          submitHandler: function (form) {
+            $.ajax({
+              url: '/business-owner/checkday',
+              type: 'POST',
+              data: $(form).serialize(),
+              success: function(response) {
+                  if(response === 'true') {
+                    $('#createoutlet').get(0).submit();
+                  } else {
+                    alert('Please Fill Open Hours Correctly')
+                  }
+                }            
+            }); 
+          }
+        });
+      });        
+      $('.selectpicker').selectpicker({
+        style: 'btn-info',
+        size: 4
+      });
+      $(document).ready(function() {
+        $("#state").change(function() {
+          var state = $(this).val();
+          $.ajax({
+            url: "http://battuta.medunes.net/api/region/"+state+"/search/?region=&callback=?&key=eece3999b174ddb2ece72e58660a9ddb",
+            dataType: 'json',
+            success:function(response){
+              var len = response.length;
+              $("#region").empty();
+              for( var i = 0; i<len; i++){
+                var id = response[i]['region'];
+                var name = response[i]['region'];
+                $("#region").append("<option value='"+id+"'>"+name+"</option>");
+              }
+            }
+          });
+        });
+        $("#region").change(function() {
+          var region = $(this).val();
+          var state1 = $('#state').val();
+          console.log(region);
+          $.ajax({
+            url: "http://battuta.medunes.net/api/city/"+state1+"/search/?region="+region+"&city=&callback=?&key=eece3999b174ddb2ece72e58660a9ddb",
+            dataType: 'json',
+            success:function(response){
+              console.log(response);
+              var len = response.length;
+              $("#city").empty();
+              for( var i = 0; i<len; i++){
+                var id = response[i]['region'];
+                var name = response[i]['city'];
+                $("#city").append("<option value='"+name+"'>"+name+"</option>");
+              }
+            }
+          });
+        });
+        $("#geolocate").click(function() {
+          var address = $('#line1').val()+', '+$('#line2').val()+', '+$('#city').val()+', '+$('#region').val()+', '+$('#state').val();
+          address = address.split(' ').join('+');
+          console.log(address);
+          $.ajax({
+            url: "https://maps.googleapis.com/maps/api/geocode/json?address=%22"+address+"%22&key=AIzaSyBPfa7eAe7vjoQFO5v_T2hgQmZ2LeQIPxY",
+            dataType: 'json',
+            success:function(response){
+              document.getElementById("lat").value = response.results[0].geometry.location.lat;
+              document.getElementById("lat1").value = response.results[0].geometry.location.lat;
+              document.getElementById("lng").value = response.results[0].geometry.location.lng;
+              document.getElementById("lng1").value = response.results[0].geometry.location.lng;
+              console.log(response.results[0].geometry.location.lat)
+            }
+          });
+        });
+      });
+    script(src='https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.17.0/jquery.validate.min.js')

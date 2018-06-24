@@ -489,3 +489,7 @@ height:40px;
 .text-main{
   color: #135589;
 }
+
+#map {
+  height: 100%;
+}

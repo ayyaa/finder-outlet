@@ -88,8 +88,8 @@ block content
                       span(aria-hidden='true') »
                       span.sr-only Next
             #nav-profile.tab-pane.fade.border-right.border-left.border-bottom.mb-4(role='tabpanel', aria-labelledby='nav-profile-tab', style='background-color: white')
-              iframe(width='100%', height='600px', frameborder='0', scrolling='no', marginheight='0', marginwidth='0', src='https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d63245.983635672164!2d110.33982538316076!3d-7.80316397292277!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e7a5787bd5b6bc5%3A0x21723fd4d3684f71!2sYogyakarta%2C+Kota+Yogyakarta%2C+Daerah+Istimewa+Yogyakarta!5e0!3m2!1sid!2sid!4v1525590578541')
-    // Page Content
+              header.business-header
+                div#map 
     // /.container
     // Footer
     footer.footer.py-2
@@ -105,4 +105,62 @@ block content
               a.block.mr-8.ml-4.text-light(href='#') Term of Use
               a.block.mr-8.ml-4.text-light(href='#') Privacy Policy
       // /.container
+    script(src='https://maps.googleapis.com/maps/api/js?key=AIzaSyBsascAYsGfhejF7XQmquGdLKlEAbfaL9o&libraries=places&callback=initMap', async='', defer='')
+    script.
+      function initMap() {
 
+        var locations = !{data}
+
+        console.log(locations)
+
+        var map = new google.maps.Map(document.getElementById('map'), {
+          center: {lat: -7.7842584, lng: 110.3875498},
+          zoom: 15
+        });
+        var infoWindow = new google.maps.InfoWindow({map: map});
+
+        var marker, i;
+
+        for (i = 0; i < locations.length; i++) {
+          marker = new google.maps.Marker({
+            position: new google.maps.LatLng(locations[i][1], locations[i][2]),
+            map: map,
+            label: 'OF',
+            url: locations[i][4],
+            title: 'Outlet : '+locations[i][0],
+          });
+
+          google.maps.event.addListener(marker, 'click', (function (marker, i) {
+            return function () {
+              infoWindow.setContent(locations[i][0]);
+              window.location.href = this.url;
+            }
+          })(marker, i));
+
+        }
+
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(function(position) {
+            var pos = {
+              lat: position.coords.latitude,
+              lng: position.coords.longitude
+            };
+            console.log(pos)
+            infoWindow.setPosition(pos);
+            infoWindow.setContent('Location found.');
+            map.setCenter(pos);
+          }, function() {
+            handleLocationError(true, infoWindow, map.getCenter());
+          });
+        } else {
+          // Browser doesn't support Geolocation
+          handleLocationError(false, infoWindow, map.getCenter());
+        }
+
+        function handleLocationError(browserHasGeolocation, infoWindow, pos) {
+          infoWindow.setPosition(pos);
+          infoWindow.setContent(browserHasGeolocation ?
+                                'Error: The Geolocation service failed.' :
+                                'Error: Your browser doesn\'t support geolocation.');
+        }  
+      }
