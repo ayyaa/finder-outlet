@@ -9,6 +9,7 @@ const sgMail = require('@sendgrid/mail');
 const moment = require('moment');
 const models = require('../src/models');
 const twoFactor = require('node-2fa');
+const Libur = require('libur');
 const users = models.users
 const categories = models.categories;
 const business = models.business;
@@ -23,6 +24,8 @@ const Sequelize = require ('sequelize');
 const regValidate= require('../src/validation/joi-registration');
 const regcValidate = require('../src/validation/joi-cmplt-reg');
 const op = Sequelize.Op;
+const libur = new Libur();
+
 
 business.belongsToMany(categories, {through: 'business_categories', foreignKey: 'business_id', otherKey: 'category_id'})
 categories.belongsToMany(business, {through: 'business_categories', foreignKey: 'category_id', otherKey: 'business_id'})
@@ -352,7 +355,6 @@ router.post('/confirmreg/:token', function(req, res, next) {
   })
 })
 
-
 router.get('/forgot', function(req, res){
   if (req.isAuthenticated()) {
     res.redirect('back');
@@ -553,6 +555,18 @@ router.post('/report', function(req, res, next) {
   })
 });
 
+function writeday(h, a, b) {
+  var c = {}
+  if(a === null & b === null) {
+    c.day = h;
+    c.op = 'close'
+  } else {
+    c.day = h;
+    c.op = a+' - '+b
+  }
+  return c
+}
+
 router.get('/outletinfo=:id', function(req, res, next) {
   outlets.findOne({
     where: {
@@ -562,6 +576,7 @@ router.get('/outletinfo=:id', function(req, res, next) {
       {
       model: business,
       attributes: [
+        'id',
         'name',
         'image'
       ],
@@ -578,7 +593,56 @@ router.get('/outletinfo=:id', function(req, res, next) {
     ]
     }).then(rows => {
       var location = []
-      console.log(rows)
+      var dy =[
+        writeday('Monday', rows.day.d1_open, rows.day.d1_close),
+        writeday('Tuesday', rows.day.d2_open, rows.day.d2_close),
+        writeday('Wednesday', rows.day.d3_open, rows.day.d3_close),
+        writeday('Thrusday', rows.day.d4_open, rows.day.d4_close),
+        writeday('Friday', rows.day.d5_open, rows.day.d5_close),
+        writeday('Saturday', rows.day.d6_open, rows.day.d6_close),
+        writeday('Sunday', rows.day.d7_open, rows.day.d7_close)
+      ]
+      var tdy = moment().isoWeekday()
+      console.log(moment().format('YYYY-MM-DD'))
+      var timenow = moment().format('HH:mm')
+      dy[tdy-1].clss = 'font-weight-bold' 
+      if(dy[tdy-1].op !== 'close') {
+        const libur2018 = libur.getDataByYear(2018)[0].data
+        for(var i = 0; i < libur2018.length; i++) {
+          var dateHash = {
+            Januari : '01',
+            Februari: '02',
+            Maret: '03',
+            April: '04',
+            Mei: '05',
+            Juni: '06',
+            Juli: '07',
+            Agustus: '08',
+            September: '09',
+            Oktober: 10,
+            November: 11,
+            Desember: 12
+          };
+          var a = libur2018[i].date;
+          var b = a.split(' ')
+          var c = b[2]+'-'+dateHash[b[1]]+'-'+b[0]
+          libur2018[i].datee = c
+          console.log(c)
+          if(moment().format('YYYY-MM-DD') === c && rows.role_public_holiday === 1) {
+            dy[tdy-1].op = 'Close'
+            break;
+          } 
+        }
+        var tt = dy[tdy-1].op
+        var ttt = tt.split(' - ')
+        if (moment().isBetween(moment(ttt[0],'HH:mm:ss'), moment(ttt[1],'HH:mm:ss'))) {
+          dy[tdy-1].crnt = 'Open'
+        } else {
+          dy[tdy-1].crnt = 'Close'
+        }
+        console.log(ttt)
+      }
+      console.log(dy)
       location.push(rows.name, rows.address.dataValues.lat, rows.address.dataValues.long, 0, 'http://localhost:3000/outletinfo='+rows.id, rows.image)
       console.log(location)
       reviews.findAll({
@@ -605,7 +669,24 @@ router.get('/outletinfo=:id', function(req, res, next) {
           tim.date = m;
           tim2.push(tim)
         }
-        res.render('guest/outletinfo', { data: rows, review: tim2, data2: JSON.stringify(location)});
+        outlets.findAll({
+          where: {
+            id_bussines: rows.business.id
+          },
+          limit: 3,
+          include: [
+            {
+              model: address,
+              attributes: [
+                'administrative_area_3'
+              ]
+            }
+          ]
+        
+        }).then(rows3 => {
+          console.log(rows3)
+          res.render('guest/outletinfo', { data: rows, review: tim2, data2: JSON.stringify(location), day: dy, today: dy[tdy-1], other: rows3});
+        })
       })
   })
 });

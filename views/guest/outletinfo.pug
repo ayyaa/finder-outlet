@@ -89,52 +89,51 @@ html(lang='en')
             a(href='https://wonderlabs.io')=data.website
           p.mb-3
             | Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
-          table.table.table-striped.mb-5(style='width:30%')
-            tr.mt-2
-              th Day
-              th Open
-              th Close
-            tr
-              td Monday
-              td=data.day.d1_open
-              td=data.day.d1_close
-            tr
-              td Tuesday
-              td=data.day.d2_open
-              td=data.day.d2_close
-            tr
-              td Wednesday
-              td=data.day.d3_open
-              td=data.day.d3_close
-            tr
-              td Thrusday
-              td=data.day.d4_open
-              td=data.day.d4_close
-            tr
-              td Friday
-              td=data.day.d5_open
-              td=data.day.d5_close
-          ul.list-inline.list-social-icons.mb-0
-            li.list-inline-item
-              a(href='#')
-                span.fa-stack.fa-lg
-                  i.fa.fa-circle.fa-stack-2x
-                  i.fab.fa-facebook-f.fa-stack-1x.fa-inverse
-            li.list-inline-item
-              a(href='#')
-                span.fa-stack.fa-lg
-                  i.fa.fa-circle.fa-stack-2x
-                  i.fab.fa-twitter.fa-stack-1x.fa-inverse
-            li.list-inline-item
-              a(href='#')
-                span.fa-stack.fa-lg
-                  i.fa.fa-circle.fa-stack-2x
-                  i.fab.fa-linkedin-in.fa-stack-1x.fa-inverse
-            li.list-inline-item
-              a(href='#')
-                span.fa-stack.fa-lg
-                  i.fa.fa-circle.fa-stack-2x
-                  i.fab.fa-github.fa-stack-1x.fa-inverse
+            =data.description
+          div.mb-2
+            .row.font-weight-bold
+              .col-2
+                | Now 
+                =today.crnt
+              .col-4
+                | :       
+                =today.op
+          div#todayss.mb-2
+            .row
+              .col-2
+                | Open Hours
+              .col-1
+                  i.fas.fa-caret-down
+          div#dayss.mb-2
+            for days in day
+              .row.mb-2
+                .col-1(class=days.clss)
+                  =days.day
+                .col-4(class=days.clss)
+                  | :       
+                  =days.op
+
+          //- ul.list-inline.list-social-icons.mb-0
+          //-   li.list-inline-item
+          //-     a(href='#')
+          //-       span.fa-stack.fa-lg
+          //-         i.fa.fa-circle.fa-stack-2x
+          //-         i.fab.fa-facebook-f.fa-stack-1x.fa-inverse
+          //-   li.list-inline-item
+          //-     a(href='#')
+          //-       span.fa-stack.fa-lg
+          //-         i.fa.fa-circle.fa-stack-2x
+          //-         i.fab.fa-twitter.fa-stack-1x.fa-inverse
+          //-   li.list-inline-item
+          //-     a(href='#')
+          //-       span.fa-stack.fa-lg
+          //-         i.fa.fa-circle.fa-stack-2x
+          //-         i.fab.fa-linkedin-in.fa-stack-1x.fa-inverse
+          //-   li.list-inline-item
+          //-     a(href='#')
+          //-       span.fa-stack.fa-lg
+          //-         i.fa.fa-circle.fa-stack-2x
+          //-         i.fab.fa-github.fa-stack-1x.fa-inverse
       section#direction.resume-section.p-3.p-lg-5.d-flex.flex-column
         .my-auto
           h2.mb-2 Get direction
@@ -273,21 +272,12 @@ html(lang='en')
                 th
                   | City
                 th
-              tr.mt-2
-                td Wonderlabs Explore Campus
-                td Yogyakarta
-                td
-                  a(href='#') View Outlet
-              tr.mt-2
-                td Wonderlabs Sputnik Campus
-                td Yogyakarta
-                td
-                  a(href='#') View Outlet
-              tr.mt-2
-                td Wonderlabs Houston Campus
-                td Yogyakarta
-                td
-                  a(href='#') View Outlet
+              for d in other
+                tr.mt-2
+                  td=d.name
+                  td=d.address.administrative_area_3
+                  td
+                    a(href='/outletinfo='+d.id) View Outlet
     // Custom scripts for this template
     script(src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js')
     script(src='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.1/js/bootstrap.bundle.js')
@@ -296,6 +286,12 @@ html(lang='en')
     script(src='../javascripts/resume.js')
     script.
       function initMap() {
+        var icon = {
+            url: "http://www.clker.com/cliparts/U/Q/d/9/V/E/orange-pin-md.png", // url
+            scaledSize: new google.maps.Size(35, 58), // scaled size
+            origin: new google.maps.Point(0,0), // origin
+            anchor: new google.maps.Point(0, 0) // anchor
+        };
         var locations = !{data2}
         var pointA = new google.maps.LatLng(locations[1], locations[2]),
               myOptions = {
@@ -310,8 +306,7 @@ html(lang='en')
               }),
               markerA = new google.maps.Marker({
                   position: pointA,
-                  title: "point A",
-                  label: "A",
+                  title: locations[0],
                   map: map
               })
 
@@ -347,6 +342,13 @@ html(lang='en')
 
     script(src='https://maps.googleapis.com/maps/api/js?key=AIzaSyBsascAYsGfhejF7XQmquGdLKlEAbfaL9o&libraries=places&callback=initMap', async='', defer='')
     script(type='text/javascript').
+      $(document).ready(function(){
+        $("#dayss").hide()
+        $("#todayss").click(function(){
+            $("#dayss").toggle();
+            //- $("#todayss").hide()
+        });
+      })
       function report(e) {
         console.log(e);
         window.idReview = e;
