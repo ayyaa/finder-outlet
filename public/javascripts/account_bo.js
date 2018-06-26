@@ -12,6 +12,61 @@ $('#check1').on('change', function(e){
   }
 });
 
+$('#checkip').on('change', function(e){
+  if(e.target.checked){
+    $('#myModal2').modal({
+        backdrop: 'static',
+        keyboard: false
+    });
+  } else {
+    $('#myModal3').modal({
+        backdrop: 'static',
+        keyboard: false
+    }); 
+  }
+});
+
+function enable2(){
+  var id = $('#id').val();
+  var ip_address = $('#ipaddress').val()
+  $.ajax({
+    url:'/business-owner/enableip/'+id,
+    type:'POST',
+    data: {
+      ip_address: $('#ipaddress').val()
+    },
+    success : function (respon) {
+      $('#myModal2').modal('hide')
+      $( "#checkip" ).prop( "checked", true); 
+    }
+  })
+} 
+
+function disable2(){
+  var id = $('#id').val();
+  $.ajax({
+    url:'/business-owner/disableip/'+id,
+    type:'POST',
+    success : function (respon) {
+      $('#myModal3').modal('hide')
+      $( "#checkip" ).prop( "checked", false); 
+    }
+  })
+} 
+
+$(document).ready(function(){
+  $('button[name="close3"]').click(function(){
+    $( "#checkip" ).prop( "checked", false ); 
+  });
+});  
+
+$(document).ready(function(){
+  $('button[name="close4"]').click(function(){
+    $( "#checkip" ).prop( "checked", true ); 
+  });
+});  
+
+
 
 $(document).ready(function(){
   $("#editname").hide()

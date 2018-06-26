@@ -141,7 +141,7 @@ html(lang='en')
             header.business-header
               #map
             .mt-4.mb-4
-              button#getdir.btn.btn-primary.mb-2.mr-2(type='button') Get Direction
+              button#getdir.btn.btn-primary.mb-2.mr-2(type='button' onclick='getdir()') Get Direction
               button#similar.btn.btn-primary.mb-2(type='button') Find Similar Bussines
       section#reviews.resume-section.p-3.p-lg-5.d-flex.flex-column
         .my-auto
@@ -310,36 +310,82 @@ html(lang='en')
                   map: map
               })
 
-        document.getElementById('getdir').onclick = function(){
-          if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(function(position) {
-              var pointB = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-              calculateAndDisplayRoute(directionsService, directionsDisplay, pointA, pointB);
-              function calculateAndDisplayRoute(directionsService, directionsDisplay, pointA, pointB) {
-                  directionsService.route({
-                      origin: pointA,
-                      destination: pointB,
-                      avoidTolls: true,
-                      avoidHighways: false,
-                      travelMode: google.maps.TravelMode.DRIVING
-                  }, function (response, status) {
-                      if (status == google.maps.DirectionsStatus.OK) {
-                          directionsDisplay.setDirections(response);
-                      } else {
-                          window.alert('Directions request failed due to ' + status);
-                      }
-                  });
+        document.getElementById('similar').onclick = function(){
+          var locations = !{data3}
+
+          console.log(locations)
+
+          var map = new google.maps.Map(document.getElementById('map'), {
+            center: pointA,
+            zoom: 13
+          });
+          var infoWindow = new google.maps.InfoWindow({map: map});
+
+          var marker, i;
+
+          var icon = {
+              url: "http://www.clker.com/cliparts/U/Q/d/9/V/E/orange-pin-md.png", // url
+              scaledSize: new google.maps.Size(35, 58), // scaled size
+              origin: new google.maps.Point(0,0), // origin
+              anchor: new google.maps.Point(0, 0) // anchor
+          };
+
+          for (i = 0; i < locations.length; i++) {
+            marker = new google.maps.Marker({
+              position: new google.maps.LatLng(locations[i][1], locations[i][2]),
+              map: map,
+              icon: icon,
+              url: locations[i][4],
+              title: 'Outlet : '+locations[i][0],
+            });
+
+            google.maps.event.addListener(marker, 'click', (function (marker, i) {
+              return function () {
+                infoWindow.setContent(locations[i][0]);
+                window.location.href = this.url;
               }
-            })
-          } else {
-            window.alert('Please')
+            })(marker, i));
+
           }
         }
-
       }
-
       initMap();
-
+      function getdir() {
+        var locations = !{data2}
+        var pointA = new google.maps.LatLng(locations[1], locations[2]),
+            myOptions = {
+                zoom: 15,
+                center: pointA
+            },
+            map = new google.maps.Map(document.getElementById('map'), myOptions),
+              directionsService = new google.maps.DirectionsService,
+            directionsDisplay = new google.maps.DirectionsRenderer({
+                map: map
+            })
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(function(position) {
+            var pointB = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+            calculateAndDisplayRoute(directionsService, directionsDisplay, pointA, pointB);
+            function calculateAndDisplayRoute(directionsService, directionsDisplay, pointA, pointB) {
+                directionsService.route({
+                    origin: pointA,
+                    destination: pointB,
+                    avoidTolls: true,
+                    avoidHighways: false,
+                    travelMode: google.maps.TravelMode.DRIVING
+                }, function (response, status) {
+                    if (status == google.maps.DirectionsStatus.OK) {
+                        directionsDisplay.setDirections(response);
+                    } else {
+                        alert('Directions request failed due to ' + status);
+                    }
+                });
+            }
+          })
+        } else {
+          window.alert('Please')
+        }
+      }
     script(src='https://maps.googleapis.com/maps/api/js?key=AIzaSyBsascAYsGfhejF7XQmquGdLKlEAbfaL9o&libraries=places&callback=initMap', async='', defer='')
     script(type='text/javascript').
       $(document).ready(function(){

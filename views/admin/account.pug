@@ -82,7 +82,7 @@ block content
                           
                         tr
                           td#editcp.bg-light.p-4(colspan="3" widht='100%')
-                            form#formeditname(action='/admin/editcp', method='POST')
+                            form#formeditcp(action='/admin/editcp', method='POST')
                               label(for='phone', style='font-size: 0.9em') Contact Number
                               input#cp.form-control(type='text', placeholder='Your Contact Number', name='phone', value = user.contact_no)
                               label.error.mt-2.alert-danger.mb-2(for='phone', generated='true')
@@ -127,11 +127,11 @@ block content
                 .form-group.col-md-8.col-sm-10.ml-4
                   h6
                     | Preven login from other IP address (current IP address : 
-                    a(href='') 144.205.456.32
+                    a(href='')=ip
                     | )
                 .form-group.col-md-2.text-center
                   label.switch
-                    input(type='checkbox')
+                    input#checkip(type='checkbox' checked=ipad)
                     span.slider.round
             #myModal.modal.fade(tabindex='-1', role='dialog')
               .modal-dialog(role='document')
@@ -172,6 +172,34 @@ block content
                     button#cancel2.btn.btn-secondary(type='button', data-dismiss='modal', name = 'close2') Cancel
                     //- form(action='/admin/logout', method='POST')
                     button.btn.btn-primary(type='button', onclick='disable()') Yes  
+
+            #myModal2.modal.fade(tabindex='-1', role='dialog')
+              .modal-dialog(role='document')
+                .modal-content
+                  .modal-header
+                    h5#exampleModalLabel.modal-title You will only be able to login with the ip address you input. If you agree then enter a valid ip address
+                    button#cancel2.close(type='button', data-dismiss='modal', aria-label='Close', name = 'close3')
+                      span(aria-hidden='true') ×
+                  .modal-body
+                    .form-group
+                      label IP Address
+                      textarea#ipaddress.form-control(placeholder=ip+', X.X.X.X', name='content')
+                  .modal-footer
+                    button#cancel2.btn.btn-secondary(type='button', data-dismiss='modal', name = 'close3') Cancel
+                    //- form(action='/admin/logout', method='POST')
+                    button#submitip.btn.btn-primary(type='button', onclick='enable2()') Save changes 
+            
+            #myModal3.modal.fade(tabindex='-1', role='dialog')
+              .modal-dialog(role='document')
+                .modal-content
+                  .modal-header
+                    h5#exampleModalLabel.modal-title Are you sure will disable to Preven login from other IP address?
+                    button#cancel2.close(type='button', data-dismiss='modal', aria-label='Close', name = 'close4')
+                      span(aria-hidden='true') ×
+                  .modal-footer
+                    button#cancel2.btn.btn-secondary(type='button', data-dismiss='modal', name = 'close4') Cancel
+                    //- form(action='/admin/logout', method='POST')
+                    button.btn.btn-primary(type='button', onclick='disable2()') Yes  
 
           #nav-deactivated.tab-pane.fade.border(role='tabpanel', aria-labelledby='nav-deactivated-tab', style='background-color: white', name='nav-deactivated')
             form(action='/admin/deactive', style='padding:5%', method='POST')

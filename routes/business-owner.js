@@ -18,6 +18,7 @@ const outlets = models.outlets;
 const address = models.address;
 const days = models.days;
 const reviews = models.reviews;
+const ip = require("ip");
 const validateJoi = require('../src/validation/joi-create-business');
 const validateJoiOutlet = require('../src/validation/joi-create-outlet');
 const validateEditCp = require('../src/validation/joi-edit-cp');
@@ -338,7 +339,7 @@ router.get('/create-business', function(req, res, next) {
             return console.dir(error);
         }
         var data = JSON.parse(body);
-        // console.dir(JSON.parse(body));
+        console.dir(JSON.parse(body));
         // console.log(data[1].name)
         res.render('business-owner/create-business', {active2: 'active', valCategories:rows, valState: data, api_key: BATTUTA_KEY , user: req.user[0]});
     });
@@ -971,6 +972,19 @@ router.post('/enable/:id', function(req, res, next) {
   })
 });
 
+router.post('/enableip/:id', function(req, res, next) {
+  users.update({
+    ip_address: req.body.ip_address
+  }, {where: {
+    id: [req.params.id]
+  }}).then(rows => {
+    res.send('success')
+  }).catch(err => {
+    console.error(err)
+    res.send('error')
+  })
+});
+
 router.post('/disable/:id', function(req, res, next) {
   users.update({
     fa_status: 0
@@ -983,6 +997,20 @@ router.post('/disable/:id', function(req, res, next) {
     res.send('error')
   })
 });
+
+router.post('/disableip/:id', function(req, res, next) {
+  users.update({
+    ip_address: '*'
+  }, {where: {
+    id: [req.params.id]
+  }}).then(rows => {
+    res.send('success')
+  }).catch(err => {
+    console.error(err)
+    res.send('error')
+  })
+});
+
 
 router.post('/refresh_sk/:id', function(req, res, next) {
   users.findOne({
@@ -1011,8 +1039,14 @@ router.get('/account', function(req, res, next) {
   } else {
     var auth = false
   }
+
+  if(req.user[0].ip_address !== '*') {
+    var ip_ad = true
+  } else {
+    var ip_ad = false
+  }
   // console.log(auth)
-  res.render('business-owner/account', {user: req.user[0], vauth: auth, 'info' : req.flash('info'), 'message' : req.flash('message'), error : req.flash('error')});
+  res.render('business-owner/account', {user: req.user[0], vauth: auth, 'info' : req.flash('info'), 'message' : req.flash('message'), error : req.flash('error'), ip: ip.address(), ipad: ip_ad});
 });
 
 // router.get('/edit-business=:id', function(req, res, next) {

@@ -12,6 +12,21 @@ $('#check1').on('change', function(e){
   }
 });
 
+$('#checkip').on('change', function(e){
+  if(e.target.checked){
+    $('#myModal2').modal({
+        backdrop: 'static',
+        keyboard: false
+    });
+  } else {
+    $('#myModal3').modal({
+        backdrop: 'static',
+        keyboard: false
+    }); 
+  }
+});
+
+
 
 $(document).ready(function(){
   $("#editname").hide()
@@ -37,6 +52,17 @@ $(document).ready(function(){
 
 });
 
+function enable(){
+  var id = $('#id').val();
+  $.ajax({
+    url:'/admin/enable/'+id,
+    type:'POST',
+    success : function (respon) {
+      $('#myModal').modal('hide')
+      $( "#check1" ).prop( "checked", true); 
+    }
+  })
+} 
 
 function disable(){
   var id = $('#id').val();
@@ -49,6 +75,34 @@ function disable(){
     }
   })
 }  
+
+function enable2(){
+  var id = $('#id').val();
+  var ip_address = $('#ipaddress').val()
+  $.ajax({
+    url:'/admin/enableip/'+id,
+    type:'POST',
+    data: {
+      ip_address: $('#ipaddress').val()
+    },
+    success : function (respon) {
+      $('#myModal2').modal('hide')
+      $( "#checkip" ).prop( "checked", true); 
+    }
+  })
+} 
+
+function disable2(){
+  var id = $('#id').val();
+  $.ajax({
+    url:'/admin/disableip/'+id,
+    type:'POST',
+    success : function (respon) {
+      $('#myModal3').modal('hide')
+      $( "#checkip" ).prop( "checked", false); 
+    }
+  })
+} 
 
 
 function check(){
@@ -69,19 +123,7 @@ function check(){
   })
 } 
 
-
-
-function enable(){
-  var id = $('#id').val();
-  $.ajax({
-    url:'/admin/enable/'+id,
-    type:'POST',
-    success : function (respon) {
-      $('#myModal').modal('hide')
-      $( "#check1" ).prop( "checked", true); 
-    }
-  })
-}  
+ 
 
 function update(){
   var name= $('#name').val()
@@ -133,6 +175,18 @@ function updatepw(){
     })
   }
 }  
+
+$(document).ready(function(){
+  $('button[name="close3"]').click(function(){
+    $( "#checkip" ).prop( "checked", false ); 
+  });
+});  
+
+$(document).ready(function(){
+  $('button[name="close4"]').click(function(){
+    $( "#checkip" ).prop( "checked", true ); 
+  });
+});  
 
 $(document).ready(function(){
   $('button[name="close1"], button[name="close2"]').click(function(){

@@ -13,7 +13,7 @@ const Libur = require('libur');
 const users = models.users
 const categories = models.categories;
 const business = models.business;
-const business_category = models.business_category;
+const business_categories = models.business_categories;
 const outlets = models.outlets;
 const address = models.address;
 const days = models.days;
@@ -60,13 +60,20 @@ router.get('/', function(req, res, next) {
     }
   })
   .then(rows => {
-    for(var i = 0 ; i < rows.length; i++) {
-      var as = []
-      as.push(rows[i].name, rows[i].address.dataValues.lat, rows[i].address.dataValues.long, i, 'http://localhost:3000/outletinfo='+rows[i].id)
-      location.push(as)
-    }
-    console.log(location)
-    res.render('guest/home', { title: 'Express', data: JSON.stringify(location)});
+    address.findAll({
+      group: 'administrative_area_3'
+    }).then(rows1 => {
+      categories.findAll()
+      .then(rows2=> {
+        for(var i = 0 ; i < rows.length; i++) {
+          var as = []
+          as.push(rows[i].name, rows[i].address.dataValues.lat, rows[i].address.dataValues.long, i, 'http://localhost:3000/outletinfo='+rows[i].id)
+          location.push(as)
+        }
+        console.log(location)
+        res.render('guest/home', { title: 'Express', data: JSON.stringify(location), city: rows1, cat: rows2});
+      })
+    })
   })
 });
 
@@ -75,6 +82,61 @@ users.findAll().then(rows => {
 })
 
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+
+// select distinct(`category_id`)
+// from `outlets` 
+// inner join `business` on `outlets`.`id_bussines` = `business`.`id`
+// inner join `business_categories` on `business_categories`.`business_id` = `business`.`id`
+// where business_id = 1
+
+outlets.findAll({
+  where: {
+    id_bussines: '1'
+  },
+  include: [
+    {
+      model: business,
+      include: [
+        {
+          model: business_categories
+        }
+      ]
+    }
+  ],
+  group: ['business->business_category.category_id']
+}).then(rows => {
+    outlets.findAll({
+    where: {
+      id_bussines: [rows[0].business.business_category.category_id, rows[1].business.business_category.category_id, rows[2].business.business_category.category_id]
+    },
+    include: [
+      {
+        model: business,
+        include: [
+          {
+            model: business_categories
+          }
+        ]
+      },
+      {
+        model: address,
+        attributes: [
+          [Sequelize.fn('X', Sequelize.col('point')), 'lat'], [Sequelize.fn('Y', Sequelize.col('point')), 'long']
+        ]
+      }
+    ],
+    group: ['outlets.id']
+  })
+  .then(rows2=>{
+    var location = [];
+    for(var i = 0 ; i < rows2.length; i++) {
+      var as = []
+      as.push(rows2[i].name, rows2[i].address.dataValues.lat, rows2[i].address.dataValues.long, i, 'http://localhost:3000/outletinfo='+rows2[i].id)
+      location.push(as)
+    }
+    console.log(location)
+  })
+})
 
 router.get('/login', function(req, res){
   if (req.isAuthenticated()) {
@@ -90,6 +152,8 @@ router.get('/login', function(req, res){
   };
 });
 
+console.log(moment().format())
+
 router.get('/signin', function(req, res, next) {
   passport.authenticate('local', function(err, user, info) {
     if (err) { return next(err); }
@@ -102,17 +166,25 @@ router.get('/signin', function(req, res, next) {
       console.log(rows[0].fa_status)
       if (rows[0].fa_status == 0) {
         req.logIn(user, function(err) {
-          if (err) { return next(err); }
-          console.log(user.role)
-          if(user.role === 'BUSINESS OWNER') {
-            var role = 'Business Owner'
-            req.flash('info', '<div class="alert alert-success"><div class="text-center">Welcome to Outlet Finder as '+role+' '+user.username+ '!</div></div>');
-            return res.redirect('/business-owner/dashboard');
-          } else {
-            var role = 'Admin'
-            req.flash('info', '<div class="alert alert-success"><div class="text-center">Welcome to Outlet Finder as ' +role+' '+user.username+ '!</div></div>');
-            return res.redirect('/admin/dashboard');
-          }
+          users.update({
+            last_login: moment().format()
+          },{
+            where: {
+              username: [req.query.username]
+            }
+          }).then(rows => {
+            if (err) { return next(err); }
+            console.log(user.role)
+            if(user.role === 'BUSINESS OWNER') {
+              var role = 'Business Owner'
+              req.flash('info', '<div class="alert alert-success"><div class="text-center">Welcome to Outlet Finder as '+role+' '+user.username+ '!</div></div>');
+              return res.redirect('/business-owner/dashboard');
+            } else {
+              var role = 'Admin'
+              req.flash('info', '<div class="alert alert-success"><div class="text-center">Welcome to Outlet Finder as ' +role+' '+user.username+ '!</div></div>');
+              return res.redirect('/admin/dashboard');
+            }
+          })
         });
       } else {
         req.flash('username',req.query.username)
@@ -619,9 +691,9 @@ router.get('/outletinfo=:id', function(req, res, next) {
             Juli: '07',
             Agustus: '08',
             September: '09',
-            Oktober: 10,
-            November: 11,
-            Desember: 12
+            Oktober: '10',
+            November: '11',
+            Desember: '12'
           };
           var a = libur2018[i].date;
           var b = a.split(' ')
@@ -684,8 +756,57 @@ router.get('/outletinfo=:id', function(req, res, next) {
           ]
         
         }).then(rows3 => {
-          console.log(rows3)
-          res.render('guest/outletinfo', { data: rows, review: tim2, data2: JSON.stringify(location), day: dy, today: dy[tdy-1], other: rows3});
+          outlets.findAll({
+            where: {
+              id_bussines: '1'
+            },
+            include: [
+              {
+                model: business,
+                include: [
+                  {
+                    model: business_categories
+                  }
+                ]
+              }
+            ],
+            group: ['business->business_category.category_id']
+          }).then(rows4 => {
+              outlets.findAll({
+              where: {
+                id_bussines: [rows4[0].business.business_category.category_id, rows4[1].business.business_category.category_id, rows4[2].business.business_category.category_id]
+              },
+              include: [
+                {
+                  model: business,
+                  include: [
+                    {
+                      model: business_categories
+                    }
+                  ]
+                },
+                {
+                  model: address,
+                  attributes: [
+                    [Sequelize.fn('X', Sequelize.col('point')), 'lat'], [Sequelize.fn('Y', Sequelize.col('point')), 'long']
+                  ]
+                }
+              ],
+              group: ['outlets.id']
+            })
+            .then(rows2=>{
+              var locationz = [];
+              for(var i = 0 ; i < rows2.length; i++) {
+                var as = []
+                as.push(rows2[i].name, rows2[i].address.dataValues.lat, rows2[i].address.dataValues.long, i, 'http://localhost:3000/outletinfo='+rows2[i].id)
+                locationz.push(as)
+              }
+              console.log(locationz)
+              console.log(rows3)
+              console.log(location)
+              res.render('guest/outletinfo', { data: rows, review: tim2, data2: JSON.stringify(location), day: dy, today: dy[tdy-1], other: rows3, data3: JSON.stringify(locationz)});
+            })
+          })          
         })
       })
   })
