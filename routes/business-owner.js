@@ -1260,8 +1260,7 @@ router.get('/edit-outlet=:id', function(req, res, next) {
       // console.log(rows)
       var BATTUTA_KEY=config.batuta_key.key;
       var url = "https://battuta.medunes.net/api/country/all/?key="+BATTUTA_KEY;
-      
-
+    
       Request.get(url, (error, response, body) => {
           if(error) {
               return console.dir(error);
