@@ -88,11 +88,45 @@ head
         marker.setPosition(place.geometry.location);
         marker.setVisible(true);
 
-
+        for (var i = 0; i < place.address_components.length; i++) {
+          for (var j = 0; j < place.address_components[i].types.length; j++) {
+            if (place.address_components[i].types[j] == "postal_code") {
+              document.getElementById('postal_code').value = place.address_components[i].long_name;
+            } else if (place.address_components[i].types[j] == "administrative_area_level_4") {
+              var adm4 = place.address_components[i].short_name;
+            } else if (place.address_components[i].types[j] == "administrative_area_level_3" || place.address_components[i].types[j] == "locality") {
+              var adm5 = place.address_components[i].short_name;
+            } else if (place.address_components[i].types[j] == "route") {
+              var route = place.address_components[i].short_name;
+            } else if (place.address_components[i].types[j] == "street_number") {
+              var st = place.address_components[i].short_name;
+            }
+          }
+        }
+        if (route === undefined) {
+          route = '';
+        }
+        if (st === undefined) {
+          st = '';
+        }
+        console.log(adm4);
+        console.log(adm5);
         document.getElementById("lat").value = place.geometry.location.lat();
         document.getElementById("lat1").value = place.geometry.location.lat();
         document.getElementById("lng").value = place.geometry.location.lng();
         document.getElementById("lng1").value = place.geometry.location.lng();
+        //- document.getElementById("postal_code").value = place.address_components[7].short_name;
+        //- document.getElementById("city").value = place.address_components[4].short_name;
+        //- document.getElementById("region").value = place.address_components[5].short_name;
+        //- document.getElementById("state").value = place.address_components[6].short_name;
+        document.getElementById("line1").value = route +' '+ st;
+        document.getElementById("line2").value = adm4 +' '+ adm5;
+
+        var dummy = '<label for="formatted">Formatted Addresss</label>\n<p>'+place.formatted_address+'</p>';
+        document.getElementById('wrapper').innerHTML += dummy;
+        document.getElementById("line2").value = adm4 +' '+ adm5;
+
+        
 
         var address = '';
         if (place.address_components) {

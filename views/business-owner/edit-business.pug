@@ -28,7 +28,7 @@ block content
               .form-group
                 label(for='line') Line of Business:
                 //- input#cat_bus_id.form-control(type='text' name='cat_bus_id', value=cat_bus_id)
-                input#cat_id.form-control(type='text' name='cat_id', value=cat_id)
+                input#cat_id.form-control(type='hidden' name='cat_id', value=cat_id)
                 select#get_category.form-control.selectpicker(name='get_category' multiple='multilpe')
                   each value in valCategories
                     option(value=value.id) #{value.name}     
@@ -60,12 +60,16 @@ block content
                     option(value=value.code) #{value.name}
               .form-group.col-md-6
                 label(for='line2') Region
-                select#region.custom-select(name='province')
-                  option(value=region) #{region}
+                input#temp_region.form-control(type='hidden' name='temp_region', value=temp_region)
+                select#region.form-control.selectpicker(name='region')
+                  each value in valRegion
+                    option(value=value.region) #{value.region}
               .form-group.col-md-6
                 label(for=city) City
-                select#city.custom-select(name='city')
-                  option(value='0') #{city}
+                input#temp_city.form-control(type='hidden' name='temp_city', value=temp_city)
+                select#city.form-control.selectpicker(name='city')
+                  each value in valCity
+                    option(value=value.city) #{value.city}
               .form-group.col-md-6
                 label(for='zipcode') Postal code
                 input#inputPassword4.form-control(type='text', placeholder='Postal Code' name='postal_code' value=postal_code)
@@ -127,7 +131,6 @@ block content
             button.btn.btn-primary(onclick='save()') Save 
     script.
       var values = $("#cat_id").val();
-      //- console.log(values);
       $.each(values.split(","), function(i,e){
         $("select[name='get_category'] option[value='" + e + "']").prop("selected", true);
       });
@@ -136,39 +139,41 @@ block content
         size: 4
       });
       
-      var temp = $("#temp_state").val();
-      console.log(temp)
-      $.each(values.split(","), function(i,e){
-        $("select[name='state'] option[value='" + temp + "']").prop("selected", true);
-      });
-     
-        //- $("select[name='state']").val(temp);
-    
-      
+      var temp_state = $("#temp_state").val();
+      $("select[name='state']").val(temp_state);
+      $('.selectpicker').selectpicker('refresh');
 
       $(document).ready(function() {
         $("#state").change(function() {
-          var state = $("#state").val();
+          var state = $('#state').val();
           $.ajax({
-            url: "http://battuta.medunes.net/api/region/"+state+"/search/?region=&callback=?&key=4a4098af6b93a68e90f7438a91d2a516",
+            url: "http://battuta.medunes.net/api/region/"+state+"/search/?region=&callback=?&key=eece3999b174ddb2ece72e58660a9ddb",
             dataType: 'json',
             success:function(response){
               var len = response.length;
+              console.log(response)
               $("#region").empty();
               for( var i = 0; i<len; i++){
                 var id = response[i]['region'];
                 var name = response[i]['region'];
                 $("#region").append("<option value='"+id+"'>"+name+"</option>");
+                $('.selectpicker').selectpicker('refresh');
               }
             }
           });
         });
+        var temp_region = $("#temp_region").val();
+        console.log(temp_region);
+        $("select[name='region']").val(temp_region);
+        $('.selectpicker').selectpicker('refresh');
+        
+
         $("#region").change(function() {
           var region = $("#region").val();
           var state1 = $('#state').val();
           console.log(region);
           $.ajax({
-            url: "http://battuta.medunes.net/api/city/"+state1+"/search/?region="+region+"&city=&callback=?&key=4a4098af6b93a68e90f7438a91d2a516",
+            url: "http://battuta.medunes.net/api/city/"+state1+"/search/?region="+region+"&city=&callback=?&key=eece3999b174ddb2ece72e58660a9ddb",
             dataType: 'json',
             success:function(response){
               console.log(response);
@@ -178,10 +183,17 @@ block content
                 var id = response[i]['region'];
                 var name = response[i]['city'];
                 $("#city").append("<option value='"+id+"'>"+name+"</option>");
+                $('.selectpicker').selectpicker('refresh');
               }
             }
           });
         });
+
+        var temp_city = $("#temp_city").val();
+        console.log(temp_city);
+        $("select[name='city']").val(temp_city);
+        $('.selectpicker').selectpicker('refresh');
+
         $("#geolocate").click(function() {
           var address = $('#line1').val()+', '+$('#line2').val()+', '+$('#city').val()+', '+$('#region').val()+', '+$('#state').val();
           address = address.split(' ').join('+');

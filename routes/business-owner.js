@@ -413,7 +413,7 @@ router.post('/create-outlet', function(req, res, next) {
               outlet_id: rowss.id
             }).then(rowsss => {
               req.flash('success', 'Successful added Business.');
-              res.redirect('/business-owner/list-business');
+              res.redirect('/business-owner/list-outlet');
             })
           })
         }) 
@@ -1119,9 +1119,10 @@ router.get('/edit-business=:id', function(req, res) {
     }
     categories.findAll()
     .then(row => {
-      console.log(rows)
+      // console.log(rows)
       var BATTUTA_KEY=config.batuta_key.key;
       var url = "https://battuta.medunes.net/api/country/all/?key="+BATTUTA_KEY;
+      
 
       Request.get(url, (error, response, body) => {
           if(error) {
@@ -1130,21 +1131,40 @@ router.get('/edit-business=:id', function(req, res) {
           var data = JSON.parse(body);
           // console.dir(JSON.parse(body));
           console.log(rows.category)
-          res.render('business-owner/edit-business', {
-            id:  rows[0].id,
-            name_business:  rows[0].name, contact_no: rows[0].contact_no, email: rows[0].email, website: rows[0].website, description: rows[0].description, 
-            address_id: rows[0]['address.id'],
-            line1: rows[0]['address.line1'], line2: rows[0]['address.line2'],
-            temp_state: rows[0]['address.administrative_area_1'], region: rows[0]['address.administrative_area_2'], city: rows[0]['address.administrative_area_3'],
-            postal_code: rows[0]['address.postalcode'],
-            lat: rows[0]['address.point'].coordinates[0], lng: rows[0]['address.point'].coordinates[1],
-            active3: 'active',
-            user: req.user[0], 
-            valState: data,
-            cat_id: rows[0].category,
-            valCategories: row ,
-            // cat_bus_id: rows[0].business_cat
-          })
+          var url2 = "http://battuta.medunes.net/api/region/"+rows[0]['address.administrative_area_1']+"/search/?key="+BATTUTA_KEY;
+          Request.get(url2, (error, response, body2) => {
+            if(error) {
+                return console.dir(error);
+            }
+            var data2 = JSON.parse(body2);
+            // console.dir(data2);
+            // "http://battuta.medunes.net/api/city/search/?region={REGION_NAME_HINT}&city={CITY_NAME_HINT}&key="
+            var url3 = "http://battuta.medunes.net/api/city/"+rows[0]['address.administrative_area_1']+"/search/?region="+rows[0]['address.administrative_area_2']+"&key="+BATTUTA_KEY;
+            Request.get(url3, (error, response, body3) => {
+              if(error) {
+                  return console.dir(error);
+              }
+              var data3 = JSON.parse(body3);
+              console.dir(data3)
+              res.render('business-owner/edit-business', {
+                id:  rows[0].id,
+                name_business:  rows[0].name, contact_no: rows[0].contact_no, email: rows[0].email, website: rows[0].website, description: rows[0].description, 
+                address_id: rows[0]['address.id'],
+                line1: rows[0]['address.line1'], line2: rows[0]['address.line2'],
+                temp_state: rows[0]['address.administrative_area_1'], temp_region: rows[0]['address.administrative_area_2'], temp_city: rows[0]['address.administrative_area_3'],
+                postal_code: rows[0]['address.postalcode'],
+                lat: rows[0]['address.point'].coordinates[0], lng: rows[0]['address.point'].coordinates[1],
+                active3: 'active',
+                user: req.user[0], 
+                valState: data,
+                cat_id: rows[0].category,
+                valCategories: row,
+                valRegion: data2,
+                valCity: data3
+                // cat_bus_id: rows[0].business_cat
+              })
+          });
+        });
       });
     })
     .catch(err => {
@@ -1169,7 +1189,154 @@ router.get('/edit-picture=:id', function(req, res, next) {
   })
 });
 
-router.get('/edit-outlet', function(req, res, next) {
+router.get('/edit-outlet=:id', function(req, res, next) {
+  outlets.findAll({
+    where: {
+      id: [req.params.id]
+    },
+    attributes: [
+      'id',
+      'name', 
+      'email',
+      'website',
+      'contact_no',
+      'description',
+      'id_address',
+      'id_bussines',
+      'role_public_holiday'
+      // [Sequelize.fn('GROUP_CONCAT', Sequelize.literal("categories.id SEPARATOR ','")), 'category'],
+    ],
+    group: ['outlets.id'],
+    include: [{
+        model: business
+      },
+      {
+        model: address
+      },
+      {
+        model: days
+      }
+    ],
+      distinct: true,
+      raw:true
+      })
+  .then(rows => {
+    var open = [
+      rows[0]['day.d1_open'],
+      rows[0]['day.d2_open'],
+      rows[0]['day.d3_open'],
+      rows[0]['day.d4_open'],
+      rows[0]['day.d5_open'],
+      rows[0]['day.d6_open'],
+      rows[0]['day.d7_open'],
+    ]
+    var status = [];
+    for(var i = 0; i < open.length ; i++) {
+      if(open[i] == null) {
+        status.push(true);
+      } else {
+        status.push(false);
+      }
+    }
+    var role_public_holiday;
+    if(rows[0]['role_public_holiday'] === 1) {
+      role_public_holiday = true;
+    } else {
+      role_public_holiday = false;
+    }
+    // console.log(status);
+    // console.log(rows[0]['day.d7_open'])
+    if(rows.length <= 0) {
+      res.render('access-denied');
+      return false;
+    }
+    console.log(rows)
+    business.findAll({
+      where: {
+        owner_id: req.user[0].id
+      }
+    })
+    .then(row => {
+      // console.log(rows)
+      var BATTUTA_KEY=config.batuta_key.key;
+      var url = "https://battuta.medunes.net/api/country/all/?key="+BATTUTA_KEY;
+      
+
+      Request.get(url, (error, response, body) => {
+          if(error) {
+              return console.dir(error);
+          }
+          var data = JSON.parse(body);
+          // console.dir(JSON.parse(body));
+          console.log(rows.category)
+          var url2 = "http://battuta.medunes.net/api/region/"+rows[0]['address.administrative_area_1']+"/search/?key="+BATTUTA_KEY;
+          Request.get(url2, (error, response, body2) => {
+            if(error) {
+                return console.dir(error);
+            }
+            var data2 = JSON.parse(body2);
+            // console.dir(data2);
+            // "http://battuta.medunes.net/api/city/search/?region={REGION_NAME_HINT}&city={CITY_NAME_HINT}&key="
+            var url3 = "http://battuta.medunes.net/api/city/"+rows[0]['address.administrative_area_1']+"/search/?region="+rows[0]['address.administrative_area_2']+"&key="+BATTUTA_KEY;
+            Request.get(url3, (error, response, body3) => {
+              if(error) {
+                  return console.dir(error);
+              }
+              var data3 = JSON.parse(body3);
+              console.dir(data3)
+              console.log(role_public_holiday)
+              res.render('business-owner/edit-outlet', {
+                valBusiness: row,
+                name_outlet: rows[0].name,
+                contact_no: rows[0].contact_no, 
+                email: rows[0].email, 
+                website: rows[0].website, 
+                description: rows[0].description, 
+                id:  rows[0].id,
+                bus_id: rows[0]['business.id'],
+                address_id: rows[0].id_address,
+                line1: rows[0]['address.line1'], line2: rows[0]['address.line2'],
+                temp_state: rows[0]['address.administrative_area_1'], temp_region: rows[0]['address.administrative_area_2'], temp_city: rows[0]['address.administrative_area_3'],
+                postal_code: rows[0]['address.postalcode'],
+                lat: rows[0]['address.point'].coordinates[0], lng: rows[0]['address.point'].coordinates[1],
+                active3: 'active',
+                user: req.user[0], 
+                valState: data,
+                valRegion: data2,
+                valCity: data3,
+                d1_open: rows[0]['day.d1_open'], d1_close: rows[0]['day.d1_close'],
+                d2_open: rows[0]['day.d2_open'], d2_close: rows[0]['day.d2_close'],
+                d3_open: rows[0]['day.d3_open'], d3_close: rows[0]['day.d3_close'],
+                d4_open: rows[0]['day.d4_open'], d4_close: rows[0]['day.d4_close'],
+                d5_open: rows[0]['day.d5_open'], d5_close: rows[0]['day.d5_close'],
+                d6_open: rows[0]['day.d6_open'], d6_close: rows[0]['day.d6_close'],
+                d7_open: rows[0]['day.d7_open'], d7_close: rows[0]['day.d7_close'],
+                checkcd1: status[0],
+                checkcd2: status[1],
+                checkcd3: status[2],
+                checkcd4: status[3],
+                checkcd5: status[4],
+                checkcd6: status[5],
+                checkcd7: status[6],
+                checkHoliday: role_public_holiday
+                // cat_bus_id: rows[0].business_cat
+              })
+          });
+        });
+      });
+    })
+    .catch(err => {
+      console.log(err)
+    res.render('error')
+    });
+  })
+  .catch(err => {
+    console.log(err)
+  res.render('error')
+  });
+});
+
+router.post('/edit-outlet', function(req, res, next) {
   res.render('business-owner/edit-outlet',{user: req.user[0]});
 });
 
