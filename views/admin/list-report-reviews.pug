@@ -31,7 +31,7 @@ block content
                     | id 
                     br 
                     | reviews
-                  th(rowspan='2') Business
+                  th(rowspan='2') Review content
                   th(rowspan='2') Outlets
                   th(colspan='2') Report
                   th(rowspan='2') 
@@ -43,34 +43,44 @@ block content
                     th spam
                     th inappropriate
               tbody
-                tr
-                  th.text-center(scope='row') 1
-                  td Wonderlabs
-                  td Wonderlabs Amstrong Campus
-                  td.text-center
-                    a(href="" data-toggle="tooltip" data-placement="bottom" title="ayyaa.ats12@gmail.com") 1 
-                  td.text-center
-                    a(href="" data-toggle="tooltip" data-placement="bottom" title="ayyaa.ats12@gmail.com") 1
-                  td.text-center
-                    a(href="" data-toggle="tooltip" data-placement="bottom" title="ayyaa.ats12@gmail.com") 2
-                  td.text-center
-                    button.btn.bg-5.btn-sm.border(type='button' data-toggle='modal', data-target='#deleteModal')
-                      i.fa.fa-trash
-                      |  Delete
-                tr
-                  th.text-center 2
-                  td(scope='row') Wonderfood
-                  td Wonderlabs Sputnik Campus 
-                  td.text-center 
-                    a(href="" data-toggle="tooltip" data-placement="bottom" title="ayyaa.ats12@gmail.com") 1
-                  td.text-center 
-                    a(href="" data-toggle="tooltip" data-placement="bottom" title="") 0
-                  td.text-center
-                    a(href="" data-toggle="tooltip" data-placement="bottom" title="ayyaa.ats12@gmail.com") 1
-                  td.text-center
-                    button.btn.bg-5.btn-sm.border(type='button' data-toggle='modal', data-target='#deleteModal')
-                      i.fa.fa-trash
-                      |  Delete
+                for report in data
+                  tr
+                    th.text-center(scope='row')=report.dataValues.review.id
+                    td=report.dataValues.review.content
+                    td=report.dataValues.review.outlet.name
+                    td.text-center
+                      a(href="" data-toggle="tooltip" data-placement="bottom" title="ayyaa.ats12@gmail.com")=report.dataValues.SPAM
+                    td.text-center
+                      a(href="" data-toggle="tooltip" data-placement="bottom" title="ayyaa.ats12@gmail.com")=report.dataValues.INAPPROPRIATE
+                    td.text-center
+                      =report.dataValues.tot
+                      button(data-toggle="tooltip" type='button' onclick='viewReport("'+report.dataValues.email+'")' data-placement="bottom" title=report.dataValues.email style='border: none; background-color:transparent')
+                        i.fas.fa-eye
+                    td.text-center
+                      button.btn.bg-5.btn-sm.border(type='button' data-toggle='modal', data-target='#deleteModal')
+                        i.fa.fa-trash
+                        |  Delete
         .card-footer.small.text-muted Updated yesterday at 11:59 PM
     a.scroll-to-top.rounded(href='#page-top')
       i.fa.fa-angle-up
+
+    #viewModal.modal.fade(tabindex='-1', role='dialog', aria-labelledby='deleteModalLabel', aria-hidden='true')
+      .modal-dialog(role='document')
+        .modal-content
+          .modal-header
+            h5#deleteModalLabel.modal-title Who's report this review?
+            button.close(type='button', data-dismiss='modal', aria-label='Close')
+              span(aria-hidden='true') ×
+          .modal-body
+            label(for='email') Email Reporter : 
+            h6#email_reporter
+          .modal-footer
+            button.btn.btn-secondary(type='button', data-dismiss='modal') Cancel
+
+    script(type='text/javascript').
+      function viewReport(...a) {
+        console.log(a)
+        window.content = a;
+        $("#viewModal").modal('show');
+        document.getElementById("email_reporter").innerHTML = a;
+      }

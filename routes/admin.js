@@ -17,8 +17,11 @@ const users = models.users;
 const outlets = models.outlets;
 const address = models.address;
 const reviews = models.reviews;
+const review_reports = models.review_reports;
+const op = Sequelize.Op;
 const validateJoi = require('../src/validation/joi-create-category');
 const flash = require('connect-flash');
+const ip = require("ip");
 
 const multerConfig = {
     
@@ -62,11 +65,16 @@ outlets.belongsTo(address, {foreignKey: 'id_address'});
 address.hasOne(outlets, {foreignKey: 'id_address'});
 reviews.belongsTo(outlets, {foreignKey: 'outlet_id'});
 outlets.hasOne(reviews, {foreignKey: 'outlet_id'});
+review_reports.belongsTo(reviews, {foreignKey: 'review_id'});
+reviews.hasOne(review_reports, {foreignKey: 'review_id'});
 // address.hasOne(business, {foreignKey: 'address_id'})
 // business.belongsTo(address, {foreignKey: 'address_id'})
 
 router.get('/dashboard', function(req, res, next) {
   business.findAll({
+    order: [
+      ['id','DESC']
+    ],
     attributes: [
       'id',
       'name', 
@@ -91,6 +99,9 @@ router.get('/dashboard', function(req, res, next) {
   })
   .then(rows1 => {
     outlets.findAll({
+      order: [
+        ['id','DESC']
+      ],
       attributes: [
         'id',
         'name', 
@@ -112,6 +123,9 @@ router.get('/dashboard', function(req, res, next) {
       ]
     }).then(rows2 => {
       business.findAndCountAll({
+        order: [
+          ['id','DESC']
+        ],
         attributes: [
           'id',
           [Sequelize.fn('COUNT', Sequelize.fn('DISTINCT', Sequelize.col("outlet_id"))), 'count_outlet'],
@@ -239,6 +253,19 @@ router.post('/create-category', function(req, res, next) {
   })
 });
 
+router.get('/bo=:id', function(req, res, next) {
+  users.findOne({
+    where: {
+      id: req.params.id, 
+      [op.and]: {role: 'BUSINESS OWNER'}
+    }
+  })
+  .then(rows => {
+    console.log(rows)
+    res.render('admin/bo_profile', {data: rows, user: req.user[0], active4: 'active'})
+  })
+});
+
 router.get('/edit-category=:id', function(req, res, next) {
   categories.findAll({
     where: {
@@ -303,6 +330,20 @@ router.post('/update-category', function(req, res, next) {
   })
 });
 
+router.post('/delete-review=:id', function(req, res, next) {
+  reviews.destroy({ 
+    where: {
+      id: req.params.id
+    },
+    force: true })
+  .then(() => {
+    res.send(true)
+  })
+  .catch(err => {
+    res.send(false)
+  })
+});
+
 router.post('/delete-category=:id', function(req, res, next) {
   categories.destroy({ 
     where: {
@@ -323,8 +364,14 @@ router.get('/account', function(req, res, next) {
   } else {
     var auth = false
   }
+
+  if(req.user[0].ip_address !== '*') {
+    var ip_ad = true
+  } else {
+    var ip_ad = false
+  }
   // console.log(auth)
-  res.render('admin/account', {user: req.user[0], vauth: auth});
+  res.render('admin/account', {user: req.user[0], vauth: auth, ip: ip.address(), ipad: ip_ad});
 })
 
 router.post('/update', function(req, res, next) {
@@ -542,9 +589,35 @@ router.post('/enable/:id', function(req, res, next) {
   })
 });
 
+router.post('/enableip/:id', function(req, res, next) {
+  users.update({
+    ip_address: req.body.ip_address
+  }, {where: {
+    id: [req.params.id]
+  }}).then(rows => {
+    res.send('success')
+  }).catch(err => {
+    console.error(err)
+    res.send('error')
+  })
+});
+
 router.post('/disable/:id', function(req, res, next) {
   users.update({
     fa_status: 0
+  }, {where: {
+    id: [req.params.id]
+  }}).then(rows => {
+    res.send('success')
+  }).catch(err => {
+    console.error(err)
+    res.send('error')
+  })
+});
+
+router.post('/disableip/:id', function(req, res, next) {
+  users.update({
+    ip_address: '*'
   }, {where: {
     id: [req.params.id]
   }}).then(rows => {
@@ -633,14 +706,38 @@ router.post('/delete-business/:id', function(req, res, next) {
   })
 });
 
+
 router.get('/list-report-reviews', function(req, res, next) {
-  res.render('admin/list-report-reviews', {  active7: 'active', user: req.user[0]});
+  review_reports.findAll({
+    attributes: [
+      [Sequelize.literal(`COUNT(review_reports.id)`), 'tot'],
+      [Sequelize.fn('GROUP_CONCAT', Sequelize.literal("review_reports.email SEPARATOR ', '")), 'email'],
+      `review.outlet_id`,
+      [Sequelize.literal(`SUM(CASE WHEN report_type = 'SPAM' THEN 1 ELSE 0 END)`), 'SPAM'],
+      [Sequelize.literal(`SUM(CASE WHEN report_type = 'INAPPROPRIATE' THEN 1 ELSE 0 END)`), 'INAPPROPRIATE'],
+    ],
+    include: [
+      {
+        model: reviews,
+        include: [
+          {
+            model: outlets
+          }
+        ]
+      },
+    ],
+    group: [`review.outlet_id`]
+  }).then(rows => {
+    console.log(rows[0].dataValues.email)
+    res.render('admin/list-report-reviews', {  active7: 'active', user: req.user[0], data: rows});
+  })
 });
 
 router.get('/list-business-owner', function(req, res, next) {
   users.findAll({ 
     where: {
-      role: 'BUSINESS OWNER'
+      role: ['BUSINESS OWNER'],
+      [op.and]: {status: 1}
     }
   })
   .then(rows => {

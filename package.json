@@ -22,6 +22,7 @@
     "express-flash": "0.0.2",
     "express-session": "^1.15.6",
     "gulp-nodemon": "^2.2.1",
+    "ip": "^1.1.5",
     "joi": "^13.3.0",
     "joi-date-extensions": "^1.2.0",
     "libur": "0.0.2",

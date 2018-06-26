@@ -1,0 +1,49 @@
+extends layout-admin
+
+block content
+  .content-wrapper
+    .container-fluid
+      ol.breadcrumb
+        li.breadcrumb-item
+          h4 Business Owner Account
+      .container-fluid.col-sm-12
+        .row
+          .col-xs-12.col-sm-12.col-md-6.col-lg-6.col-xs-offset-0.col-sm-offset-0.col-md-offset-3.col-lg-offset-3.toppad
+            .panel.panel-info
+              .panel-heading
+                h3.panel-title.mb-4 
+                  =data.name
+              .panel-body
+                .row
+                  .col-md-4.col-lg-4(align='center')
+                    img.img-circle.img-responsive(alt='User Pic', src='../photo-storage/'+data.photo , width='140', height='auto')
+                  .col-md-8.col-lg-8
+                    table.table.table-user-information
+                      tbody
+                        tr
+                          td Username:
+                          td=data.username
+                        tr
+                          td Email:
+                          td=data.email
+                        tr
+                          td Contact No:
+                          td=data.contact_no
+                        tr
+                          td Last Login:
+                          td=moment(data.last_login).format('DD-MM-YYYY HH:mm:ss')
+                        tr
+                          td Num of Outlets
+                          td 12
+                        tr
+                          td Num of Business
+                          td 3
+
+              //- .panel-footer
+              //-   a.btn.btn-sm.btn-primary(data-original-title='Broadcast Message', data-toggle='tooltip', type='button')
+              //-     i.glyphicon.glyphicon-envelope
+              //-   span.pull-right
+              //-     a.btn.btn-sm.btn-warning(href='edit.html', data-original-title='Edit this user', data-toggle='tooltip', type='button')
+              //-       i.glyphicon.glyphicon-edit
+              //-     a.btn.btn-sm.btn-danger(data-original-title='Remove this user', data-toggle='tooltip', type='button')
+              //-       i.glyphicon.glyphicon-remove

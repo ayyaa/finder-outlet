@@ -41,18 +41,8 @@ block content
                     td= business.dataValues.categories[0].dataValues.countoutlet
                       | 
                       a(href='/admin/list-outlets='+business.id) view outlets
-                    td.text-center
-                      .dropdown
-                        button.btn.bg-5.dropdown-toggle.btn-sm.border(type='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
-                          | Action
-                        .dropdown-menu.dropdown-menu-right
-                          a.dropdown-item(href='#')
-                            i.fa.fa-user
-                            |  View
-                          .dropdown-divider
-                          a.dropdown-item(onclick='delBusiness('+business.id+')')
-                            i.fa.fa-trash
-                            |  Delete
+                    td
+                      a(href='/admin/list-business') view business
         .card-footer.small.text-muted Updated yesterday at 11:59 PM
     a.scroll-to-top.rounded(href='#page-top')
       i.fa.fa-angle-up

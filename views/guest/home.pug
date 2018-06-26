@@ -6,7 +6,6 @@ block content
       div#map
         .row
           .col-lg-12
-            //- #map
     header.search
       .ml-auto
         .row
@@ -15,22 +14,22 @@ block content
               .from-group.col-md-3
                 select.option-index.border.bg-white.mb-2.form-control(name='city', style='width: 100%;')
                   option(value='') Select City...
-                  option(value='jogja') Yogyakarta
-                  option(value='semarang') Semarang
-                  option(value='jakarta') Jakarta
-                  option(value='bandung') Bandung
-                  option(value='surabaya') Surabaya
-                  option(value='kudus') Kudus
+                  each cit in city
+                    option(value=cit.id) !{cit.administrative_area_3}
+                  //- option(value='semarang') Semarang
+                  //- option(value='jakarta') Jakarta
+                  //- option(value='bandung') Bandung
+                  //- option(value='surabaya') Surabaya
+                  //- option(value='kudus') Kudus
               .from-group.col-md-3
                 select.option-index.border.bg-white.mb-2.form-control(name='category', style='width: 100%;')
                   option(value='') Select Line of Bussines
-                  option(value='arts') Arts
-                  option(value='computers') Computers
-                  option(value='games') Games
+                  each cate in cat
+                    option(value=cate.id) !{cate.name}
               .from-group.col-md-3
                 input.form-control.input-index.border.rounded.mb-2(type='text', placeholder='keyword', name='keyword', style='width: 100%;')
               .from-group.col-md-3
-                button.button.btn.btn-secondary.mb-2.form-control.input-index(type='button', onclick='search_list.html')
+                button.btn-secondary.mb-2.form-control.input-index(type='button', onclick='search_list.html')
                   | Search
       // Page Content
       .container-fluid.d-flex.align-items-center(style='background-color: white')
