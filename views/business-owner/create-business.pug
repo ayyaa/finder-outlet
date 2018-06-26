@@ -50,16 +50,16 @@ block content
           .form-group.col-md-11.border.ml-3.pt-2.mr-3
             .form-row
               .form-group.col-md-6
-                label(for='state') State
+                label(for='state') Country
                 select#state.custom-select(name='state', value=state)
                   each value in valState
                     option(value=value.code) #{value.name}
               .form-group.col-md-6
-                label(for='line2') Region
+                label(for='line2') Administrative Area 1
                 select#region.custom-select(name='region', value=region)
                   option(value='0') - select -
               .form-group.col-md-6
-                label(for='line2') City
+                label(for='line2') Administrative Area 2
                 select#city.custom-select(name='city', value=city)
                   option(value='0') - select -
               .form-group.col-md-6
@@ -73,9 +73,11 @@ block content
                 label(for='line2') Line 2
                 input#line2.form-control(type='text', placeholder='Line 2 address' name='line2', value=line2)
             .form-row
+              .form-group.col-md-12
+                #wrapper
+            .form-row
               .form-group.col-md-3
                 a#geolocate.btn.btn-secondary.btn-block.disabled(type='button') Geolocate
-                //- button.btn.btn-secondary.btn-block 
             .form-row
               .form-group.col-md-3
                 label(for='zipcode') Latitude
@@ -120,9 +122,9 @@ block content
                 .form-group.col-md-6
                   label(for='zipcode') Longitude
                   input#lng1.form-control(type='text', placeholder='Longitude',name='lng',  style='100%', value=lat2)
-          .modal-footer
-            button.btn.btn-secondary(type='button', data-dismiss='modal') Cancel
-            button.btn.btn-primary(onclick='save()') Save 
+          //- .modal-footer
+          //-   button.btn.btn-secondary(type='button', data-dismiss='modal') 
+          //-   button.btn.btn-primary(onclick='save()') Save 
     script.
       $('.selectpicker').selectpicker({
         style: 'btn-info',
@@ -132,7 +134,7 @@ block content
         $("#state").change(function() {
           var state = $(this).val();
           $.ajax({
-            url: "http://battuta.medunes.net/api/region/"+state+"/search/?region=&callback=?&key=eece3999b174ddb2ece72e58660a9ddb",
+            url: "http://battuta.medunes.net/api/region/"+state+"/search/?region=&callback=?&key=9e921060ab938e297da0528a880add43",
             dataType: 'json',
             success:function(response){
               var len = response.length;
@@ -150,7 +152,7 @@ block content
           var state1 = $('#state').val();
           console.log(region);
           $.ajax({
-            url: "http://battuta.medunes.net/api/city/"+state1+"/search/?region="+region+"&city=&callback=?&key=eece3999b174ddb2ece72e58660a9ddb",
+            url: "http://battuta.medunes.net/api/city/"+state1+"/search/?region="+region+"&city=&callback=?&key=9e921060ab938e297da0528a880add43",
             dataType: 'json',
             success:function(response){
               console.log(response);
