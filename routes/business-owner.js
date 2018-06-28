@@ -21,6 +21,7 @@ const reviews = models.reviews;
 const ip = require("ip");
 const validateJoi = require('../src/validation/joi-create-business');
 const validateJoiOutlet = require('../src/validation/joi-create-outlet');
+const validateEditOutlet = require('../src/validation/joi-edit-outlet');
 const validateEditCp = require('../src/validation/joi-edit-cp');
 const validateEditName = require('../src/validation/joi-edit-name');
 const validateEditEmail = require('../src/validation/joi-edit-email');
@@ -1294,7 +1295,8 @@ router.get('/edit-outlet=:id', function(req, res, next) {
       // console.log(rows)
       var BATTUTA_KEY=config.batuta_key.key;
       var url = "https://battuta.medunes.net/api/country/all/?key="+BATTUTA_KEY;
-    
+      
+
       Request.get(url, (error, response, body) => {
           if(error) {
               return console.dir(error);
@@ -1370,7 +1372,130 @@ router.get('/edit-outlet=:id', function(req, res, next) {
 });
 
 router.post('/edit-outlet', function(req, res, next) {
-  res.render('business-owner/edit-outlet',{user: req.user[0]});
+  console.log("test");
+  if(req.body.checkholiday === 'on') {
+    var holiday = 1
+  } else {
+    var holiday = 0
+  }
+  validateEditOutlet.validate({
+    get_business: req.body.get_business,
+    contact_no: req.body.contact_no, 
+    name_outlet: req.body.name_outlet, 
+    email: req.body.email, 
+    website: req.body.website, 
+    description: req.body.description, 
+    line1: req.body.line1, 
+    line2: req.body.line2,
+    state: req.body.state, 
+    region: req.body.region, 
+    city: req.body.city, 
+    postal_code: req.body.postal_code, 
+    lat: req.body.lat, 
+    lng: req.body.lng}, function(errors, value) {
+      console.log(errors);
+      if (!errors) {
+        console.log(req.body.city)
+        console.log(req.body.region)
+        console.log(req.body.address_id)
+        console.log(req.body.outlet_id)
+        var id_adres = req.body.address_id;
+        console.log(id_adres[0]);
+        address.update({
+          line1: req.body.line1, 
+          line2: req.body.line2,
+          administrative_area_1: req.body.state, 
+          administrative_area_2: req.body.region, 
+          administrative_area_3: req.body.city, 
+          administrative_area_4: '', 
+          postalcode: req.body.postal_code,
+          point: Sequelize.fn(`ST_GEOMFROMTEXT`, `POINT(`+req.body.lat+` `+req.body.lng+`)`)
+        }, {
+          where : {
+            id : id_adres[0]
+          }
+        }, {
+          include: [{
+            model: outlets,
+          }]
+        }).then(row => {
+          console.log("test")
+          outlets.update({
+            name: req.body.name_outlet,
+            id_address: row.id,
+            email: req.body.email,
+            website: req.body.website,
+            contact_no: req.body.contact_no,
+            description: req.body.description,
+            id_bussines: req.body.get_business,
+            role_public_holiday: holiday
+          }, {
+            where : {
+              id : req.body.outlet_id
+            }
+          })
+          .then(rowss => {
+            days.update({
+              d1_open: req.body.opend1,
+              d1_close: req.body.closed1,
+              d2_open: req.body.opend2,
+              d2_close: req.body.closed2,
+              d3_open: req.body.opend3,
+              d3_close: req.body.closed3,
+              d4_open: req.body.opend4,
+              d4_close: req.body.closed4,
+              d5_open: req.body.opend5,
+              d5_close: req.body.closed5,
+              d6_open: req.body.opend6,
+              d6_close: req.body.closed6,
+              d7_open: req.body.opend7,
+              d7_close: req.body.closed7,
+              outlet_id: rowss.id 
+            }, {
+              where : {
+                id : req.body.outlet_id
+              }
+            }).then(rowsss => {
+              req.flash('success', 'Successful added Business.');
+              res.redirect('/business-owner/list-outlet');
+            })
+          })
+        }) 
+      } else {
+        var BATTUTA_KEY=config.batuta_key.key;
+        var url = "https://battuta.medunes.net/api/country/all/?key="+BATTUTA_KEY;
+
+        Request.get(url, (error, response, body) => {
+          if(error) {
+              return console.dir(error);
+          }
+          var data = JSON.parse(body);
+          req.flash('error','<div class="alert alert-danger"><div class="text-center">'+errors+'</div></div>')
+          res.redirect('/business-owner/edit-outlet')
+          // res.render('business-owner/create-business', {
+          //   active3: 'active', 
+          //   valState: data, 
+          //   error: req.flash('error'), 
+          //   user: req.user[0],
+          //   name_outlet: req.body.name_outlet,
+          //   email: req.body.email,
+          //   website: req.body.website,
+          //   contact_no: req.body.contact_no,
+          //   description: req.body.description,
+          //   state: req.body.state,
+          //   region: req.body.region,
+          //   city: req.body.city,
+          //   postal_code: req.body.postal_code,
+          //   line1: req.body.line1,
+          //   line2: req.body.line2,
+          //   lat: req.body.lat,
+          //   lng: req.body.lng,
+          //   lat1: req.body.lat1,
+          //   lat2: req.body.lng
+          // });    
+        })
+      } 
+    })
 });
 
 router.get('/list-business', function(req, res, next) {
@@ -1421,6 +1546,20 @@ router.post('/delete-business/:id', function(req, res, next) {
     })
     .catch(err => {
       res.send(false)
+    })
+});
+
+router.post('/delete-outlet/:id', function(req, res, next) {
+  outlets.destroy({ 
+    where: {
+      id: req.params.id
+    },
+    force: true })
+    .then(() => {
+      res.send(true)
+    })
+    .catch(err => {
+      res.send(false);
     })
 });
 

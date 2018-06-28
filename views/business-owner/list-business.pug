@@ -65,7 +65,7 @@ block content
       a.float(href='/business-owner/create-business')
         i.fa.fa-plus.fa-2x.my-float
       .label-container
-        .label-text Add Outlets
+        .label-text Add Business
         i.fa.fa-play.label-arrow
     a.scroll-to-top.rounded(href='#page-top')
       i.fa.fa-angle-up
@@ -95,11 +95,11 @@ block content
           success : function (respon) {
             if(respon === true) {
               setTimeout(function() {$("#deleteModal").modal('hide');}, 1000);
-              alert('Success delete new category')
+              alert('Success delete business')
               location.reload();
             } else {
               setTimeout(function() {$("#deleteModal").modal('hide');}, 100);
-              alert('Failed to remove categoryr')
+              alert('Failed to remove business')
             }
           }
         })
